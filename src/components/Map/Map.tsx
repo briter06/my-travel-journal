@@ -14,9 +14,10 @@ const CENTER_OF_MAP: [number, number] = [40.5, -40.0];
 
 interface MapData {
   data: Data;
+  showJournies: boolean;
 }
 
-const Map: React.FC<MapData> = ({ data }) => {
+const Map: React.FC<MapData> = ({ data, showJournies }) => {
   const travelEntries = Object.entries(data);
 
   return (
@@ -61,28 +62,30 @@ const Map: React.FC<MapData> = ({ data }) => {
               );
             })}
 
-            {trips.map((trip) => {
-              const { latitude: la1, longitude: lo1 } =
-                places[trip.from].coordinates;
-              const { latitude: la2, longitude: lo2 } =
-                places[trip.to].coordinates;
-              return (
-                <DirectedLine
-                  key={`trip_${trip.from}_${trip.to}`}
-                  positions={[
-                    [la1, lo1],
-                    [la2, lo2],
-                  ]}
-                  color={color}
-                  popup={new Date(trip.date).toLocaleString(undefined, {
-                    weekday: "long",
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                />
-              );
-            })}
+            {showJournies
+              ? trips.map((trip) => {
+                  const { latitude: la1, longitude: lo1 } =
+                    places[trip.from].coordinates;
+                  const { latitude: la2, longitude: lo2 } =
+                    places[trip.to].coordinates;
+                  return (
+                    <DirectedLine
+                      key={`trip_${trip.from}_${trip.to}`}
+                      positions={[
+                        [la1, lo1],
+                        [la2, lo2],
+                      ]}
+                      color={color}
+                      popup={new Date(trip.date).toLocaleString(undefined, {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    />
+                  );
+                })
+              : null}
           </div>
         )
       )}
