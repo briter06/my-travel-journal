@@ -1,0 +1,116 @@
+{
+  "info": {
+    "id": "Various"
+  },
+  "places": {
+    "1": {
+      "name": "Bogota",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 4.711,
+        "longitude": -74.0721
+      },
+      "description": ""
+    },
+    "2": {
+      "name": "Cabo de la Vela",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 12.195475,
+        "longitude": -72.147218
+      },
+      "description": ""
+    },
+    "3": {
+      "name": "Cartagena",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 10.391334,
+        "longitude": -75.533854
+      },
+      "description": ""
+    },
+    "4": {
+      "name": "Cali",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 3.420556,
+        "longitude": -76.522224
+      },
+      "description": ""
+    },
+    "5": {
+      "name": "Pereira",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 4.81428,
+        "longitude": -75.69488
+      },
+      "description": ""
+    },
+    "6": {
+      "name": "Villavicencio",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 4.151382,
+        "longitude": -73.637688
+      },
+      "description": ""
+    },
+    "7": {
+      "name": "Ibague",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 4.43889,
+        "longitude": -75.23222
+      },
+      "description": ""
+    },
+    "8": {
+      "name": "Ibague",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 4.43889,
+        "longitude": -75.23222
+      },
+      "description": ""
+    },
+    "9": {
+      "name": "Tunja",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 4.43889,
+        "longitude": -75.23222
+      },
+      "description": ""
+    },
+    "10": {
+      "name": "Bucaramanga",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 7.1114611,
+        "longitude": -73.1172869
+      },
+      "description": ""
+    },
+    "11": {
+      "name": "Melgar",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 4.20389,
+        "longitude": -74.64278
+      },
+      "description": ""
+    },
+    "12": {
+      "name": "Girardot",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 4.3008,
+        "longitude": -74.8075
+      },
+      "description": ""
+    }
+  },
+  "trips": []
+}

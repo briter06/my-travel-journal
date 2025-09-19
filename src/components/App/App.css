@@ -38,3 +38,35 @@
     transform: rotate(360deg);
   }
 }
+
+.initial-select-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f0f8ff; /* Soft background */
+}
+
+.select-folder-button {
+  padding: 15px 30px;
+  border-radius: 25px;
+  background: linear-gradient(145deg, #ff9a9e, #fad0c4);
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-align: center;
+  display: inline-block;
+}
+
+.select-folder-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.select-folder-button:active {
+  transform: translateY(0);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}

@@ -1,41 +1,94 @@
 {
-    "id": "USA 2011",
-    "places": {
-        "1": {
-            "name": "Bogota",
-            "coordinates": {
-              "latitude": 4.7110,
-              "longitude": -74.0721
-            },
-            "description": "Bogota description"
-        },
-        "2": {
-            "name": "Orlando",
-            "coordinates": {
-              "latitude": 28.5383,
-              "longitude": -81.3792
-            },
-            "description": "Orlando description"
-        },
-        "3": {
-            "name": "Philadelphia",
-            "coordinates": {
-              "latitude": 39.9526,
-              "longitude": -75.1652
-            },
-            "description": "Philadelphia description"
-        }
+  "info": {
+    "id": "The United States",
+    "date": "2011-01-01"
+  },
+  "places": {
+    "Bogota": {
+      "name": "Bogota",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 4.711,
+        "longitude": -74.0721
+      },
+      "description": ""
     },
-    "trips": [
-        {
-            "from": "1",
-            "to": "2",
-            "date": "2011-01-13"
-        },
-        {
-            "from": "2",
-            "to": "3",
-            "date": "2011-01-20"
-        }
-    ]
+    "Orlando": {
+      "name": "Orlando",
+      "Country": "The United States",
+      "coordinates": {
+        "latitude": 28.5383,
+        "longitude": -81.3792
+      },
+      "description": ""
+    },
+    "Tampa": {
+      "name": "Tampa",
+      "Country": "The United States",
+      "coordinates": {
+        "latitude": 27.964157,
+        "longitude": -82.452606
+      },
+      "description": ""
+    },
+    "Washington": {
+      "name": "Washington",
+      "Country": "The United States",
+      "coordinates": {
+        "latitude": 38.89511,
+        "longitude": -77.03637
+      },
+      "description": ""
+    },
+    "New York": {
+      "name": "New York",
+      "Country": "The United States",
+      "coordinates": {
+        "latitude": 40.712776,
+        "longitude": -74.005974
+      },
+      "description": ""
+    },
+    "Philadelphia": {
+      "name": "Philadelphia",
+      "Country": "The United States",
+      "coordinates": {
+        "latitude": 39.9526,
+        "longitude": -75.1652
+      },
+      "description": ""
+    }
+  },
+  "trips": [
+    {
+      "from": "Bogota",
+      "to": "Orlando",
+      "date": "2011-01-01"
+    },
+    {
+      "from": "Orlando",
+      "to": "Tampa",
+      "date": "2011-01-01"
+    },
+    {
+      "from": "Tampa",
+      "to": "Washington",
+      "date": "2011-01-01"
+    },
+    {
+      "from": "Washington",
+      "to": "Philadelphia",
+      "date": "2011-01-01"
+    },
+    {
+      "from": "Philadelphia",
+      "to": "New York",
+      "date": "2011-01-01"
+    },
+    {
+      "from": "New York",
+      "to": "Bogota",
+      "date": "2011-01-01"
+    }
+  ]
 }

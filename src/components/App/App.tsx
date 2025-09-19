@@ -4,6 +4,7 @@ import { Data } from "../../types/Data";
 import { Place } from "../../types/Place";
 import { useState } from "react";
 import chroma from "chroma-js";
+import moment from "moment";
 
 async function readDirectory(
   dirHandle: any,
@@ -13,11 +14,18 @@ async function readDirectory(
   try {
     for await (const entry of dirHandle.values()) {
       const fullPath = parentPath ? `${parentPath}/${entry.name}` : entry.name;
-
       if (entry.kind === "file") {
         const file = await entry.getFile();
-        const { id: travelId, places, trips } = JSON.parse(await file.text());
+        const { info, places, trips } = JSON.parse(await file.text());
+        const newInfo = {
+          id: info.id,
+          date: info.date ? moment(info.date) : undefined,
+        };
+        const travelId = `${info.id}_${
+          newInfo.date?.format("YYYY-MM") ?? "undefined"
+        }`;
         result.data[travelId] = {
+          info: newInfo,
           places: {},
           trips: [],
           color: "",
@@ -64,14 +72,17 @@ function App() {
       {data !== null ? (
         <Map data={data} />
       ) : (
-        <button
-          onClick={async () => {
-            const data = await loadData();
-            setData(data);
-          }}
-        >
-          Pick a Folder
-        </button>
+        <div className="initial-select-container">
+          <button
+            className="select-folder-button"
+            onClick={async () => {
+              const data = await loadData();
+              setData(data);
+            }}
+          >
+            Select the folder with your travels
+          </button>
+        </div>
       )}
     </div>
   );

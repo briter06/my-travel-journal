@@ -1,0 +1,52 @@
+{
+  "info": {
+    "id": "Republica Dominicana",
+    "date": "2012-01-01"
+  },
+  "places": {
+    "Bogota": {
+      "name": "Bogota",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 4.711,
+        "longitude": -74.0721
+      },
+      "description": ""
+    },
+    "Punta Cana": {
+      "name": "Punta Cana",
+      "Country": "Dominican Republic",
+      "coordinates": {
+        "latitude": 18.5818,
+        "longitude": -68.4043
+      },
+      "description": ""
+    },
+    "Santo Domingo": {
+      "name": "Santo Domingo",
+      "Country": "Dominican Republic",
+      "coordinates": {
+        "latitude": 18.483402,
+        "longitude": -69.929611
+      },
+      "description": ""
+    }
+  },
+  "trips": [
+    {
+      "from": "Bogota",
+      "to": "Punta Cana",
+      "date": "2012-01-01"
+    },
+    {
+      "from": "Punta Cana",
+      "to": "Santo Domingo",
+      "date": "2012-01-01"
+    },
+    {
+      "from": "Santo Domingo",
+      "to": "Bogota",
+      "date": "2012-01-01"
+    }
+  ]
+}
