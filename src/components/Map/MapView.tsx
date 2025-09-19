@@ -3,7 +3,7 @@ import React from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
-import DirectedLine from './DirectedLine';
+import DirectedLine from '../DirectedLine/DirectedLine';
 
 // Fix default marker icon issue
 delete (L.Icon.Default.prototype as any)._getIconUrl;
