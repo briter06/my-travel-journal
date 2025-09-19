@@ -3,8 +3,8 @@ import React from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import 'leaflet-extra-markers';
-import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css';
+import "leaflet-extra-markers";
+import "leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css";
 import DirectedLine from "../DirectedLine/DirectedLine";
 import { Data } from "../../types/Data";
 import { mapFilter } from "../../utils/lists";
@@ -21,9 +21,14 @@ const Map: React.FC<MapData> = ({ data }) => {
 
   return (
     <MapContainer center={CENTER_OF_MAP} zoom={2.5} id="map-container">
-      <TileLayer
+      {/* <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      /> */}
+
+      <TileLayer
+        url="https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="https://carto.com/">CARTO</a>'
       />
 
       {mapFilter(
@@ -34,7 +39,7 @@ const Map: React.FC<MapData> = ({ data }) => {
             {Object.entries(places).map(([placeId, place]) => {
               const icon = (L as any).ExtraMarkers.icon({
                 svg: true,
-                innerHTML: createMarker()
+                innerHTML: createMarker(color),
               });
               return (
                 <Marker
@@ -46,7 +51,10 @@ const Map: React.FC<MapData> = ({ data }) => {
                   icon={icon}
                 >
                   <Popup>
-                    {place.name} - {place.description}
+                    <b>{place.name}</b>
+                    <br />
+                    <br />
+                    {place.description}
                   </Popup>
                 </Marker>
               );
