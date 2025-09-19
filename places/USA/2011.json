@@ -1,0 +1,41 @@
+{
+    "id": "USA 2011",
+    "places": {
+        "1": {
+            "name": "Bogota",
+            "coordinates": {
+              "latitude": 4.7110,
+              "longitude": -74.0721
+            },
+            "description": "Bogota description"
+        },
+        "2": {
+            "name": "Orlando",
+            "coordinates": {
+              "latitude": 28.5383,
+              "longitude": -81.3792
+            },
+            "description": "Orlando description"
+        },
+        "3": {
+            "name": "Philadelphia",
+            "coordinates": {
+              "latitude": 39.9526,
+              "longitude": -75.1652
+            },
+            "description": "Philadelphia description"
+        }
+    },
+    "trips": [
+        {
+            "from": "1",
+            "to": "2",
+            "date": "2011-01-13"
+        },
+        {
+            "from": "2",
+            "to": "3",
+            "date": "2011-01-20"
+        }
+    ]
+}

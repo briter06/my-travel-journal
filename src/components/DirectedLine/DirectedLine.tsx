@@ -26,7 +26,7 @@ const DirectedLine: React.FC<DirectedLineProps> = ({
     const decorator = (L as any).polylineDecorator(polyline, {
       patterns: [
         {
-          offset: "50%", // middle of the line
+          offset: "70%", // middle of the line
           repeat: 0, // only one arrow
           symbol: (L as any).Symbol.arrowHead({
             pixelSize: size,
