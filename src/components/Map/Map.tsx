@@ -26,8 +26,9 @@ const Map: React.FC<MapData> = ({ data }) => {
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
       /> */}
 
+      {/* https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png */}
       <TileLayer
-        url="https://cartodb-basemaps-a.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
+        url="https://basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         attribution='&copy; <a href="https://carto.com/">CARTO</a>'
       />
 
@@ -73,6 +74,12 @@ const Map: React.FC<MapData> = ({ data }) => {
                     [la2, lo2],
                   ]}
                   color={color}
+                  popup={new Date(trip.date).toLocaleString(undefined, {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
                 />
               );
             })}
