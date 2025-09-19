@@ -1,8 +1,9 @@
 import './Map.css';
 import React from "react";
-import { MapContainer, TileLayer, Marker, Popup, Polyline } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from 'leaflet';
+import DirectedLine from './DirectedLine';
 
 // Fix default marker icon issue
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -18,10 +19,10 @@ L.Icon.Default.mergeOptions({
 const CENTER_OF_MAP: [number, number] = [40.5, -40.0]
 
 const Map: React.FC = () => {
-  const sanFrancisco: [number, number] = [37.7749, -122.4194];
-  const losAngeles: [number, number] = [34.0522, -118.2437];
+  const position1: [number, number] = [37.7749, -122.4194];
+  const position2: [number, number] = [4.7110, -74.0721];
 
-  const path: [number, number][] = [sanFrancisco, losAngeles];
+  const path: [number, number][] = [position1, position2];
 
   return (
     <MapContainer
@@ -35,15 +36,15 @@ const Map: React.FC = () => {
         />
       
       {/* Markers */}
-      <Marker position={sanFrancisco}>
+      <Marker position={position1}>
         <Popup>San Francisco</Popup>
       </Marker>
-      <Marker position={losAngeles}>
-        <Popup>Los Angeles</Popup>
+      <Marker position={position2}>
+        <Popup>Bogota</Popup>
       </Marker>
 
       {/* Polyline */}
-      <Polyline positions={path} color="red" />
+      <DirectedLine positions={path} />
     </MapContainer>
   );
 };
