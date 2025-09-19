@@ -1,10 +1,10 @@
 import './App.css';
-import MapView from './components/Map/MapView';
+import Map from '../Map/MapView';
 
 function App() {
   return (
     <div className="App">
-      <MapView />
+      <Map />
     </div>
   );
 }
