@@ -5,7 +5,7 @@
   },
   "places": {
     "Bogota": {
-      "name": "Bogota",
+      "city": "Bogota",
       "country": "Colombia",
       "coordinates": {
         "latitude": 4.711,
@@ -14,7 +14,7 @@
       "description": ""
     },
     "Punta Cana": {
-      "name": "Punta Cana",
+      "city": "Punta Cana",
       "Country": "Dominican Republic",
       "coordinates": {
         "latitude": 18.5818,
@@ -23,7 +23,7 @@
       "description": ""
     },
     "Santo Domingo": {
-      "name": "Santo Domingo",
+      "city": "Santo Domingo",
       "Country": "Dominican Republic",
       "coordinates": {
         "latitude": 18.483402,

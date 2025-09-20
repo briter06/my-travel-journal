@@ -1,4 +1,6 @@
 import "./Map.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import React from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -53,10 +55,13 @@ const Map: React.FC<MapData> = ({ data, showJournies }) => {
                   icon={icon}
                 >
                   <Popup>
-                    <b>{place.name}</b>
-                    <br />
-                    <br />
-                    {place.description}
+                    <b>{place.name ?? place.city}</b>
+                    {place.description ? (
+                      <div>
+                        <br />
+                        {place.description}
+                      </div>
+                    ) : null}
                   </Popup>
                 </Marker>
               );
@@ -76,12 +81,19 @@ const Map: React.FC<MapData> = ({ data, showJournies }) => {
                         [la2, lo2],
                       ]}
                       color={color}
-                      popup={new Date(trip.date).toLocaleString(undefined, {
-                        weekday: "long",
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
+                      popup={`<b>${
+                        places[trip.from].name ?? places[trip.from].city
+                      } <i class="bi-caret-right-fill"></i> ${
+                        places[trip.to].name ?? places[trip.to].city
+                      }</b> <br/> ${new Date(trip.date).toLocaleString(
+                        undefined,
+                        {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        }
+                      )}`}
                     />
                   );
                 })

@@ -4,7 +4,7 @@
   },
   "places": {
     "1": {
-      "name": "Bogota",
+      "city": "Bogota",
       "country": "Colombia",
       "coordinates": {
         "latitude": 4.711,
@@ -13,7 +13,7 @@
       "description": ""
     },
     "2": {
-      "name": "Cabo de la Vela",
+      "city": "Cabo de la Vela",
       "country": "Colombia",
       "coordinates": {
         "latitude": 12.195475,
@@ -22,7 +22,7 @@
       "description": ""
     },
     "3": {
-      "name": "Cartagena",
+      "city": "Cartagena",
       "country": "Colombia",
       "coordinates": {
         "latitude": 10.391334,
@@ -31,7 +31,7 @@
       "description": ""
     },
     "4": {
-      "name": "Cali",
+      "city": "Cali",
       "country": "Colombia",
       "coordinates": {
         "latitude": 3.420556,
@@ -40,7 +40,7 @@
       "description": ""
     },
     "5": {
-      "name": "Pereira",
+      "city": "Pereira",
       "country": "Colombia",
       "coordinates": {
         "latitude": 4.81428,
@@ -49,7 +49,7 @@
       "description": ""
     },
     "6": {
-      "name": "Villavicencio",
+      "city": "Villavicencio",
       "country": "Colombia",
       "coordinates": {
         "latitude": 4.151382,
@@ -58,7 +58,7 @@
       "description": ""
     },
     "7": {
-      "name": "Ibague",
+      "city": "Ibague",
       "country": "Colombia",
       "coordinates": {
         "latitude": 4.43889,
@@ -67,7 +67,7 @@
       "description": ""
     },
     "8": {
-      "name": "Ibague",
+      "city": "Tunja",
       "country": "Colombia",
       "coordinates": {
         "latitude": 4.43889,
@@ -76,16 +76,7 @@
       "description": ""
     },
     "9": {
-      "name": "Tunja",
-      "country": "Colombia",
-      "coordinates": {
-        "latitude": 4.43889,
-        "longitude": -75.23222
-      },
-      "description": ""
-    },
-    "10": {
-      "name": "Bucaramanga",
+      "city": "Bucaramanga",
       "country": "Colombia",
       "coordinates": {
         "latitude": 7.1114611,
@@ -93,8 +84,8 @@
       },
       "description": ""
     },
-    "11": {
-      "name": "Melgar",
+    "10": {
+      "city": "Melgar",
       "country": "Colombia",
       "coordinates": {
         "latitude": 4.20389,
@@ -102,8 +93,8 @@
       },
       "description": ""
     },
-    "12": {
-      "name": "Girardot",
+    "11": {
+      "city": "Girardot",
       "country": "Colombia",
       "coordinates": {
         "latitude": 4.3008,

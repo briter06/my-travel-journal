@@ -5,7 +5,7 @@
   },
   "places": {
     "Bogota": {
-      "name": "Bogota",
+      "city": "Bogota",
       "country": "Colombia",
       "coordinates": {
         "latitude": 4.711,
@@ -14,7 +14,7 @@
       "description": ""
     },
     "Orlando": {
-      "name": "Orlando",
+      "city": "Orlando",
       "Country": "The United States",
       "coordinates": {
         "latitude": 28.5383,
@@ -23,7 +23,7 @@
       "description": ""
     },
     "Tampa": {
-      "name": "Tampa",
+      "city": "Tampa",
       "Country": "The United States",
       "coordinates": {
         "latitude": 27.964157,
@@ -32,7 +32,7 @@
       "description": ""
     },
     "Washington": {
-      "name": "Washington",
+      "city": "Washington",
       "Country": "The United States",
       "coordinates": {
         "latitude": 38.89511,
@@ -41,7 +41,7 @@
       "description": ""
     },
     "New York": {
-      "name": "New York",
+      "city": "New York",
       "Country": "The United States",
       "coordinates": {
         "latitude": 40.712776,
@@ -50,7 +50,7 @@
       "description": ""
     },
     "Philadelphia": {
-      "name": "Philadelphia",
+      "city": "Philadelphia",
       "Country": "The United States",
       "coordinates": {
         "latitude": 39.9526,
