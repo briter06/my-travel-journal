@@ -1,12 +1,14 @@
 import "./App.css";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 import Map from "../Map/Map";
 import { Data } from "../../types/Data";
 import { Place } from "../../types/Place";
 import { useState } from "react";
 import chroma from "chroma-js";
 import moment from "moment";
-import { Sidebar, Menu, SubMenu, MenuItem } from "react-pro-sidebar";
-import { motion } from "framer-motion";
+import { Menu, SubMenu, MenuItem } from "react-pro-sidebar";
+import NavigationLayout from "../NavigationLayout/NavigationLayout";
 
 async function readDirectory(
   dirHandle: any,
@@ -93,74 +95,70 @@ function App() {
   return (
     <div className="App">
       {data !== null && dataForMap ? (
-        <div className="MainContainer">
-          <div className="MainContainerTopBar">
-              <input type="button" onClick={() => setIsOpen(!isOpen)} />
-          </div>
-          <div className="MainContainerContent">
-            <motion.div
-              className="SideBarContainer"
-              animate={{
-                width: isOpen ? '20%' : 0,
-                opacity: isOpen ? 1 : 0,
+        <NavigationLayout
+          isOpen={isOpen}
+          navbar={
+            <button
+              style={{
+                background: "none",
+                border: "none",
+                padding: 0,
+                cursor: "pointer",
+                fontSize: "1.5rem",
               }}
-              initial={{ width: 0, opacity: 0 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
+              onClick={() => setIsOpen(!isOpen)}
             >
-              <Sidebar className="SideBar">
-                <Menu>
-                  <SubMenu label="Trips">
-                    {/* <MenuItem> Pie charts </MenuItem> */}
-                    {groupByYear(data).map(({ year, groupedData }) => (
-                      <SubMenu label={year} key={year}>
-                        {Object.entries(groupedData).map(
-                          ([travelId, travelContent]) => (
-                            <MenuItem
-                              key={travelId}
-                              onClick={() => {
-                                const newData = { ...dataForMap };
-                                if (dataForMap[travelId] == null) {
-                                  newData[travelId] = travelContent;
-                                } else {
-                                  delete newData[travelId];
-                                }
-                                setDataForMap(newData);
-                              }}
-                            >
-                              <input
-                                type="checkbox"
-                                onChange={() => ({})}
-                                checked={dataForMap[travelId] != null}
-                                style={{
-                                  marginRight: "10px",
-                                  pointerEvents: "none",
-                                }}
-                              />
-                              {travelContent.info.id}
-                            </MenuItem>
-                          )
-                        )}
-                      </SubMenu>
-                    ))}
+              <i className={`bi ${isOpen ? "bi-x" : "bi-list"}`}></i>
+            </button>
+          }
+          sidebar={
+            <Menu>
+              <SubMenu label="Trips">
+                {groupByYear(data).map(({ year, groupedData }) => (
+                  <SubMenu label={year} key={year}>
+                    {Object.entries(groupedData).map(
+                      ([travelId, travelContent]) => (
+                        <MenuItem
+                          key={travelId}
+                          onClick={() => {
+                            const newData = { ...dataForMap };
+                            if (dataForMap[travelId] == null) {
+                              newData[travelId] = travelContent;
+                            } else {
+                              delete newData[travelId];
+                            }
+                            setDataForMap(newData);
+                          }}
+                        >
+                          <input
+                            type="checkbox"
+                            onChange={() => ({})}
+                            checked={dataForMap[travelId] != null}
+                            style={{
+                              marginRight: "10px",
+                              pointerEvents: "none",
+                            }}
+                          />
+                          {travelContent.info.id}
+                        </MenuItem>
+                      )
+                    )}
                   </SubMenu>
-                  <MenuItem onClick={() => setShowJournies(!showJournies)}>
-                    <input
-                      type="checkbox"
-                      onChange={() => ({})}
-                      checked={showJournies}
-                      style={{ marginRight: "10px", pointerEvents: "none" }}
-                    />
-                    Show journies
-                  </MenuItem>
-                </Menu>
-              </Sidebar>
-            </motion.div>
-
-            <div className="MapContainer">
-              <Map data={dataForMap} showJournies={showJournies} />
-            </div>
-          </div>
-        </div>
+                ))}
+              </SubMenu>
+              <MenuItem onClick={() => setShowJournies(!showJournies)}>
+                <input
+                  type="checkbox"
+                  onChange={() => ({})}
+                  checked={showJournies}
+                  style={{ marginRight: "10px", pointerEvents: "none" }}
+                />
+                Show journies
+              </MenuItem>
+            </Menu>
+          }
+          content={<Map data={dataForMap} showJournies={showJournies} />}
+        ></NavigationLayout>
       ) : (
         <div className="initial-select-container">
           <button

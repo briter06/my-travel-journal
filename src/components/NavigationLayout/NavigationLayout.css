@@ -1,0 +1,36 @@
+.MainContainer {
+  width: 100vw;
+  height: 100vh;
+}
+
+.MainContainerContent {
+  text-align: center;
+  width: 100%;
+  display: flex;
+}
+
+.MainContainerTopBar {
+  text-align: center;
+  width: 100%;
+  height: 40px; /* fixed navbar height */
+  display: flex; /* enable flexbox */
+  align-items: center; /* vertically center content */
+  justify-content: space-between; /* optional: spread items horizontally */
+}
+
+.SideBar {
+  text-align: left;
+  width: 100% !important;
+  height: 100%;
+}
+
+.SideBarContainer {
+  text-align: left;
+  width: 20%;
+  height: 100%;
+}
+
+.NavigationContent {
+  width: 100%;
+  height: 100%;
+}
