@@ -6,6 +6,7 @@ import { useState } from "react";
 import chroma from "chroma-js";
 import moment from "moment";
 import { Sidebar, Menu, SubMenu, MenuItem } from "react-pro-sidebar";
+import { motion } from "framer-motion";
 
 async function readDirectory(
   dirHandle: any,
@@ -85,6 +86,7 @@ const loadData = async () => {
 function App() {
   const [data, setData] = useState<Data | null>(null);
   const [dataForMap, setDataForMap] = useState<Data | null>(null);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const [showJournies, setShowJournies] = useState<boolean>(true);
 
@@ -92,55 +94,71 @@ function App() {
     <div className="App">
       {data !== null && dataForMap ? (
         <div className="MainContainer">
-          <Sidebar className="SideBar">
-            <Menu>
-              <SubMenu label="Trips">
-                {/* <MenuItem> Pie charts </MenuItem> */}
-                {groupByYear(data).map(({ year, groupedData }) => (
-                  <SubMenu label={year} key={year}>
-                    {Object.entries(groupedData).map(
-                      ([travelId, travelContent]) => (
-                        <MenuItem
-                          key={travelId}
-                          onClick={() => {
-                            const newData = { ...dataForMap };
-                            if (dataForMap[travelId] == null) {
-                              newData[travelId] = travelContent;
-                            } else {
-                              delete newData[travelId];
-                            }
-                            setDataForMap(newData);
-                          }}
-                        >
-                          <input
-                            type="checkbox"
-                            onChange={() => ({})}
-                            checked={dataForMap[travelId] != null}
-                            style={{
-                              marginRight: "10px",
-                              pointerEvents: "none",
-                            }}
-                          />
-                          {travelContent.info.id}
-                        </MenuItem>
-                      )
-                    )}
+          <div className="MainContainerTopBar">
+              <input type="button" onClick={() => setIsOpen(!isOpen)} />
+          </div>
+          <div className="MainContainerContent">
+            <motion.div
+              className="SideBarContainer"
+              animate={{
+                width: isOpen ? '20%' : 0,
+                opacity: isOpen ? 1 : 0,
+              }}
+              initial={{ width: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+            >
+              <Sidebar className="SideBar">
+                <Menu>
+                  <SubMenu label="Trips">
+                    {/* <MenuItem> Pie charts </MenuItem> */}
+                    {groupByYear(data).map(({ year, groupedData }) => (
+                      <SubMenu label={year} key={year}>
+                        {Object.entries(groupedData).map(
+                          ([travelId, travelContent]) => (
+                            <MenuItem
+                              key={travelId}
+                              onClick={() => {
+                                const newData = { ...dataForMap };
+                                if (dataForMap[travelId] == null) {
+                                  newData[travelId] = travelContent;
+                                } else {
+                                  delete newData[travelId];
+                                }
+                                setDataForMap(newData);
+                              }}
+                            >
+                              <input
+                                type="checkbox"
+                                onChange={() => ({})}
+                                checked={dataForMap[travelId] != null}
+                                style={{
+                                  marginRight: "10px",
+                                  pointerEvents: "none",
+                                }}
+                              />
+                              {travelContent.info.id}
+                            </MenuItem>
+                          )
+                        )}
+                      </SubMenu>
+                    ))}
                   </SubMenu>
-                ))}
-              </SubMenu>
-              <MenuItem onClick={() => setShowJournies(!showJournies)}>
-                <input
-                  type="checkbox"
-                  checked={showJournies}
-                  style={{ marginRight: "10px", pointerEvents: "none" }}
-                />
-                Show journies
-              </MenuItem>
-            </Menu>
-          </Sidebar>
+                  <MenuItem onClick={() => setShowJournies(!showJournies)}>
+                    <input
+                      type="checkbox"
+                      onChange={() => ({})}
+                      checked={showJournies}
+                      style={{ marginRight: "10px", pointerEvents: "none" }}
+                    />
+                    Show journies
+                  </MenuItem>
+                </Menu>
+              </Sidebar>
+            </motion.div>
 
-          <div className="MapContainer">
-            <Map data={dataForMap} showJournies={showJournies} />
+            <div className="MapContainer">
+              <Map data={dataForMap} showJournies={showJournies} />
+            </div>
           </div>
         </div>
       ) : (
