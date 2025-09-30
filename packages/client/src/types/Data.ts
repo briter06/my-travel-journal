@@ -1,5 +1,5 @@
-import { Moment } from "moment";
-import { Place, Trip } from "./Place";
+import { Moment } from 'moment';
+import { Place, Trip } from './Place';
 
 export type Data = Record<string, DataContent>;
 

@@ -1,9 +1,9 @@
-import { v4 } from "uuid";
+import { v4 } from 'uuid';
 
 export const createMarker = (
-  colorMarker = "red",
-  icon = "circle-fill",
-  colorIcon = "white"
+  colorMarker = 'red',
+  icon = 'circle-fill',
+  colorIcon = 'white',
 ) => {
   const uuid = v4();
   return `
