@@ -13,6 +13,7 @@
     "test": "lerna run test",
     "client": "lerna run start --scope @tj/client",
     "server": "lerna run start --scope @tj/server",
+    "server:prod": "cd packages/server && node .",
     "heroku-postbuild": "yarn build"
   },
   "dependencies": {},
