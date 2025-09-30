@@ -8,7 +8,7 @@ import L from 'leaflet';
 import 'leaflet-extra-markers';
 import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css';
 import DirectedLine from '../DirectedLine/DirectedLine';
-import { Data } from '@tj/common';
+import { Data } from '@my-travel-journal/common';
 import { mapFilter } from '../../utils/lists';
 import { createMarker } from '../../utils/icon';
 

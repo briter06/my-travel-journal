@@ -2,7 +2,7 @@ import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Map from '../Map/Map';
-import { Data, Place } from '@tj/common';
+import { Data, Place } from '@my-travel-journal/common';
 import { useState } from 'react';
 import chroma from 'chroma-js';
 import moment from 'moment';

@@ -1,5 +1,5 @@
 {
-  "name": "@tj/server",
+  "name": "@my-travel-journal/server",
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
@@ -12,8 +12,13 @@
   "author": "",
   "license": "ISC",
   "description": "",
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/morgan": "^1.9.10"
+  },
   "dependencies": {
-    "express": "^5.1.0"
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "log4js": "^6.9.1",
+    "morgan": "^1.10.1"
   }
 }

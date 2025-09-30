@@ -11,17 +11,17 @@
     "prepare": "husky",
     "build": "lerna run build",
     "test": "lerna run test",
-    "client": "lerna run start --scope @tj/client",
-    "server": "lerna run start --scope @tj/server",
+    "client": "lerna run start --scope @my-travel-journal/client",
+    "server": "lerna run start --scope @my-travel-journal/server",
     "server:prod": "cd packages/server && node .",
     "heroku-postbuild": "yarn build"
   },
   "dependencies": {},
   "devDependencies": {
     "@types/node": "^22.2.0",
-    "@types/jest": "^29.5.12",
-    "@typescript-eslint/eslint-plugin": "^8.0.1",
-    "@typescript-eslint/parser": "^8.0.1",
+    "@types/jest": "^29.5.14",
+    "@typescript-eslint/eslint-plugin": "^8.45.0",
+    "@typescript-eslint/parser": "^8.45.0",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
     "rimraf": "^6.0.1",
@@ -31,12 +31,12 @@
     "lerna": "^8.1.9",
     "lint-staged": "^15.2.8",
     "prettier": "^3.3.3",
-    "ts-jest": "^29.2.4"
+    "ts-jest": "^29.4.4"
   },
   "lint-staged": {
     "*.{js,ts,cjs,cts,mjs,mts}": [
-      "npm run lint:check",
-      "npm run prettier:check"
+      "yarn lint:check",
+      "yarn prettier:check"
     ]
   }
 }

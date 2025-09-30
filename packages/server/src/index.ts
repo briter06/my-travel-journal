@@ -1,5 +1,9 @@
-import express, { Request, Response } from 'express';
+import 'dotenv/config';
+import { logger } from './utils/logger';
+import express from 'express';
 import path from 'path';
+import { apiRouter } from './api';
+import morgan from 'morgan';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -8,17 +12,18 @@ const clientBuildPath = path.join(__dirname, '../../client/build');
 
 app.use(express.static(clientBuildPath));
 
-// Middleware
-app.use(express.json());
+// Morgan middleware
+app.use(
+  morgan(':method :url | Status: :status | Response time: :response-time ms', {
+    stream: {
+      write: (message: string) => {
+        logger.info(message.trim());
+      },
+    },
+  }),
+);
 
-// Routes
-app.get('/api', (_req: Request, res: Response) => {
-  res.send('Hello, TypeScript + Express!');
-});
-
-app.post('/api/echo', (req: Request, res: Response) => {
-  res.json({ youSent: req.body });
-});
+app.use('/api', apiRouter);
 
 app.get('/', (_req, res) => {
   res.sendFile(path.join(clientBuildPath, 'index.html'));
@@ -26,5 +31,5 @@ app.get('/', (_req, res) => {
 
 // Start server
 app.listen(port, () => {
-  console.log(`🚀 Server running at http://localhost:${port}`);
+  logger.info(`Server running at http://localhost:${port}`);
 });
