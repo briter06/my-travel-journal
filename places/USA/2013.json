@@ -1,0 +1,38 @@
+{
+  "info": {
+    "id": "The United States",
+    "date": "2013-01-01"
+  },
+  "places": {
+    "Bogota": {
+      "city": "Bogota",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 4.711,
+        "longitude": -74.0721
+      },
+      "description": ""
+    },
+    "Orlando": {
+      "city": "Orlando",
+      "Country": "The United States",
+      "coordinates": {
+        "latitude": 28.5383,
+        "longitude": -81.3792
+      },
+      "description": ""
+    }
+  },
+  "trips": [
+    {
+      "from": "Bogota",
+      "to": "Orlando",
+      "date": "2013-03-01"
+    },
+    {
+      "from": "Orlando",
+      "to": "Bogota",
+      "date": "2013-03-01"
+    }
+  ]
+}

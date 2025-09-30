@@ -1,0 +1,110 @@
+{
+  "info": {
+    "id": "The United States",
+    "date": "2017-12-01"
+  },
+  "places": {
+    "Bogota": {
+      "city": "Bogota",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 4.711,
+        "longitude": -74.0721
+      },
+      "description": ""
+    },
+    "Los Angeles": {
+      "city": "Los Angeles",
+      "country": "United States",
+      "coordinates": {
+        "latitude": 34.0522,
+        "longitude": -118.2437
+      },
+      "description": ""
+    },
+    "San Diego": {
+      "city": "San Diego",
+      "country": "United States",
+      "coordinates": {
+        "latitude": 32.7157,
+        "longitude": -117.1611
+      },
+      "description": ""
+    },
+    "Las Vegas": {
+      "city": "Las Vegas",
+      "country": "United States",
+      "coordinates": {
+        "latitude": 36.1699,
+        "longitude": -115.1398
+      },
+      "description": ""
+    },
+    "Grand Canyon": {
+      "name": "Grand Canyon",
+      "city": "Tusayan",
+      "country": "United States",
+      "coordinates": {
+        "latitude": 36.1069,
+        "longitude": -112.1129
+      },
+      "description": ""
+    },
+    "Antelope Canyon": {
+      "name": "Antelope Canyon",
+      "city": "Page",
+      "country": "United States",
+      "coordinates": {
+        "latitude": 36.8619,
+        "longitude": -111.3743
+      },
+      "description": ""
+    },
+    "San Francisco": {
+      "city": "San Francisco",
+      "country": "United States",
+      "coordinates": {
+        "latitude": 37.7749,
+        "longitude": -122.4194
+      },
+      "description": ""
+    }
+  },
+  "trips": [
+    {
+      "from": "Bogota",
+      "to": "Los Angeles",
+      "date": "2017-12-16"
+    },
+    {
+      "from": "Los Angeles",
+      "to": "San Diego",
+      "date": "2017-12-19"
+    },
+    {
+      "from": "San Diego",
+      "to": "Las Vegas",
+      "date": "2017-12-22"
+    },
+    {
+      "from": "Las Vegas",
+      "to": "Grand Canyon",
+      "date": "2017-12-26"
+    },
+    {
+      "from": "Grand Canyon",
+      "to": "Antelope Canyon",
+      "date": "2017-12-26"
+    },
+    {
+      "from": "Antelope Canyon",
+      "to": "San Francisco",
+      "date": "2017-12-26"
+    },
+    {
+      "from": "San Francisco",
+      "to": "Bogota",
+      "date": "2018-01-02"
+    }
+  ]
+}

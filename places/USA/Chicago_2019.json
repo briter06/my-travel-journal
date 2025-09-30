@@ -1,0 +1,38 @@
+{
+  "info": {
+    "id": "The United States",
+    "date": "2019-04-01"
+  },
+  "places": {
+    "Bogota": {
+      "city": "Bogota",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 4.711,
+        "longitude": -74.0721
+      },
+      "description": ""
+    },
+    "Chicago": {
+      "city": "Chicago",
+      "country": "United States",
+      "coordinates": {
+        "latitude": 41.8781,
+        "longitude": -87.6298
+      },
+      "description": ""
+    }
+  },
+  "trips": [
+    {
+      "from": "Bogota",
+      "to": "Chicago",
+      "date": "2019-04-17"
+    },
+    {
+      "from": "Chicago",
+      "to": "Bogota",
+      "date": "2019-04-25"
+    }
+  ]
+}

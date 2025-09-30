@@ -55,7 +55,11 @@ const Map: React.FC<MapData> = ({ data, showJournies }) => {
                   icon={icon}
                 >
                   <Popup>
-                    <b>{place.name ?? place.city}</b>
+                    <b>
+                      {place.name
+                        ? `${place.name} - ${place.city}`
+                        : place.city}
+                    </b>
                     {place.description ? (
                       <div>
                         <br />
@@ -82,9 +86,9 @@ const Map: React.FC<MapData> = ({ data, showJournies }) => {
                       ]}
                       color={color}
                       popup={`<b>${
-                        places[trip.from].name ?? places[trip.from].city
+                        places[trip.from].city
                       } <i class="bi-caret-right-fill"></i> ${
-                        places[trip.to].name ?? places[trip.to].city
+                        places[trip.to].city
                       }</b> <br/> ${new Date(trip.date).toLocaleString(
                         undefined,
                         {

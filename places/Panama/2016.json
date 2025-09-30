@@ -1,0 +1,55 @@
+{
+  "info": {
+    "id": "Panama",
+    "date": "2016-12-01"
+  },
+  "places": {
+    "Bogota": {
+      "city": "Bogota",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 4.711,
+        "longitude": -74.0721
+      }
+    },
+    "Panama City": {
+      "city": "Panama City",
+      "country": "Panama",
+      "coordinates": {
+        "latitude": 8.9833,
+        "longitude": -79.5167
+      }
+    },
+    "Farallon": {
+      "name": "Royal Decameron Panama",
+      "city": "Farallón",
+      "country": "Panama",
+      "coordinates": {
+        "latitude": 8.3649,
+        "longitude": -80.1264
+      }
+    }
+  },
+  "trips": [
+    {
+      "from": "Bogota",
+      "to": "Panama City",
+      "date": "2016-12-01"
+    },
+    {
+      "from": "Panama City",
+      "to": "Farallon",
+      "date": "2016-12-01"
+    },
+    {
+      "from": "Farallon",
+      "to": "Panama City",
+      "date": "2016-12-10"
+    },
+    {
+      "from": "Panama City",
+      "to": "Bogota",
+      "date": "2016-12-10"
+    }
+  ]
+}

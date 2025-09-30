@@ -1,0 +1,76 @@
+{
+  "info": {
+    "id": "Mexico",
+    "date": "2018-12-01"
+  },
+  "places": {
+    "Bogota": {
+      "city": "Bogota",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 4.711,
+        "longitude": -74.0721
+      },
+      "description": ""
+    },
+    "Mexico City": {
+      "city": "Mexico City",
+      "country": "Mexico",
+      "coordinates": {
+        "latitude": 19.4326,
+        "longitude": -99.1332
+      },
+      "description": ""
+    },
+    "Cancun": {
+      "city": "Cancun",
+      "country": "Mexico",
+      "coordinates": {
+        "latitude": 21.1619,
+        "longitude": -86.8515
+      },
+      "description": ""
+    },
+    "Chichen Itza": {
+      "name": "Chichén-Itzá",
+      "city": "Piste",
+      "country": "Mexico",
+      "coordinates": {
+        "latitude": 20.6829,
+        "longitude": -88.5686
+      },
+      "description": ""
+    },
+    "Isla Mujeres": {
+      "city": "Isla Mujeres",
+      "country": "Mexico",
+      "coordinates": {
+        "latitude": 21.2310,
+        "longitude": -86.7316
+      },
+      "description": ""
+    }
+  },
+  "trips": [
+    {
+      "from": "Bogota",
+      "to": "Mexico City",
+      "date": "2018-12-20"
+    },
+    {
+      "from": "Mexico City",
+      "to": "Cancun",
+      "date": "2018-12-26"
+    },
+    {
+      "from": "Cancun",
+      "to": "Mexico City",
+      "date": "2019-01-02"
+    },
+    {
+      "from": "Mexico City",
+      "to": "Bogota",
+      "date": "2019-01-02"
+    }
+  ]
+}

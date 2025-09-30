@@ -1,0 +1,52 @@
+{
+  "info": {
+    "id": "The United States",
+    "date": "2022-04-01"
+  },
+  "places": {
+    "Bogota": {
+      "city": "Bogota",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 4.711,
+        "longitude": -74.0721
+      },
+      "description": ""
+    },
+    "Orlando": {
+      "city": "Orlando",
+      "country": "United States",
+      "coordinates": {
+        "latitude": 28.5383,
+        "longitude": -81.3792
+      },
+      "description": ""
+    },
+    "Miami": {
+      "city": "Miami",
+      "country": "United States",
+      "coordinates": {
+        "latitude": 25.7617,
+        "longitude": -80.1918
+      },
+      "description": ""
+    }
+  },
+  "trips": [
+    {
+      "from": "Bogota",
+      "to": "Orlando",
+      "date": "2022-04-01"
+    },
+    {
+      "from": "Orlando",
+      "to": "Miami",
+      "date": "2022-04-06"
+    },
+    {
+      "from": "Miami",
+      "to": "Bogota",
+      "date": "2022-04-10"
+    }
+  ]
+}

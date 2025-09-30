@@ -1,0 +1,154 @@
+{
+  "info": {
+    "id": "Europe",
+    "date": "2016-06-01"
+  },
+  "places": {
+    "Bogota": {
+      "city": "Bogota",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 4.711,
+        "longitude": -74.0721
+      },
+      "description": ""
+    },
+    "Madrid": {
+      "city": "Madrid",
+      "country": "Spain",
+      "coordinates": {
+        "latitude": 40.4168,
+        "longitude": -3.7038
+      },
+      "description": ""
+    },
+    "Zaragoza": {
+      "city": "Zaragoza",
+      "country": "Spain",
+      "coordinates": {
+        "latitude": 41.6488,
+        "longitude": -0.8891
+      },
+      "description": ""
+    },
+    "Barcelona": {
+      "city": "Barcelona",
+      "country": "Spain",
+      "coordinates": {
+        "latitude": 41.3851,
+        "longitude": 2.1734
+      },
+      "description": ""
+    },
+    "Rome": {
+      "city": "Rome",
+      "country": "Italy",
+      "coordinates": {
+        "latitude": 41.9028,
+        "longitude": 12.4964
+      },
+      "description": ""
+    },
+    "Vatican City": {
+      "city": "Vatican City",
+      "country": "Vatican",
+      "coordinates": {
+        "latitude": 41.9029,
+        "longitude": 12.4534
+      },
+      "description": ""
+    },
+    "Pisa": {
+      "city": "Pisa",
+      "country": "Italy",
+      "coordinates": {
+        "latitude": 43.7228,
+        "longitude": 10.4017
+      },
+      "description": ""
+    },
+    "Florence": {
+      "city": "Florence",
+      "country": "Italy",
+      "coordinates": {
+        "latitude": 43.7696,
+        "longitude": 11.2558
+      },
+      "description": ""
+    },
+    "Venecia": {
+      "city": "Venecia",
+      "country": "Italy",
+      "coordinates": {
+        "latitude": 45.4408,
+        "longitude": 12.3155
+      },
+      "description": ""
+    },
+    "Paris": {
+      "city": "Paris",
+      "country": "France",
+      "coordinates": {
+        "latitude": 48.8566,
+        "longitude": 2.3522
+      },
+      "description": ""
+    },
+    "London": {
+      "city": "London",
+      "country": "United Kingdom",
+      "coordinates": {
+        "latitude": 51.5074,
+        "longitude": -0.1278
+      },
+      "description": ""
+    }
+  },
+  "trips": [
+    {
+      "from": "Bogota",
+      "to": "Madrid",
+      "date": "2016-06-02"
+    },
+    {
+      "from": "Madrid",
+      "to": "Zaragoza",
+      "date": "2016-06-02"
+    },
+    {
+      "from": "Zaragoza",
+      "to": "Barcelona",
+      "date": "2016-06-03"
+    },
+    {
+      "from": "Barcelona",
+      "to": "Rome",
+      "date": "2016-06-05"
+    },
+    {
+      "from": "Rome",
+      "to": "Florence",
+      "date": "2016-06-07"
+    },
+    {
+      "from": "Florence",
+      "to": "Paris",
+      "date": "2016-06-10"
+    },
+    {
+      "from": "Paris",
+      "to": "London",
+      "date": "2016-06-15"
+    },
+    {
+      "from": "London",
+      "to": "Madrid",
+      "date": "2016-06-18"
+    },
+    {
+      "from": "Madrid",
+      "to": "Bogota",
+      "date": "2016-06-21"
+    }
+  ]
+}

@@ -101,6 +101,33 @@
         "longitude": -74.8075
       },
       "description": ""
+    },
+    "12": {
+      "city": "Armenia",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 4.535,
+        "longitude": -75.67569
+      },
+      "description": ""
+    },
+    "13": {
+      "city": "Medellin",
+      "country": "Colombia",
+      "coordinates": {
+        "latitude": 6.2476,
+        "longitude": -75.5658
+      },
+      "description": ""
+    },
+    "14": {
+      "city": "Bordeaux",
+      "country": "France",
+      "coordinates": {
+        "latitude": 44.8416,
+        "longitude": -0.5811
+      },
+      "description": ""
     }
   },
   "trips": []
