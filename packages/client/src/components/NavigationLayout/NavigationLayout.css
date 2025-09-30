@@ -6,13 +6,14 @@
 .MainContainerContent {
   text-align: center;
   width: 100%;
+  height: 92%;
   display: flex;
 }
 
 .MainContainerTopBar {
   text-align: center;
   width: 100%;
-  height: 40px; /* fixed navbar height */
+  height: 8%; /* fixed navbar height */
   display: flex; /* enable flexbox */
   align-items: center; /* vertically center content */
   justify-content: space-between; /* optional: spread items horizontally */

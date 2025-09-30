@@ -1,20 +1,19 @@
 {
-  "name": "server",
+  "name": "@tj/server",
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {
     "test": "jest --coverage",
     "test:update": "jest --updateSnapshot",
     "clean": "rimraf dist",
-    "build": "npm run clean && tsc"
+    "build": "yarn clean && tsc",
+    "start": "yarn build && node ."
   },
   "author": "",
   "license": "ISC",
   "description": "",
-  "devDependencies": {
-    "rimraf": "^6.0.1",
-    "@types/node": "^22.2.0",
-    "typescript": "^5.5.4"
-  },
-  "dependencies": {}
+  "devDependencies": {},
+  "dependencies": {
+    "express": "^5.1.0"
+  }
 }

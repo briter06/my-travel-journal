@@ -1,38 +1,48 @@
-import "./App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap-icons/font/bootstrap-icons.css";
-import Map from "../Map/Map";
-import { Data } from "../../types/Data";
-import { Place } from "../../types/Place";
-import { useState } from "react";
-import chroma from "chroma-js";
-import moment from "moment";
-import { Menu, SubMenu, MenuItem } from "react-pro-sidebar";
-import NavigationLayout from "../NavigationLayout/NavigationLayout";
+import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import Map from '../Map/Map';
+import { Data, Place } from '@tj/common';
+import { useState } from 'react';
+import chroma from 'chroma-js';
+import moment from 'moment';
+import { Menu, SubMenu, MenuItem } from 'react-pro-sidebar';
+import NavigationLayout from '../NavigationLayout/NavigationLayout';
+
+async function readFileSafe(file: File): Promise<string> {
+  let retries = 3;
+  while (retries > 0) {
+    const text = await file.text();
+    if (text.length > 0) return text;
+    retries--;
+    await new Promise(r => setTimeout(r, 10)); // small delay
+  }
+  throw new Error(`File ${file.name} is empty after retries`);
+}
 
 async function readDirectory(
   dirHandle: any,
   parentPath: string,
-  result: { data: Data }
+  result: { data: Data },
 ) {
   try {
     for await (const entry of dirHandle.values()) {
       const fullPath = parentPath ? `${parentPath}/${entry.name}` : entry.name;
-      if (entry.kind === "file") {
+      if (entry.kind === 'file') {
         const file = await entry.getFile();
-        const { info, places, trips } = JSON.parse(await file.text());
+        const { info, places, trips } = JSON.parse(await readFileSafe(file));
         const newInfo = {
           id: info.id,
           date: info.date ? moment(info.date) : undefined,
         };
         const travelId = `${info.id}_${
-          newInfo.date?.format("YYYY-MM") ?? "undefined"
+          newInfo.date?.format('YYYY-MM') ?? 'undefined'
         }`;
         result.data[travelId] = {
           info: newInfo,
           places: {},
           trips: [],
-          color: "",
+          color: '',
         };
         const placesEntries = Object.entries(places);
         for (const [placeId, place] of placesEntries) {
@@ -46,19 +56,19 @@ async function readDirectory(
             date: trip.date,
           });
         }
-      } else if (entry.kind === "directory") {
+      } else if (entry.kind === 'directory') {
         await readDirectory(entry, fullPath, result);
       }
     }
   } catch (err) {
-    console.error("Access denied or cancelled", err);
+    console.error('Access denied or cancelled', err);
   }
 }
 
 const groupByYear = (data: Data) => {
   const grouped: Record<string, Data> = {};
   for (const [id, content] of Object.entries(data)) {
-    const index = content.info.date?.year()?.toString() ?? "Other";
+    const index = content.info.date?.year()?.toString() ?? 'Other';
     if (grouped[index] == null) {
       grouped[index] = {};
     }
@@ -75,13 +85,13 @@ const groupByYear = (data: Data) => {
 const loadData = async () => {
   const data: Data = {};
   const folderHandle = await (window as any).showDirectoryPicker();
-  await readDirectory(folderHandle, "", { data });
+  await readDirectory(folderHandle, '', { data });
   const keys = Object.keys(data);
-  const colors = chroma.scale("Set1").colors(keys.length);
+  const colors = chroma.scale('Set1').colors(keys.length);
   for (let i = 0; i < keys.length; i++) {
     data[keys[i]].color = colors[i];
   }
-  console.log("Loaded data:", data);
+  console.log('Loaded data:', data);
   return data;
 };
 
@@ -98,18 +108,30 @@ function App() {
         <NavigationLayout
           isOpen={isOpen}
           navbar={
-            <button
-              style={{
-                background: "none",
-                border: "none",
-                padding: 0,
-                cursor: "pointer",
-                fontSize: "1.5rem",
-              }}
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              <i className={`bi ${isOpen ? "bi-x" : "bi-list"}`}></i>
-            </button>
+            <div style={{ display: 'flex' }}>
+              <button
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  cursor: 'pointer',
+                  fontSize: '1.5rem',
+                }}
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                <i className={`bi ${isOpen ? 'bi-x' : 'bi-list'}`}></i>
+              </button>
+              <div
+                style={{
+                  textAlign: 'center',
+                  width: '100%',
+                  fontFamily: 'Pacifico, cursive',
+                  fontSize: '1.4rem',
+                }}
+              >
+                My Travel Journal
+              </div>
+            </div>
           }
           sidebar={
             <Menu>
@@ -135,13 +157,13 @@ function App() {
                             onChange={() => ({})}
                             checked={dataForMap[travelId] != null}
                             style={{
-                              marginRight: "10px",
-                              pointerEvents: "none",
+                              marginRight: '10px',
+                              pointerEvents: 'none',
                             }}
                           />
                           {travelContent.info.id}
                         </MenuItem>
-                      )
+                      ),
                     )}
                   </SubMenu>
                 ))}
@@ -151,7 +173,7 @@ function App() {
                   type="checkbox"
                   onChange={() => ({})}
                   checked={showJournies}
-                  style={{ marginRight: "10px", pointerEvents: "none" }}
+                  style={{ marginRight: '10px', pointerEvents: 'none' }}
                 />
                 Show journies
               </MenuItem>

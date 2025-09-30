@@ -11,16 +11,20 @@
     "prepare": "husky",
     "build": "lerna run build",
     "test": "lerna run test",
-    "client": "lerna run start --scope client",
-    "server": "lerna run start --scope server"
+    "client": "lerna run start --scope @tj/client",
+    "server": "lerna run start --scope @tj/server",
+    "heroku-postbuild": "yarn build"
   },
   "dependencies": {},
   "devDependencies": {
+    "@types/node": "^22.2.0",
     "@types/jest": "^29.5.12",
     "@typescript-eslint/eslint-plugin": "^8.0.1",
     "@typescript-eslint/parser": "^8.0.1",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.1.0",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.5.4",
     "husky": "^9.1.4",
     "jest": "^29.7.0",
     "lerna": "^8.1.9",

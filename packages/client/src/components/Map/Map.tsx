@@ -1,16 +1,16 @@
-import "./Map.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap-icons/font/bootstrap-icons.css";
-import React from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
-import "leaflet-extra-markers";
-import "leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css";
-import DirectedLine from "../DirectedLine/DirectedLine";
-import { Data } from "../../types/Data";
-import { mapFilter } from "../../utils/lists";
-import { createMarker } from "../../utils/icon";
+import './Map.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import React from 'react';
+import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+import 'leaflet-extra-markers';
+import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css';
+import DirectedLine from '../DirectedLine/DirectedLine';
+import { Data } from '@tj/common';
+import { mapFilter } from '../../utils/lists';
+import { createMarker } from '../../utils/icon';
 
 const CENTER_OF_MAP: [number, number] = [40.5, -40.0];
 
@@ -37,7 +37,7 @@ const Map: React.FC<MapData> = ({ data, showJournies }) => {
 
       {mapFilter(
         travelEntries,
-        (elem) => true,
+        elem => true,
         ([travelId, { places, trips, color }]) => (
           <div key={travelId}>
             {Object.entries(places).map(([placeId, place]) => {
@@ -72,7 +72,7 @@ const Map: React.FC<MapData> = ({ data, showJournies }) => {
             })}
 
             {showJournies
-              ? trips.map((trip) => {
+              ? trips.map(trip => {
                   const { latitude: la1, longitude: lo1 } =
                     places[trip.from].coordinates;
                   const { latitude: la2, longitude: lo2 } =
@@ -92,18 +92,18 @@ const Map: React.FC<MapData> = ({ data, showJournies }) => {
                       }</b> <br/> ${new Date(trip.date).toLocaleString(
                         undefined,
                         {
-                          weekday: "long",
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        }
+                          weekday: 'long',
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        },
                       )}`}
                     />
                   );
                 })
               : null}
           </div>
-        )
+        ),
       )}
     </MapContainer>
   );

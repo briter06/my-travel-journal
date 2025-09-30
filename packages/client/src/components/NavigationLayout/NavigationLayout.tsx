@@ -19,7 +19,7 @@ function NavigationLayout({
   return (
     <div className="MainContainer">
       <div className="MainContainerTopBar">
-        <div style={{padding: '0 15px'}}>
+        <div style={{padding: '0 15px', width: '100%'}}>
           {navbar}
         </div>
       </div>
