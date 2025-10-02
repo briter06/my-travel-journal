@@ -9,8 +9,8 @@
     "packages/*"
   ],
   "scripts": {
-    "lint:check": "eslint --ignore-path .gitignore --ext .ts .",
-    "lint:write": "eslint --ignore-path .gitignore --ext .ts --fix .",
+    "lint:check": "eslint --ext .ts,.tsx .",
+    "lint:write": "eslint --ext .ts,.tsx --fix .",
     "prettier:check": "prettier --check --ignore-path .gitignore \"**/*.+(js|ts)\"",
     "prettier:write": "prettier --write --ignore-path .gitignore \"**/*.+(js|ts)\"",
     "prepare": "husky",
@@ -26,7 +26,7 @@
     "@types/node": "^22.2.0",
     "@typescript-eslint/eslint-plugin": "^8.45.0",
     "@typescript-eslint/parser": "^8.45.0",
-    "eslint": "^8.57.1",
+    "eslint": "^9.36.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.5.4",
     "husky": "^9.1.4",

@@ -64,6 +64,9 @@ tripsRouter.get(
         })),
       };
     }
-    res.json(result);
+    res.json({
+      trips: result,
+      username: req.username,
+    });
   }),
 );

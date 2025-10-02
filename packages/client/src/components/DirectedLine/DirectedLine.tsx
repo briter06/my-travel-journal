@@ -27,13 +27,13 @@ const DirectedLine: React.FC<DirectedLineProps> = ({
       .bindPopup(popup);
 
     // Add filled arrow decorator
-    const decorator = (L as any)
+    const decorator = L
       .polylineDecorator(polyline, {
         patterns: [
           {
             offset: "70%", // middle of the line
             repeat: 0, // only one arrow
-            symbol: (L as any).Symbol.arrowHead({
+            symbol: L.Symbol.arrowHead({
               pixelSize: size,
               polygon: true, // filled arrow
               pathOptions: { color, weight: 1, fillOpacity: 1 },

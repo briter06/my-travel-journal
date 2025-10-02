@@ -2,14 +2,19 @@ import axios from 'axios';
 import { environment } from '../env/environment';
 import { Trips } from '@my-travel-journal/common';
 
-export const getTrips = async (): Promise<Trips | null> => {
+type GetTripsResult = {
+  username: string;
+  trips: Trips;
+};
+
+export const getTrips = async (): Promise<GetTripsResult | null> => {
   try {
     const result = await axios.get(`${environment.apiUrl}/trips`, {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     });
-    return result.data;
+    return result.data as GetTripsResult;
   } catch (err) {
     return null;
   }

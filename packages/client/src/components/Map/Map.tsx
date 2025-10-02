@@ -41,7 +41,7 @@ const Map: React.FC<MapData> = ({ data, showJournies }) => {
         ([travelId, { places, journeys, color }]) => (
           <div key={travelId}>
             {Object.entries(places).map(([placeId, place]) => {
-              const icon = (L as any).ExtraMarkers.icon({
+              const icon = L.ExtraMarkers.icon({
                 svg: true,
                 innerHTML: createMarker(color),
               });
