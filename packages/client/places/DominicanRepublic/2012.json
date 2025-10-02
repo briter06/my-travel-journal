@@ -15,7 +15,7 @@
     },
     "Punta Cana": {
       "city": "Punta Cana",
-      "Country": "Dominican Republic",
+      "country": "Dominican Republic",
       "coordinates": {
         "latitude": 18.5818,
         "longitude": -68.4043
@@ -24,7 +24,7 @@
     },
     "Santo Domingo": {
       "city": "Santo Domingo",
-      "Country": "Dominican Republic",
+      "country": "Dominican Republic",
       "coordinates": {
         "latitude": 18.483402,
         "longitude": -69.929611

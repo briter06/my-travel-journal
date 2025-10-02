@@ -1,15 +1,12 @@
-import { Coordinates } from './Coordinates';
-
 export type Place = {
-  name?: string;
+  name: string | null;
   city: string;
   country: string;
   coordinates: Coordinates;
-  description: string;
+  description: string | null;
 };
 
-export type Trip = {
-  from: string;
-  to: string;
-  date: string;
+export type Coordinates = {
+  latitude: number;
+  longitude: number;
 };

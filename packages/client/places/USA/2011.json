@@ -15,7 +15,7 @@
     },
     "Orlando": {
       "city": "Orlando",
-      "Country": "The United States",
+      "country": "The United States",
       "coordinates": {
         "latitude": 28.5383,
         "longitude": -81.3792
@@ -24,7 +24,7 @@
     },
     "Tampa": {
       "city": "Tampa",
-      "Country": "The United States",
+      "country": "The United States",
       "coordinates": {
         "latitude": 27.964157,
         "longitude": -82.452606
@@ -33,7 +33,7 @@
     },
     "Washington": {
       "city": "Washington",
-      "Country": "The United States",
+      "country": "The United States",
       "coordinates": {
         "latitude": 38.89511,
         "longitude": -77.03637
@@ -42,7 +42,7 @@
     },
     "New York": {
       "city": "New York",
-      "Country": "The United States",
+      "country": "The United States",
       "coordinates": {
         "latitude": 40.712776,
         "longitude": -74.005974
@@ -51,7 +51,7 @@
     },
     "Philadelphia": {
       "city": "Philadelphia",
-      "Country": "The United States",
+      "country": "The United States",
       "coordinates": {
         "latitude": 39.9526,
         "longitude": -75.1652

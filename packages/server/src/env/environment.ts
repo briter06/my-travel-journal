@@ -1,0 +1,28 @@
+import Joi from 'joi';
+
+export type Environment = {
+  DATABASE_MIGRATE: string;
+  JAWSDB: string;
+  LOGGER_LEVEL: string;
+  JWT_SECRET: string;
+  JWT_EXPIRES_IN: number;
+};
+
+const envJoiSchema = Joi.object()
+  .keys({
+    DATABASE_MIGRATE: Joi.string().optional().default('FALSE'),
+    JAWSDB: Joi.string().required(),
+    LOGGER_LEVEL: Joi.string().required(),
+    JWT_SECRET: Joi.string().required(),
+    JWT_EXPIRES_IN: Joi.number().optional(),
+  })
+  .required()
+  .unknown();
+
+const result = envJoiSchema.validate(process.env);
+
+if (result.error != null) {
+  throw new Error(result.error.message);
+}
+
+export const environment: Environment = result.value as Environment;

@@ -1,3 +1,3 @@
-export * from './types/Coordinates';
-export * from './types/Data';
-export * from './types/Place';
+export * from './types/journey.js';
+export * from './types/trip.js';
+export * from './types/place.js';

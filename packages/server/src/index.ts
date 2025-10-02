@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import { connectSequelize } from './db/init';
 import { logger } from './utils/logger';
 import express from 'express';
 import path from 'path';
@@ -29,7 +30,13 @@ app.get('/', (_req, res) => {
   res.sendFile(path.join(clientBuildPath, 'index.html'));
 });
 
-// Start server
-app.listen(port, () => {
-  logger.info(`Server running at http://localhost:${port}`);
-});
+connectSequelize()
+  .then(() => {
+    // Start server
+    app.listen(port, () => {
+      logger.info(`Server running at http://localhost:${port}`);
+    });
+  })
+  .catch(err => {
+    throw err;
+  });
