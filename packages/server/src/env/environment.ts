@@ -2,7 +2,7 @@ import Joi from 'joi';
 
 export type Environment = {
   DATABASE_MIGRATE: string;
-  JAWSDB: string;
+  JAWSDB_URL: string;
   LOGGER_LEVEL: string;
   JWT_SECRET: string;
   JWT_EXPIRES_IN: number;
@@ -11,7 +11,7 @@ export type Environment = {
 const envJoiSchema = Joi.object()
   .keys({
     DATABASE_MIGRATE: Joi.string().optional().default('FALSE'),
-    JAWSDB: Joi.string().required(),
+    JAWSDB_URL: Joi.string().required(),
     LOGGER_LEVEL: Joi.string().required(),
     JWT_SECRET: Joi.string().required(),
     JWT_EXPIRES_IN: Joi.number().optional(),

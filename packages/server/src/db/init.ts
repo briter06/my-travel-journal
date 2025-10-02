@@ -7,9 +7,9 @@ import { _Trip } from './models/trip-model.js';
 import { _User } from './models/user-model.js';
 import { _UserTrip } from './models/user-trip-model.js';
 
-const { JAWSDB, DATABASE_MIGRATE } = environment;
+const { JAWSDB_URL, DATABASE_MIGRATE } = environment;
 
-export const sequelize = new Sequelize(JAWSDB, {
+export const sequelize = new Sequelize(JAWSDB_URL, {
   dialect: 'mysql',
   logging: false,
 });
