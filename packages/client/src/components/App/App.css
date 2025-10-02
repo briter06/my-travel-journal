@@ -6,7 +6,7 @@
   height: 100vh;
 }
 
-.MapContainer{
+.MapContainer {
   width: 100%;
   height: 100%;
 }
@@ -23,33 +23,47 @@
 }
 
 .initial-select-container {
-  height: 100vh;
-  display: flex;
+  width: 100%;
+  height: 100%;
+  padding-top: 10%;
   justify-content: center;
   align-items: center;
-  background: #f0f8ff; /* Soft background */
+  background: #f0f8ff;
 }
 
-.select-folder-button {
-  padding: 15px 30px;
-  border-radius: 25px;
-  background: linear-gradient(145deg, #ff9a9e, #fad0c4);
-  color: #fff;
-  font-size: 1.2rem;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s, box-shadow 0.2s;
+.loginForm {
+  background: #fff;
+  margin: auto auto;
+  width: 40%;
+  padding: 1.5rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   text-align: center;
-  display: inline-block;
 }
-
-.select-folder-button:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+.usernameLabel {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: #333;
 }
-
-.select-folder-button:active {
-  transform: translateY(0);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+.usernameInput {
+  width: 100%;
+  padding: 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+.LoginButton {
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  background: #6c63ff;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+button:hover {
+  background: #5548d8;
 }

@@ -1,11 +1,11 @@
 import { Sequelize } from 'sequelize';
-import { environment } from '../env/environment';
-import { logger } from '../utils/logger';
-import { _Place } from './models/place-model';
-import { _Journey } from './models/journey-model';
-import { _Trip } from './models/trip-model';
-import { _User } from './models/user-model';
-import { _UserTrip } from './models/user-trip-model';
+import { environment } from '../env/environment.js';
+import { logger } from '../utils/logger.js';
+import { _Place } from './models/place-model.js';
+import { _Journey } from './models/journey-model.js';
+import { _Trip } from './models/trip-model.js';
+import { _User } from './models/user-model.js';
+import { _UserTrip } from './models/user-trip-model.js';
 
 const { JAWSDB, DATABASE_MIGRATE } = environment;
 

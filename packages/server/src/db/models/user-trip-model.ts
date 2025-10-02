@@ -1,7 +1,7 @@
 // trip-model.ts
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { TripModel } from './trip-model';
-import { UserModel } from './user-model';
+import { TripModel } from './trip-model.js';
+import { UserModel } from './user-model.js';
 
 export class UserTripModel extends Model {
   declare username: string;

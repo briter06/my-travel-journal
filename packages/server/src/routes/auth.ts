@@ -1,9 +1,9 @@
 import express from 'express';
-import { joiMiddleware } from '../middlewares/joi';
+import { joiMiddleware } from '../middlewares/joi.js';
 import Joi from 'joi';
-import * as jwt from 'jsonwebtoken';
-import { environment } from '../env/environment';
-import { UserModel } from '../db/models/user-model';
+import jwt from 'jsonwebtoken';
+import { environment } from '../env/environment.js';
+import { UserModel } from '../db/models/user-model.js';
 import { StatusCodes } from 'http-status-codes';
 import expressAsyncHandler from 'express-async-handler';
 

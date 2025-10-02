@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import * as jwt from 'jsonwebtoken';
-import { environment } from '../env/environment';
-import { UserModel } from '../db/models/user-model';
+import jwt from 'jsonwebtoken';
+import { environment } from '../env/environment.js';
+import { UserModel } from '../db/models/user-model.js';
 
 export const authMiddleware = async (
   req: Request,

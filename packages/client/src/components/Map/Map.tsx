@@ -8,14 +8,14 @@ import L from 'leaflet';
 import 'leaflet-extra-markers';
 import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css';
 import DirectedLine from '../DirectedLine/DirectedLine';
-import { Data } from '@my-travel-journal/common';
 import { mapFilter } from '../../utils/lists';
 import { createMarker } from '../../utils/icon';
+import { Trips } from '@my-travel-journal/common';
 
 const CENTER_OF_MAP: [number, number] = [40.5, -40.0];
 
 interface MapData {
-  data: Data;
+  data: Trips;
   showJournies: boolean;
 }
 
@@ -38,7 +38,7 @@ const Map: React.FC<MapData> = ({ data, showJournies }) => {
       {mapFilter(
         travelEntries,
         elem => true,
-        ([travelId, { places, trips, color }]) => (
+        ([travelId, { places, journeys, color }]) => (
           <div key={travelId}>
             {Object.entries(places).map(([placeId, place]) => {
               const icon = (L as any).ExtraMarkers.icon({
@@ -72,24 +72,24 @@ const Map: React.FC<MapData> = ({ data, showJournies }) => {
             })}
 
             {showJournies
-              ? trips.map(trip => {
+              ? journeys.map(journey => {
                   const { latitude: la1, longitude: lo1 } =
-                    places[trip.from].coordinates;
+                    places[journey.from].coordinates;
                   const { latitude: la2, longitude: lo2 } =
-                    places[trip.to].coordinates;
+                    places[journey.to].coordinates;
                   return (
                     <DirectedLine
-                      key={`trip_${trip.from}_${trip.to}`}
+                      key={`trip_${journey.from}_${journey.to}`}
                       positions={[
                         [la1, lo1],
                         [la2, lo2],
                       ]}
                       color={color}
                       popup={`<b>${
-                        places[trip.from].city
+                        places[journey.from].city
                       } <i class="bi-caret-right-fill"></i> ${
-                        places[trip.to].city
-                      }</b> <br/> ${new Date(trip.date).toLocaleString(
+                        places[journey.to].city
+                      }</b> <br/> ${new Date(journey.date).toLocaleString(
                         undefined,
                         {
                           weekday: 'long',

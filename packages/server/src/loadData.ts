@@ -1,10 +1,10 @@
 import fs from 'fs';
 import path from 'path';
-import { TripModel } from './db/models/trip-model';
-import { PlaceModel } from './db/models/place-model';
-import { JourneyModel } from './db/models/journey-model';
-import { UserTripModel } from './db/models/user-trip-model';
-import { logger } from './utils/logger';
+import { TripModel } from './db/models/trip-model.js';
+import { PlaceModel } from './db/models/place-model.js';
+import { JourneyModel } from './db/models/journey-model.js';
+import { UserTripModel } from './db/models/user-trip-model.js';
+import { logger } from './utils/logger.js';
 import { Place } from '@my-travel-journal/common';
 
 const processTrip = async (username: string, dataS: string) => {

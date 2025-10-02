@@ -1,6 +1,6 @@
 // place-model.ts
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { TripModel } from './trip-model';
+import { TripModel } from './trip-model.js';
 
 export class PlaceModel extends Model {
   declare id: number;

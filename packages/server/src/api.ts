@@ -1,7 +1,7 @@
 import expressAsyncHandler from 'express-async-handler';
-import { authMiddleware } from './middlewares/auth';
-import { authRouter } from './routes/auth';
-import { tripsRouter } from './routes/trips';
+import { authMiddleware } from './middlewares/auth.js';
+import { authRouter } from './routes/auth.js';
+import { tripsRouter } from './routes/trips.js';
 import express from 'express';
 
 export const apiRouter = express.Router();

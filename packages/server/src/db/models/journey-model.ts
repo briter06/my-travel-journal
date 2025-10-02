@@ -1,7 +1,7 @@
 // journey-model.ts
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { PlaceModel } from './place-model';
-import { TripModel } from './trip-model';
+import { PlaceModel } from './place-model.js';
+import { TripModel } from './trip-model.js';
 
 export class JourneyModel extends Model {
   declare from: number;

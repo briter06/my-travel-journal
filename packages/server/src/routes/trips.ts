@@ -1,9 +1,9 @@
 import express from 'express';
-import { UserTripModel } from '../db/models/user-trip-model';
-import { TripModel } from '../db/models/trip-model';
+import { UserTripModel } from '../db/models/user-trip-model.js';
+import { TripModel } from '../db/models/trip-model.js';
 import { Place, Trips } from '@my-travel-journal/common';
-import { PlaceModel } from '../db/models/place-model';
-import { JourneyModel } from '../db/models/journey-model';
+import { PlaceModel } from '../db/models/place-model.js';
+import { JourneyModel } from '../db/models/journey-model.js';
 import expressAsyncHandler from 'express-async-handler';
 
 export const tripsRouter = express.Router();
