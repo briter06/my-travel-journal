@@ -9,7 +9,6 @@ export type Trip = {
   };
   places: Record<number, Place>;
   journeys: Journey[];
-  color?: string;
 };
 
 export type Trips = Record<number, Trip>;

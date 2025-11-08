@@ -15,12 +15,13 @@ import { Trips } from '@my-travel-journal/common';
 const CENTER_OF_MAP: [number, number] = [40.5, -40.0];
 
 interface MapData {
-  data: Trips;
+  trips: Trips;
+  colors: Record<string, string>;
   showJournies: boolean;
 }
 
-const Map: React.FC<MapData> = ({ data, showJournies }) => {
-  const travelEntries = Object.entries(data);
+const Map: React.FC<MapData> = ({ trips, colors, showJournies }) => {
+  const tripEntries = Object.entries(trips);
 
   return (
     <MapContainer center={CENTER_OF_MAP} zoom={2.5} id="map-container">
@@ -36,14 +37,14 @@ const Map: React.FC<MapData> = ({ data, showJournies }) => {
       />
 
       {mapFilter(
-        travelEntries,
+        tripEntries,
         elem => true,
-        ([travelId, { places, journeys, color }]) => (
-          <div key={travelId}>
+        ([tripId, { places, journeys }]) => (
+          <div key={tripId}>
             {Object.entries(places).map(([placeId, place]) => {
               const icon = L.ExtraMarkers.icon({
                 svg: true,
-                innerHTML: createMarker(color),
+                innerHTML: createMarker(colors[tripId]),
               });
               return (
                 <Marker
@@ -84,7 +85,7 @@ const Map: React.FC<MapData> = ({ data, showJournies }) => {
                         [la1, lo1],
                         [la2, lo2],
                       ]}
-                      color={color}
+                      color={colors[tripId]}
                       popup={`<b>${
                         places[journey.from].city
                       } <i class="bi-caret-right-fill"></i> ${

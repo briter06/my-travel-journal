@@ -1,8 +1,14 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState: { isLoggedIn: boolean; username: string } = {
+export type Me = {
+  username: string;
+  firstName: string;
+  lastName: string;
+};
+
+const initialState: { isLoggedIn: boolean; me: Me | null } = {
   isLoggedIn: false,
-  username: '',
+  me: null,
 };
 
 const sessionSlice = createSlice({
@@ -12,16 +18,15 @@ const sessionSlice = createSlice({
     setIsLoggedIn: (state, action) => {
       state.isLoggedIn = action.payload;
     },
-    setUsername: (state, action) => {
-      state.username = action.payload;
+    setMe: (state, action) => {
+      state.me = action.payload;
     },
     clearSession: state => {
       state.isLoggedIn = false;
-      state.username = '';
+      state.me = null;
     },
   },
 });
 
-export const { setIsLoggedIn, setUsername, clearSession } =
-  sessionSlice.actions;
+export const { setIsLoggedIn, setMe, clearSession } = sessionSlice.actions;
 export default sessionSlice.reducer;

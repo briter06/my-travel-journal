@@ -9,6 +9,7 @@ import expressAsyncHandler from 'express-async-handler';
 import { claimNonce, verifyLogin } from '../crypto/hmac.js';
 import { decryptPassword } from '../crypto/rsa.js';
 import { logger } from '../utils/logger.js';
+import { authMiddleware } from '../middlewares/auth.js';
 
 export const authRouter = express.Router();
 
@@ -92,5 +93,27 @@ authRouter.post(
     });
     logger.info(`${req.body.username} signed up`);
     res.json({ status: true }).status(StatusCodes.OK);
+  }),
+);
+
+authRouter.get(
+  '/me',
+  expressAsyncHandler(authMiddleware),
+  expressAsyncHandler(async (req, res) => {
+    const user = await UserModel.findByPk(req.username, {
+      raw: true,
+    });
+    if (user == null) {
+      res.status(StatusCodes.UNAUTHORIZED).json({
+        status: false,
+        error: 'UNAUTHORIZED',
+      });
+      return;
+    }
+    res.json({
+      username: user.username,
+      firstName: user.firstName,
+      lastName: user.lastName,
+    });
   }),
 );

@@ -1,0 +1,15 @@
+@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
+
+.avatar {
+  --size: 40px;
+  display: inline-grid;
+  place-items: center;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: #6c5ce7;
+  color: #fff;
+  font-weight: 700;
+  font-size: calc(var(--size) * 0.45);
+  cursor: pointer;
+}

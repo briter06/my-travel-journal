@@ -1,18 +1,21 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = {
-  isLoading: true,
+const initialState: { loadingProcesses: Record<string, boolean> } = {
+  loadingProcesses: {},
 };
 
 const loadingSlice = createSlice({
   name: 'loading',
   initialState,
   reducers: {
-    setLoading: (state, action) => {
-      state.isLoading = action.payload;
+    startLoading: (state, action) => {
+      state.loadingProcesses[action.payload] = true;
+    },
+    stopLoading: (state, action) => {
+      delete state.loadingProcesses[action.payload];
     },
   },
 });
 
-export const { setLoading } = loadingSlice.actions;
+export const { startLoading, stopLoading } = loadingSlice.actions;
 export default loadingSlice.reducer;

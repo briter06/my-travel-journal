@@ -4,6 +4,9 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
 export class UserModel extends Model {
   declare username: string;
   declare password: string;
+  declare firstName: string;
+  declare lastName: string;
+  declare lastRefreshTrigger: string;
 }
 
 export function _User(sequelize: Sequelize) {
@@ -14,6 +17,14 @@ export function _User(sequelize: Sequelize) {
         primaryKey: true,
       },
       password: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      firstName: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      lastName: {
         type: DataTypes.STRING,
         allowNull: false,
       },

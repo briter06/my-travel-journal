@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { environment } from '../env/environment';
 import { genHmac } from '../crypto/hmac';
+import { Me } from '../store/slices/session';
 
 type NonceResult = { nonce: string };
 
@@ -34,5 +35,18 @@ export const loginUser = async (
       status: false,
       message: 'Username or password are incorrect',
     };
+  }
+};
+
+export const getMe = async (): Promise<Me | null> => {
+  try {
+    const result = await axios.get(`${environment.apiUrl}/auth/me`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    return result.data.error != null ? null : (result.data as Me);
+  } catch (err) {
+    return null;
   }
 };

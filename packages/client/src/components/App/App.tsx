@@ -1,21 +1,30 @@
 import './App.css';
 import { useEffect, useState } from 'react';
-import { getNonce, loginUser } from '../../api/login';
+import { getMe, getNonce, loginUser } from '../../api/login';
 import Loading from '../Loading/Loading';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { setLoading } from '../../store/slices/loading';
 import MainScreen from '../MainScreen/MainScreen';
-import { setIsLoggedIn } from '../../store/slices/session';
+import { setIsLoggedIn, setMe } from '../../store/slices/session';
 import { createUser, getNonceKey } from '../../api/signup';
+import { useQuery } from '@tanstack/react-query';
+import { startLoading, stopLoading } from '../../store/slices/loading';
+
+const LOADING_PROCESSES = {
+  GETTING_ME: 'gettingMe',
+  LOGIN: 'login',
+  SIGNUP: 'signup',
+};
 
 function App() {
+  const hasToken = localStorage.getItem('token') != null;
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [message, setMessage] = useState<{
     error: boolean;
     message: string;
   } | null>(null);
-  const [isReady, setIsReady] = useState(false);
+  const [isReady, setIsReady] = useState(!hasToken);
   const isLoggedIn = useAppSelector(state => state.session.isLoggedIn);
 
   const dispatch = useAppDispatch();
@@ -24,25 +33,49 @@ function App() {
     return username.length > 3 && username.length <= 30 && password.length > 3;
   };
 
+  const { data: me, isLoading } = useQuery({
+    queryKey: ['me'],
+    queryFn: getMe,
+    enabled: hasToken,
+  });
+
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token != null) {
-      dispatch(setIsLoggedIn(true));
+    if (hasToken) {
+      if (isLoading) {
+        dispatch(startLoading(LOADING_PROCESSES.GETTING_ME));
+      } else {
+        if (me != null) {
+          dispatch(setMe(me));
+          dispatch(setIsLoggedIn(true));
+        } else {
+          dispatch(setIsLoggedIn(false));
+          localStorage.removeItem('token');
+        }
+        dispatch(stopLoading(LOADING_PROCESSES.GETTING_ME));
+        setIsReady(true);
+      }
     }
-    dispatch(setLoading(false));
-    setIsReady(true);
-  }, []);
+  }, [me, isLoading]);
 
   const login = async () => {
     setMessage(null);
-    dispatch(setLoading(true));
+    dispatch(startLoading(LOADING_PROCESSES.LOGIN));
     const nonce = await getNonce();
     if (nonce != null) {
       const result = await loginUser(username, password, nonce.nonce);
       if (result == null) {
         setUsername('');
         setPassword('');
-        dispatch(setIsLoggedIn(true));
+        const me = await getMe();
+        if (me != null) {
+          dispatch(setMe(me));
+          dispatch(setIsLoggedIn(true));
+        } else {
+          setMessage({
+            error: true,
+            message: 'There was a problem. Please try again.',
+          });
+        }
       } else {
         setMessage({
           error: !result.status,
@@ -55,12 +88,12 @@ function App() {
         message: 'There was a problem. Please try again.',
       });
     }
-    dispatch(setLoading(false));
+    dispatch(stopLoading(LOADING_PROCESSES.LOGIN));
   };
 
   const signUp = async () => {
     setMessage(null);
-    dispatch(setLoading(true));
+    dispatch(startLoading(LOADING_PROCESSES.SIGNUP));
     const nonce = await getNonceKey();
     if (nonce != null) {
       const result = await createUser(
@@ -83,7 +116,7 @@ function App() {
         message: 'There was a problem. Please try again.',
       });
     }
-    dispatch(setLoading(false));
+    dispatch(stopLoading(LOADING_PROCESSES.SIGNUP));
   };
 
   return (

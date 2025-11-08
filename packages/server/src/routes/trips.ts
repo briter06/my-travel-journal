@@ -66,7 +66,6 @@ tripsRouter.get(
     }
     res.json({
       trips: result,
-      username: req.username,
     });
   }),
 );

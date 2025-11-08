@@ -1,8 +1,7 @@
 import './MainScreen.css';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap-icons/font/bootstrap-icons.css';
 import Map from '../Map/Map';
 import { Trips } from '@my-travel-journal/common';
+import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import chroma from 'chroma-js';
 import moment from 'moment';
@@ -10,14 +9,15 @@ import { Menu, SubMenu, MenuItem } from 'react-pro-sidebar';
 import NavigationLayout from '../NavigationLayout/NavigationLayout';
 import { getTrips } from '../../api/trips';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { setLoading } from '../../store/slices/loading';
 import { setTrips, setTripsForMap } from '../../store/slices/trips';
-import {
-  clearSession,
-  setIsLoggedIn,
-  setUsername,
-} from '../../store/slices/session';
-import { handlePromiseError } from '../../utils/promises';
+import { clearSession } from '../../store/slices/session';
+import { startLoading, stopLoading } from '../../store/slices/loading';
+import { getInitials } from '../../utils/user';
+import NavBar from '../NavBar/NavBar';
+
+const LOADING_PROCESSES = {
+  GETTING_TRIPS: 'gettingTrips',
+};
 
 const groupByYear = (trips: Trips) => {
   const grouped: Record<string, Trips> = {};
@@ -41,6 +41,7 @@ const groupByYear = (trips: Trips) => {
 
 function MainScreen() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [colors, setColors] = useState<Record<string, string>>({});
 
   const stateTrips = useAppSelector(state => state.trips.trips);
   const stateTripsForMap = useAppSelector(state => state.trips.tripsForMap);
@@ -48,60 +49,51 @@ function MainScreen() {
 
   const [showJournies, setShowJournies] = useState<boolean>(true);
 
-  const loadTrips = async () => {
-    const tripsResult = await getTrips();
+  const { data: tripsResult, isLoading } = useQuery({
+    queryKey: ['trips'],
+    queryFn: getTrips,
+  });
+
+  const tripsCallback = () => {
     if (tripsResult != null) {
+      const localColors: Record<string, string> = {};
       const trips = tripsResult.trips;
       const values = Object.values(trips);
-      const colors = chroma.scale('Set1').colors(values.length);
+      const generatedColors = chroma.scale('Set1').colors(values.length);
       for (let i = 0; i < values.length; i++) {
-        trips[values[i].info.id].color = colors[i];
+        localColors[values[i].info.id] = generatedColors[i];
       }
+      setColors(localColors);
       dispatch(setTrips(trips));
       dispatch(setTripsForMap(trips));
-      dispatch(setUsername(tripsResult.username));
       console.log('Loaded data:', trips);
     }
   };
 
   useEffect(() => {
-    dispatch(setLoading(true));
-    loadTrips()
-      .then(() => dispatch(setLoading(false)))
-      .catch(handlePromiseError);
-  }, []);
+    if (isLoading) {
+      dispatch(startLoading(LOADING_PROCESSES.GETTING_TRIPS));
+    } else {
+      tripsCallback();
+      dispatch(stopLoading(LOADING_PROCESSES.GETTING_TRIPS));
+    }
+  }, [tripsResult, isLoading]);
 
   return stateTrips !== null && stateTripsForMap != null ? (
     <NavigationLayout
       isOpen={isOpen}
-      navbar={
-        <div style={{ display: 'flex' }}>
-          <button
-            style={{
-              background: 'none',
-              border: 'none',
-              padding: 0,
-              cursor: 'pointer',
-              fontSize: '1.5rem',
-            }}
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            <i className={`bi ${isOpen ? 'bi-x' : 'bi-list'}`}></i>
-          </button>
-          <div
-            style={{
-              textAlign: 'center',
-              width: '100%',
-              fontFamily: 'Pacifico, cursive',
-              fontSize: '1.4rem',
-            }}
-          >
-            My Travel Journal
-          </div>
-        </div>
-      }
+      navbar={<NavBar isOpen={isOpen} setIsOpen={setIsOpen} />}
       sidebar={
         <Menu>
+          <MenuItem onClick={() => setShowJournies(!showJournies)}>
+            <input
+              type="checkbox"
+              onChange={() => ({})}
+              checked={showJournies}
+              style={{ marginRight: '10px', pointerEvents: 'none' }}
+            />
+            Show journies
+          </MenuItem>
           <SubMenu label="Trips">
             {groupByYear(stateTrips).map(({ year, groupedData }) => (
               <SubMenu label={year} key={year}>
@@ -133,15 +125,6 @@ function MainScreen() {
               </SubMenu>
             ))}
           </SubMenu>
-          <MenuItem onClick={() => setShowJournies(!showJournies)}>
-            <input
-              type="checkbox"
-              onChange={() => ({})}
-              checked={showJournies}
-              style={{ marginRight: '10px', pointerEvents: 'none' }}
-            />
-            Show journies
-          </MenuItem>
           <MenuItem
             onClick={() => {
               dispatch(clearSession());
@@ -152,7 +135,13 @@ function MainScreen() {
           </MenuItem>
         </Menu>
       }
-      content={<Map data={stateTripsForMap} showJournies={showJournies} />}
+      content={
+        <Map
+          trips={stateTripsForMap}
+          colors={colors}
+          showJournies={showJournies}
+        />
+      }
     ></NavigationLayout>
   ) : null;
 }
