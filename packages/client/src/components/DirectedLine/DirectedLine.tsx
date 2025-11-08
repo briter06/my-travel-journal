@@ -1,7 +1,7 @@
-import { useEffect } from "react";
-import { useMap } from "react-leaflet";
-import L from "leaflet";
-import "leaflet-polylinedecorator";
+import { useEffect } from 'react';
+import { useMap } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet-polylinedecorator';
 
 interface DirectedLineProps {
   positions: [number, number][];
@@ -12,9 +12,9 @@ interface DirectedLineProps {
 
 const DirectedLine: React.FC<DirectedLineProps> = ({
   positions,
-  color = "red",
+  color = 'red',
   size = 20,
-  popup = "",
+  popup = '',
 }) => {
   const map = useMap();
 
@@ -27,20 +27,19 @@ const DirectedLine: React.FC<DirectedLineProps> = ({
       .bindPopup(popup);
 
     // Add filled arrow decorator
-    const decorator = L
-      .polylineDecorator(polyline, {
-        patterns: [
-          {
-            offset: "70%", // middle of the line
-            repeat: 0, // only one arrow
-            symbol: L.Symbol.arrowHead({
-              pixelSize: size,
-              polygon: true, // filled arrow
-              pathOptions: { color, weight: 1, fillOpacity: 1 },
-            }),
-          },
-        ],
-      })
+    const decorator = L.polylineDecorator(polyline, {
+      patterns: [
+        {
+          offset: '70%', // middle of the line
+          repeat: 0, // only one arrow
+          symbol: L.Symbol.arrowHead({
+            pixelSize: size,
+            polygon: true, // filled arrow
+            pathOptions: { color, weight: 1, fillOpacity: 1 },
+          }),
+        },
+      ],
+    })
       .addTo(map)
       .bindPopup(popup);
 

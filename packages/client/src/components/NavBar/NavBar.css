@@ -7,9 +7,32 @@
   width: var(--size);
   height: var(--size);
   border-radius: 50%;
-  background: #6c5ce7;
-  color: #fff;
-  font-weight: 700;
+  background: #006600;
+  color: white;
+  font-weight: 400;
   font-size: calc(var(--size) * 0.45);
   cursor: pointer;
+  user-select: none;
+}
+
+/* Popup animation styles */
+.popup-menu {
+  transform-origin: top right;
+  will-change: transform, opacity;
+  border-radius: 5%;
+}
+
+.popup-animate {
+  animation: popupIn 180ms cubic-bezier(0.2, 0, 0, 1) both;
+}
+
+@keyframes popupIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }

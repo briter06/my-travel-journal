@@ -10,14 +10,16 @@ import NavigationLayout from '../NavigationLayout/NavigationLayout';
 import { getTrips } from '../../api/trips';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setTrips, setTripsForMap } from '../../store/slices/trips';
-import { clearSession } from '../../store/slices/session';
 import { startLoading, stopLoading } from '../../store/slices/loading';
-import { getInitials } from '../../utils/user';
 import NavBar from '../NavBar/NavBar';
+import Switch from '../Switch/Switch';
+import CheckBox from '../CheckBox/CheckBox';
 
 const LOADING_PROCESSES = {
   GETTING_TRIPS: 'gettingTrips',
 };
+
+const SIDE_BAR_BACKGROUND_COLOR = '#fbfbfb';
 
 const groupByYear = (trips: Trips) => {
   const grouped: Record<string, Trips> = {};
@@ -70,6 +72,9 @@ function MainScreen() {
     }
   };
 
+  const allAreSelected = () =>
+    Object.keys(stateTrips).length === Object.keys(stateTripsForMap).length;
+
   useEffect(() => {
     if (isLoading) {
       dispatch(startLoading(LOADING_PROCESSES.GETTING_TRIPS));
@@ -84,55 +89,84 @@ function MainScreen() {
       isOpen={isOpen}
       navbar={<NavBar isOpen={isOpen} setIsOpen={setIsOpen} />}
       sidebar={
-        <Menu>
-          <MenuItem onClick={() => setShowJournies(!showJournies)}>
-            <input
-              type="checkbox"
-              onChange={() => ({})}
-              checked={showJournies}
-              style={{ marginRight: '10px', pointerEvents: 'none' }}
-            />
-            Show journies
-          </MenuItem>
-          <SubMenu label="Trips">
-            {groupByYear(stateTrips).map(({ year, groupedData }) => (
-              <SubMenu label={year} key={year}>
-                {Object.values(groupedData).map(trip => (
-                  <MenuItem
-                    key={trip.info.id}
-                    onClick={() => {
-                      const newData = { ...stateTripsForMap };
-                      if (stateTripsForMap[trip.info.id] == null) {
-                        newData[trip.info.id] = trip;
-                      } else {
-                        delete newData[trip.info.id];
-                      }
-                      dispatch(setTripsForMap(newData));
-                    }}
-                  >
-                    <input
-                      type="checkbox"
-                      onChange={() => ({})}
-                      checked={stateTripsForMap[trip.info.id] != null}
-                      style={{
-                        marginRight: '10px',
-                        pointerEvents: 'none',
-                      }}
-                    />
-                    {trip.info.name}
-                  </MenuItem>
-                ))}
-              </SubMenu>
-            ))}
-          </SubMenu>
+        <Menu style={{ backgroundColor: SIDE_BAR_BACKGROUND_COLOR }}>
+          <div
+            className="sticky"
+            style={{ backgroundColor: SIDE_BAR_BACKGROUND_COLOR }}
+          >
+            <MenuItem>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  width: '100%',
+                }}
+              >
+                <span style={{ marginRight: '20px' }}>Show journies</span>
+                <Switch
+                  size={'sm'}
+                  checked={showJournies}
+                  onChange={() => setShowJournies(!showJournies)}
+                />
+              </div>
+            </MenuItem>
+            <hr className="my-2 border-gray-200" />
+          </div>
           <MenuItem
+            style={{ color: 'black', fontWeight: 'bold' }}
             onClick={() => {
-              dispatch(clearSession());
-              localStorage.clear();
+              if (allAreSelected()) {
+                dispatch(setTripsForMap({}));
+              } else {
+                dispatch(setTripsForMap({ ...stateTrips }));
+              }
             }}
           >
-            Logout
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                width: '100%',
+              }}
+            >
+              <CheckBox disableClick size={'sm'} checked={allAreSelected()} />
+              <span style={{ marginLeft: '5px' }}>My Trips</span>
+            </div>
           </MenuItem>
+          {groupByYear(stateTrips).map(({ year, groupedData }) => (
+            <SubMenu label={year} key={year}>
+              {Object.values(groupedData).map(trip => (
+                <MenuItem
+                  key={trip.info.id}
+                  style={{ paddingLeft: '16px' }}
+                  onClick={() => {
+                    const newData = { ...stateTripsForMap };
+                    if (stateTripsForMap[trip.info.id] == null) {
+                      newData[trip.info.id] = trip;
+                    } else {
+                      delete newData[trip.info.id];
+                    }
+                    dispatch(setTripsForMap(newData));
+                  }}
+                >
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      width: '100%',
+                    }}
+                  >
+                    <CheckBox
+                      disableClick
+                      size={'sm'}
+                      checked={stateTripsForMap[trip.info.id] != null}
+                    />
+                    <span style={{ marginLeft: '5px' }}>{trip.info.name}</span>
+                  </div>
+                </MenuItem>
+              ))}
+            </SubMenu>
+          ))}
         </Menu>
       }
       content={

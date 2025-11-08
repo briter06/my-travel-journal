@@ -1,0 +1,84 @@
+/* Animated switch styles */
+.switch {
+  --width: 56px;
+  --height: 30px;
+  --thumb-size: 24px;
+  --track-bg: #e5e7eb; /* gray-200 */
+  --track-on: linear-gradient(90deg,#4f46e5 0%,#06b6d4 100%); /* indigo -> cyan */
+  --transition: 220ms cubic-bezier(.2,0,.18,1);
+
+  position: relative;
+  display: inline-block;
+  width: var(--width);
+  height: var(--height);
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.switch__track {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: var(--track-bg);
+  transition: background-color var(--transition);
+  box-shadow: none;
+}
+
+.switch__thumb {
+  position: absolute;
+  top: 50%;
+  left: 4px;
+  width: var(--thumb-size);
+  height: var(--thumb-size);
+  transform: translateY(-50%);
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: none;
+  transition: transform var(--transition), background-color var(--transition);
+  will-change: transform;
+}
+
+/* ON state styles */
+.switch.switch--on .switch__track {
+  background: var(--track-on);
+  box-shadow: none;
+}
+
+.switch.switch--on .switch__thumb {
+  transform: translateY(-50%) translateX(calc(var(--width) - var(--thumb-size) - 8px));
+  box-shadow: none;
+}
+
+/* Bump animation when toggling on/off */
+@keyframes thumbBump {
+  0% { transform: translateY(-50%) translateX(0) scale(1); }
+  40% { transform: translateY(-50%) translateX(6px) scale(1.06); }
+  100% { transform: translateY(-50%) translateX(calc(var(--width) - var(--thumb-size) - 8px)) scale(1); }
+}
+
+@keyframes thumbBumpReverse {
+  0% { transform: translateY(-50%) translateX(calc(var(--width) - var(--thumb-size) - 8px)) scale(1); }
+  40% { transform: translateY(-50%) translateX(calc(var(--width) - var(--thumb-size) - 14px)) scale(1.06); }
+  100% { transform: translateY(-50%) translateX(0) scale(1); }
+}
+
+/* apply a quick bump when toggled on */
+.switch.switch--on .switch__thumb {
+  animation: thumbBump 220ms cubic-bezier(.2,0,.18,1);
+}
+
+/* when toggled off quickly, we rely on transitions for a smooth return */
+
+/* Focus styles */
+.switch:focus-visible .switch__thumb {
+  box-shadow: none;
+  outline: none;
+}
+
+/* Small active press effect */
+.switch:active .switch__thumb {
+  transform: translateY(-50%) scale(0.98);
+}
