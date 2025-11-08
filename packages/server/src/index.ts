@@ -53,7 +53,7 @@ app.use(
 
 app.use('/api', apiRouter);
 
-app.get('/', (_req, res) => {
+app.get('*', (_req, res) => {
   res.sendFile(path.join(clientBuildPath, 'index.html'));
 });
 
