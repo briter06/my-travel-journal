@@ -6,6 +6,7 @@ export type Environment = {
   LOGGER_LEVEL: string;
   JWT_SECRET: string;
   JWT_EXPIRES_IN: number;
+  CORS_ORIGIN: string;
 };
 
 const envJoiSchema = Joi.object()
@@ -15,6 +16,7 @@ const envJoiSchema = Joi.object()
     LOGGER_LEVEL: Joi.string().required(),
     JWT_SECRET: Joi.string().required(),
     JWT_EXPIRES_IN: Joi.number().optional(),
+    CORS_ORIGIN: Joi.string().required(),
   })
   .required()
   .unknown();

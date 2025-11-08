@@ -25,9 +25,18 @@ app.use(express.static(clientBuildPath));
 
 app.use(helmet());
 
+// CORS config
+const corsWhitelist = [process.env.CORS_ORIGIN];
+
 app.use(
   cors({
-    origin: '*',
+    origin: (origin, callback) => {
+      if (!origin || corsWhitelist.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
   }),
 );
 
