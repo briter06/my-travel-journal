@@ -1,0 +1,11 @@
+.SideBar {
+  text-align: left;
+  width: 100% !important;
+  height: 100%;
+}
+
+.SideBarContainer {
+  text-align: left;
+  width: 20%;
+  height: 100%;
+}

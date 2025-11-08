@@ -1,6 +1,6 @@
 import './Loading.css';
-import loading from '../../assets/loading.gif';
-import { useAppSelector } from '../../store/hooks';
+import loading from '../../../assets/loading.gif';
+import { useAppSelector } from '../../../store/hooks';
 
 function Loading() {
   const loadingProcesses = useAppSelector(

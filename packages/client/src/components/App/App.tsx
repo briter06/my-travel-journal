@@ -1,13 +1,13 @@
 import './App.css';
 import { useEffect, useState } from 'react';
 import { getMe, getNonce, loginUser } from '../../api/login';
-import Loading from '../Loading/Loading';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import MainScreen from '../MainScreen/MainScreen';
 import { setIsLoggedIn, setMe } from '../../store/slices/session';
 import { createUser, getNonceKey } from '../../api/signup';
 import { useQuery } from '@tanstack/react-query';
 import { startLoading, stopLoading } from '../../store/slices/loading';
+import Loading from '../utils/Loading/Loading';
+import NavigationLayout from '../NavigationLayout/NavigationLayout';
 
 const LOADING_PROCESSES = {
   GETTING_ME: 'gettingMe',
@@ -124,7 +124,7 @@ function App() {
       <Loading />
       {isReady ? (
         isLoggedIn ? (
-          <MainScreen />
+          <NavigationLayout />
         ) : (
           <div className="initialScreen">
             <form

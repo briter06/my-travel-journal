@@ -1,18 +1,15 @@
 import './NavBar.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { getInitials } from '../../utils/user';
 import { useEffect, useRef, useState } from 'react';
 import { Menu, MenuItem } from 'react-pro-sidebar';
-import { clearSession } from '../../store/slices/session';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { getInitials } from '../../../utils/user';
+import { clearSession } from '../../../store/slices/session';
+import { toggleSideBar } from '../../../store/slices/navigation';
+import { useMatches } from 'react-router';
 
-interface NavBarData {
-  isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
-}
-
-function NavBar({ isOpen, setIsOpen }: NavBarData) {
+function NavBar() {
   const me = useAppSelector(state => state.session.me)!;
   const [openMenu, setOpenMenu] = useState(false);
   const avatarRef = useRef<HTMLDivElement | null>(null);
@@ -22,7 +19,12 @@ function NavBar({ isOpen, setIsOpen }: NavBarData) {
     right: 0,
   });
 
+  const isSideBarOpen = useAppSelector(state => state.navigation.isSideBarOpen);
   const dispatch = useAppDispatch();
+
+  const matches = useMatches();
+  const currentMatch = matches[matches.length - 1];
+  const handle = currentMatch.handle as { hasSideBar?: boolean } | undefined;
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -73,21 +75,24 @@ function NavBar({ isOpen, setIsOpen }: NavBarData) {
         padding: '0 15px',
       }}
     >
-      <button
-        style={{
-          background: 'none',
-          border: 'none',
-          padding: 0,
-          cursor: 'pointer',
-          fontSize: '1.5rem',
-        }}
-        onClick={() => setIsOpen(!isOpen)}
-      >
-        <i
-          className={`bi ${isOpen ? 'bi-x' : 'bi-list'}`}
-          style={{ color: 'white' }}
-        ></i>
-      </button>
+      {handle?.hasSideBar === true ? (
+        <button
+          style={{
+            background: 'none',
+            border: 'none',
+            padding: 0,
+            cursor: 'pointer',
+            fontSize: '1.5rem',
+          }}
+          onClick={() => dispatch(toggleSideBar())}
+        >
+          <i
+            className={`bi ${isSideBarOpen ? 'bi-x' : 'bi-list'}`}
+            style={{ color: 'white' }}
+          ></i>
+        </button>
+      ) : null}
+
       <div
         style={{
           textAlign: 'center',

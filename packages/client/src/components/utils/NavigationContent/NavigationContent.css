@@ -1,0 +1,11 @@
+.NavigationContentContainer {
+  text-align: center;
+  width: 100%;
+  height: 92%;
+  display: flex;
+}
+
+.NavigationContent {
+  width: 100%;
+  height: 100%;
+}

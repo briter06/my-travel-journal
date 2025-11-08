@@ -2,12 +2,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import loadingReducer from './slices/loading';
 import tripsReducer from './slices/trips';
 import sessionSlice from './slices/session';
+import navigationSlice from './slices/navigation';
 
 export const store = configureStore({
   reducer: {
     loading: loadingReducer,
     trips: tripsReducer,
     session: sessionSlice,
+    navigation: navigationSlice,
   },
 });
 

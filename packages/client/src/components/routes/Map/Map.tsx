@@ -1,19 +1,18 @@
-import './MainScreen.css';
-import Map from '../Map/Map';
+import './Map.css';
 import { Trips } from '@my-travel-journal/common';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import chroma from 'chroma-js';
 import moment from 'moment';
 import { Menu, SubMenu, MenuItem } from 'react-pro-sidebar';
-import NavigationLayout from '../NavigationLayout/NavigationLayout';
-import { getTrips } from '../../api/trips';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { setTrips, setTripsForMap } from '../../store/slices/trips';
-import { startLoading, stopLoading } from '../../store/slices/loading';
-import NavBar from '../NavBar/NavBar';
-import Switch from '../Switch/Switch';
-import CheckBox from '../CheckBox/CheckBox';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { getTrips } from '../../../api/trips';
+import { setTrips, setTripsForMap } from '../../../store/slices/trips';
+import { startLoading, stopLoading } from '../../../store/slices/loading';
+import NavigationContent from '../../utils/NavigationContent/NavigationContent';
+import Switch from '../../utils/Switch/Switch';
+import CheckBox from '../../utils/CheckBox/CheckBox';
+import MapContent from './MapContent/MapContent';
 
 const LOADING_PROCESSES = {
   GETTING_TRIPS: 'gettingTrips',
@@ -41,10 +40,10 @@ const groupByYear = (trips: Trips) => {
   return finalGrouped;
 };
 
-function MainScreen() {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+function Map() {
   const [colors, setColors] = useState<Record<string, string>>({});
 
+  const isSideBarOpen = useAppSelector(state => state.navigation.isSideBarOpen);
   const stateTrips = useAppSelector(state => state.trips.trips);
   const stateTripsForMap = useAppSelector(state => state.trips.tripsForMap);
   const dispatch = useAppDispatch();
@@ -85,9 +84,8 @@ function MainScreen() {
   }, [tripsResult, isLoading]);
 
   return stateTrips !== null && stateTripsForMap != null ? (
-    <NavigationLayout
-      isOpen={isOpen}
-      navbar={<NavBar isOpen={isOpen} setIsOpen={setIsOpen} />}
+    <NavigationContent
+      isOpen={isSideBarOpen}
       sidebar={
         <Menu style={{ backgroundColor: SIDE_BAR_BACKGROUND_COLOR }}>
           <div
@@ -170,14 +168,14 @@ function MainScreen() {
         </Menu>
       }
       content={
-        <Map
+        <MapContent
           trips={stateTripsForMap}
           colors={colors}
           showJournies={showJournies}
         />
       }
-    ></NavigationLayout>
+    />
   ) : null;
 }
 
-export default MainScreen;
+export default Map;
