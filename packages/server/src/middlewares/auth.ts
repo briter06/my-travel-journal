@@ -13,12 +13,12 @@ export const authMiddleware = async (
   if (authHeader != null && authHeader !== '') {
     const token = authHeader.split(' ')[1];
     let user;
-    let username;
+    let email;
     try {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const result: any = jwt.verify(token, environment.JWT_SECRET);
-      username = result.username;
-      user = await UserModel.findByPk(username);
+      email = result.email;
+      user = await UserModel.findByPk(email);
     } catch (_err) {
       user = null;
     }
@@ -27,7 +27,7 @@ export const authMiddleware = async (
         error: 'FORBIDDEN',
       });
     } else {
-      req.username = username;
+      req.email = email;
       next();
     }
   } else {

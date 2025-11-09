@@ -14,7 +14,7 @@ tripsRouter.get(
     const myTrips = (
       await UserTripModel.findAll({
         where: {
-          username: req.username!,
+          email: req.email!,
         },
       })
     ).map(t => t.tripId);

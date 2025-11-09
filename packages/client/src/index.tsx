@@ -2,12 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css';
-import App from './components/App/App';
 import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import { RouterProvider } from 'react-router';
-import { router } from './router';
+import { createRouter } from './router';
+import Loading from './components/utils/Loading/Loading';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
@@ -20,12 +20,12 @@ const queryClient = new QueryClient({
     },
   },
 });
-
 root.render(
   <React.StrictMode>
     <Provider store={store}>
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <Loading />
+        <RouterProvider router={createRouter()} />
       </QueryClientProvider>
     </Provider>
   </React.StrictMode>,

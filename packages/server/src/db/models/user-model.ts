@@ -2,7 +2,7 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 
 export class UserModel extends Model {
-  declare username: string;
+  declare email: string;
   declare password: string;
   declare firstName: string;
   declare lastName: string;
@@ -12,7 +12,7 @@ export class UserModel extends Model {
 export function _User(sequelize: Sequelize) {
   UserModel.init(
     {
-      username: {
+      email: {
         type: DataTypes.STRING,
         primaryKey: true,
       },

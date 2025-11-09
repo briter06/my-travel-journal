@@ -4,20 +4,20 @@ import { TripModel } from './trip-model.js';
 import { UserModel } from './user-model.js';
 
 export class UserTripModel extends Model {
-  declare username: string;
+  declare email: string;
   declare tripId: string;
 }
 
 export function _UserTrip(sequelize: Sequelize) {
   UserTripModel.init(
     {
-      username: {
+      email: {
         type: DataTypes.STRING,
         primaryKey: true,
         allowNull: false,
         references: {
           model: UserModel,
-          key: 'username',
+          key: 'email',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',

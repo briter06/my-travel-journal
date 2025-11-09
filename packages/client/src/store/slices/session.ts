@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 export type Me = {
-  username: string;
+  email: string;
   firstName: string;
   lastName: string;
 };

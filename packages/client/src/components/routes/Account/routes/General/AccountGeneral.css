@@ -1,0 +1,19 @@
+.account-general {
+  margin: 50px;
+}
+
+.at-section__content-inner {
+  display: block;
+}
+
+@media (max-width: 600px) {
+  .at-info-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .at-info-label {
+    min-width: 0;
+    margin-bottom: 4px;
+  }
+}

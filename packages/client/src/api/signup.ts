@@ -17,25 +17,31 @@ export const getNonceKey = async (): Promise<NonceKeyResult | null> => {
 };
 
 export const createUser = async (
-  username: string,
-  password: string,
+  user: {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+  },
   publicKey: string,
   nonce: string,
 ) => {
   try {
-    const hashedPassword = await hashPassword(password);
+    const hashedPassword = await hashPassword(user.password);
     const encryptedPassword = await encryptPassword(publicKey, hashedPassword);
     const signUpResult = await axios.post(
       `${environment.apiUrl}/auth/signup/${nonce}`,
       {
-        username: username,
+        email: user.email,
         password: encryptedPassword,
+        firstName: user.firstName,
+        lastName: user.lastName,
       },
     );
     if (!signUpResult.data.status) {
       return {
         status: false,
-        message: 'That username already exists',
+        message: 'That email is already associated with an account',
       };
     } else {
       return {

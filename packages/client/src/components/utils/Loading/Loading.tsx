@@ -9,11 +9,7 @@ function Loading() {
 
   return Object.keys(loadingProcesses).length > 0 ? (
     <div className="loading-container">
-      <img
-        style={{ width: '100px', paddingTop: '15%' }}
-        src={loading}
-        alt="loading"
-      />
+      <img className="loading-image" src={loading} alt="loading" />
     </div>
   ) : null;
 }

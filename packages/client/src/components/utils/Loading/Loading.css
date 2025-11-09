@@ -7,3 +7,9 @@
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 9999;
 }
+
+.loading-image {
+  display: block;
+  width: 100px;
+  margin: 15% auto 0; /* center horizontally and give top spacing */
+}

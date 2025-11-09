@@ -15,16 +15,16 @@ export const getNonce = async (): Promise<NonceResult | null> => {
 };
 
 export const loginUser = async (
-  username: string,
+  email: string,
   password: string,
   nonce: string,
 ) => {
   try {
-    const hmac = await genHmac(username, password, nonce);
+    const hmac = await genHmac(email, password, nonce);
     const result = await axios.post(
       `${environment.apiUrl}/auth/login/${nonce}`,
       {
-        username,
+        email,
         password: hmac,
       },
     );
@@ -33,7 +33,7 @@ export const loginUser = async (
   } catch (err) {
     return {
       status: false,
-      message: 'Username or password are incorrect',
+      message: 'Email or password are incorrect',
     };
   }
 };

@@ -6,6 +6,9 @@
 }
 
 .NavigationContent {
-  width: 100%;
+  /* Let content take remaining space and be allowed to shrink */
+  flex: 1 1 auto;
+  min-width: 0; /* allow flex children to shrink correctly */
   height: 100%;
+  overflow: auto; /* scroll if content is too tall */
 }

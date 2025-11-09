@@ -7,7 +7,7 @@ import { UserTripModel } from './db/models/user-trip-model.js';
 import { logger } from './utils/logger.js';
 import { Place } from '@my-travel-journal/common';
 
-const processTrip = async (username: string, dataS: string) => {
+const processTrip = async (email: string, dataS: string) => {
   const { info, places, trips } = JSON.parse(dataS);
   const trip = {
     name: info.id,
@@ -40,13 +40,13 @@ const processTrip = async (username: string, dataS: string) => {
   }
 
   const userTrip = {
-    username: username,
+    email: email,
     tripId: createdTrip.id,
   };
   await UserTripModel.create(userTrip);
 };
 
-export async function loadData(username: string, dirPath: string) {
+export async function loadData(email: string, dirPath: string) {
   const filesAndDirs = fs.readdirSync(dirPath);
 
   for (const name of filesAndDirs) {
@@ -55,19 +55,19 @@ export async function loadData(username: string, dirPath: string) {
 
     if (stat.isDirectory()) {
       // Recursively read subdirectory
-      await loadData(username, fullPath);
+      await loadData(email, fullPath);
     } else if (stat.isFile()) {
       // Read file content
       const content = fs.readFileSync(fullPath, 'utf8');
-      await processTrip(username, content);
+      await processTrip(email, content);
     }
   }
 }
 
-export const loadDataFromFolder = async (username: string) => {
+export const loadDataFromFolder = async (email: string) => {
   const pathFolder =
     'C:/Users/brite/Documents/workspaces/node/my-travel-journal/packages/client/places';
   logger.info(`Loading data from ${pathFolder} ...`);
-  await loadData(username, pathFolder);
+  await loadData(email, pathFolder);
   logger.info(`Data has been loaded from ${pathFolder}`);
 };

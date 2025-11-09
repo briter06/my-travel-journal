@@ -14,18 +14,25 @@ import { authMiddleware } from '../middlewares/auth.js';
 export const authRouter = express.Router();
 
 const loginSchema = Joi.object({
-  username: Joi.string().min(3).max(30).required(),
+  email: Joi.string().email().min(3).max(30).required(),
   password: Joi.string().min(3).required(),
+});
+
+const signUpSchema = Joi.object({
+  email: Joi.string().email().min(3).max(30).required(),
+  password: Joi.string().min(3).required(),
+  firstName: Joi.string().min(3).max(50).required(),
+  lastName: Joi.string().min(3).max(50).required(),
 });
 
 authRouter.post(
   '/login/:nonce',
   joiMiddleware(loginSchema),
   expressAsyncHandler(async (req, res) => {
-    const user = await UserModel.findByPk(`${req.body.username}`);
+    const user = await UserModel.findByPk(`${req.body.email}`);
     if (user != null) {
       const verificationResult = verifyLogin(
-        user.username,
+        user.email,
         user.password,
         req.body.password,
         req.params.nonce,
@@ -40,7 +47,7 @@ authRouter.post(
       res.json({
         token: jwt.sign(
           {
-            username: user.username,
+            email: user.email,
           },
           environment.JWT_SECRET,
           {
@@ -61,7 +68,7 @@ authRouter.post(
 
 authRouter.post(
   '/signup/:nonce',
-  joiMiddleware(loginSchema),
+  joiMiddleware(signUpSchema),
   expressAsyncHandler(async (req, res) => {
     const activeNonce = claimNonce(req.params.nonce);
     if (activeNonce == null || activeNonce.privateKey == null) {
@@ -77,7 +84,7 @@ authRouter.post(
       activeNonce.privateKey,
       req.body.password,
     );
-    const user = await UserModel.findByPk(req.body.username);
+    const user = await UserModel.findByPk(req.body.email);
     if (user != null) {
       res
         .json({
@@ -88,10 +95,12 @@ authRouter.post(
       return;
     }
     await UserModel.create({
-      username: req.body.username,
+      email: req.body.email,
       password: decryptedPassword,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
     });
-    logger.info(`${req.body.username} signed up`);
+    logger.info(`${req.body.email} signed up`);
     res.json({ status: true }).status(StatusCodes.OK);
   }),
 );
@@ -100,7 +109,7 @@ authRouter.get(
   '/me',
   expressAsyncHandler(authMiddleware),
   expressAsyncHandler(async (req, res) => {
-    const user = await UserModel.findByPk(req.username, {
+    const user = await UserModel.findByPk(req.email, {
       raw: true,
     });
     if (user == null) {
@@ -111,7 +120,7 @@ authRouter.get(
       return;
     }
     res.json({
-      username: user.username,
+      email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
     });
