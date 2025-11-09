@@ -7,9 +7,10 @@ import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { getInitials } from '../../../utils/user';
 import { clearSession } from '../../../store/slices/session';
 import { toggleSideBar } from '../../../store/slices/navigation';
-import { useMatches } from 'react-router';
+import { useMatches, useNavigate } from 'react-router';
 
 function NavBar() {
+  const navigate = useNavigate();
   const me = useAppSelector(state => state.session.me)!;
   const [openMenu, setOpenMenu] = useState(false);
   const avatarRef = useRef<HTMLDivElement | null>(null);
@@ -75,23 +76,23 @@ function NavBar() {
         padding: '0 15px',
       }}
     >
-      {handle?.hasSideBar === true ? (
-        <button
-          style={{
-            background: 'none',
-            border: 'none',
-            padding: 0,
-            cursor: 'pointer',
-            fontSize: '1.5rem',
-          }}
-          onClick={() => dispatch(toggleSideBar())}
-        >
-          <i
-            className={`bi ${isSideBarOpen ? 'bi-x' : 'bi-list'}`}
-            style={{ color: 'white' }}
-          ></i>
-        </button>
-      ) : null}
+      <button
+        disabled={handle?.hasSideBar !== true}
+        style={{
+          visibility: handle?.hasSideBar === true ? 'visible' : 'hidden',
+          background: 'none',
+          border: 'none',
+          padding: 0,
+          cursor: 'pointer',
+          fontSize: '1.5rem',
+        }}
+        onClick={() => dispatch(toggleSideBar())}
+      >
+        <i
+          className={`bi ${isSideBarOpen ? 'bi-x' : 'bi-list'}`}
+          style={{ color: 'white' }}
+        ></i>
+      </button>
 
       <div
         style={{
@@ -102,7 +103,14 @@ function NavBar() {
           color: 'white',
         }}
       >
-        My Travel Journal
+        <span
+          style={{ cursor: 'pointer' }}
+          onClick={() => {
+            void navigate('/');
+          }}
+        >
+          My Travel Journal
+        </span>
       </div>
       <div
         className="avatar"
@@ -127,11 +135,20 @@ function NavBar() {
             <MenuItem disabled style={{ color: 'black', fontWeight: 'bold' }}>
               {me.firstName} {me.lastName}
             </MenuItem>
-            <MenuItem>My Account</MenuItem>
             <MenuItem
               onClick={() => {
+                setOpenMenu(false);
+                void navigate('account');
+              }}
+            >
+              My Account
+            </MenuItem>
+            <MenuItem
+              onClick={() => {
+                setOpenMenu(false);
                 dispatch(clearSession());
                 localStorage.clear();
+                void navigate('/');
               }}
             >
               Logout

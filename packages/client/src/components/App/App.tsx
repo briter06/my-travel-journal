@@ -8,6 +8,7 @@ import { useQuery } from '@tanstack/react-query';
 import { startLoading, stopLoading } from '../../store/slices/loading';
 import Loading from '../utils/Loading/Loading';
 import NavigationLayout from '../NavigationLayout/NavigationLayout';
+import { useLocation, useNavigate } from 'react-router';
 
 const LOADING_PROCESSES = {
   GETTING_ME: 'gettingMe',
@@ -16,6 +17,15 @@ const LOADING_PROCESSES = {
 };
 
 function App() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const resetLocation = () => {
+    if (location.pathname !== '/') {
+      void navigate('/');
+    }
+  };
+
   const hasToken = localStorage.getItem('token') != null;
 
   const [username, setUsername] = useState('');
@@ -50,12 +60,15 @@ function App() {
         } else {
           dispatch(setIsLoggedIn(false));
           localStorage.removeItem('token');
+          resetLocation();
         }
         dispatch(stopLoading(LOADING_PROCESSES.GETTING_ME));
         setIsReady(true);
       }
+    } else {
+      resetLocation();
     }
-  }, [me, isLoading]);
+  }, [navigate, location.pathname, me, isLoading]);
 
   const login = async () => {
     setMessage(null);
