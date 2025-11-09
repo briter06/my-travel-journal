@@ -25,21 +25,6 @@ app.use(express.static(clientBuildPath));
 
 app.use(helmet());
 
-// CORS config
-const corsWhitelist = process.env.CORS_ORIGINS!.split(',');
-
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || corsWhitelist.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-  }),
-);
-
 // Morgan middleware
 app.use(
   morgan(':method :url | Status: :status | Response time: :response-time ms', {
@@ -47,6 +32,20 @@ app.use(
       write: (message: string) => {
         logger.info(message.trim());
       },
+    },
+  }),
+);
+
+// CORS config
+const corsWhitelist = process.env.CORS_ORIGINS!.split(',');
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (corsWhitelist.includes(origin)) return callback(null, true);
+      logger.info(`Blocked CORS request from origin: ${origin}`);
+      return callback(null, false);
     },
   }),
 );
@@ -59,6 +58,8 @@ app.get(/.*/, (_req, res) => {
 
 connectSequelize()
   .then(() => {
+    // TODO: Remove this after load
+    // loadDataFromFolder('briter.gd@gmail.com').then(() => console.log('FINISHED LOAD'));
     // Start server
     app.listen(port, () => {
       logger.info(`Server running at http://localhost:${port}`);

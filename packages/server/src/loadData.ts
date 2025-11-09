@@ -65,8 +65,7 @@ export async function loadData(email: string, dirPath: string) {
 }
 
 export const loadDataFromFolder = async (email: string) => {
-  const pathFolder =
-    'C:/Users/brite/Documents/workspaces/node/my-travel-journal/packages/client/places';
+  const pathFolder = '../../static/places';
   logger.info(`Loading data from ${pathFolder} ...`);
   await loadData(email, pathFolder);
   logger.info(`Data has been loaded from ${pathFolder}`);

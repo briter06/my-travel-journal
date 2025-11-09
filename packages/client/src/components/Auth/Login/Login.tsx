@@ -5,6 +5,7 @@ import { useAppDispatch } from '../../../store/hooks';
 import { setIsLoggedIn, setMe } from '../../../store/slices/session';
 import { startLoading, stopLoading } from '../../../store/slices/loading';
 import { useLocation, useNavigate } from 'react-router';
+import { isValid } from '../../../utils/form';
 
 const LOADING_PROCESSES = {
   LOGIN: 'login',
@@ -22,10 +23,6 @@ function Login() {
   } | null>(null);
 
   const dispatch = useAppDispatch();
-
-  const isValid = () => {
-    return email.length > 3 && email.length <= 30 && password.length > 3;
-  };
 
   useEffect(() => {
     const signUpResult = location.state?.signUpResult;
@@ -117,7 +114,11 @@ function Login() {
           value={password}
           onChange={e => setPassword(e.target.value)}
         />
-        <button type="submit" className="loginButton" disabled={!isValid()}>
+        <button
+          type="submit"
+          className="loginButton"
+          disabled={!isValid({ email, password })}
+        >
           Log In
         </button>
         <button

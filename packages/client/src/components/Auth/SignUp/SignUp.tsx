@@ -5,6 +5,7 @@ import { startLoading, stopLoading } from '../../../store/slices/loading';
 import { useNavigate } from 'react-router';
 import { createUser, getNonceKey } from '../../../api/signup';
 import { clearSession } from '../../../store/slices/session';
+import { isValid } from '../../../utils/form';
 
 const LOADING_PROCESSES = {
   SIGNUP: 'signup',
@@ -22,16 +23,6 @@ function SignUp() {
   } | null>(null);
 
   const dispatch = useAppDispatch();
-
-  const isValid = () => {
-    return (
-      firstName.trim().length > 0 &&
-      lastName.trim().length > 0 &&
-      email.length > 3 &&
-      email.length <= 30 &&
-      password.length > 3
-    );
-  };
 
   const signUp = async () => {
     setMessage(null);
@@ -140,7 +131,11 @@ function SignUp() {
           value={password}
           onChange={e => setPassword(e.target.value)}
         />
-        <button type="submit" className="loginButton" disabled={!isValid()}>
+        <button
+          type="submit"
+          className="loginButton"
+          disabled={!isValid({ email, password, firstName, lastName })}
+        >
           Sign Up
         </button>
       </form>
