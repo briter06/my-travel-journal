@@ -7,7 +7,11 @@ import moment from 'moment';
 import { Menu, SubMenu, MenuItem } from 'react-pro-sidebar';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { getTrips } from '../../../api/trips';
-import { setTrips, setTripsForMap } from '../../../store/slices/trips';
+import {
+  setPlaces,
+  setTrips,
+  setTripsForMap,
+} from '../../../store/slices/data';
 import { startLoading, stopLoading } from '../../../store/slices/loading';
 import NavigationContent from '../../utils/NavigationContent/NavigationContent';
 import Switch from '../../utils/Switch/Switch';
@@ -22,10 +26,7 @@ const LOADING_PROCESSES = {
 const groupByYear = (trips: Trips) => {
   const grouped: Record<string, Trips> = {};
   for (const content of Object.values(trips)) {
-    const index =
-      content.info.date != null
-        ? moment(content.info.date).year().toString()
-        : 'Other';
+    const index = content.info.year ?? 'Other';
     if (grouped[index] == null) {
       grouped[index] = {};
     }
@@ -43,6 +44,7 @@ function Map() {
   const [colors, setColors] = useState<Record<string, string>>({});
 
   const isSideBarOpen = useAppSelector(state => state.navigation.isSideBarOpen);
+  const statePlaces = useAppSelector(state => state.trips.places);
   const stateTrips = useAppSelector(state => state.trips.trips);
   const stateTripsForMap = useAppSelector(state => state.trips.tripsForMap);
   const dispatch = useAppDispatch();
@@ -64,6 +66,7 @@ function Map() {
         localColors[values[i].info.id] = generatedColors[i];
       }
       setColors(localColors);
+      dispatch(setPlaces(tripsResult.places));
       dispatch(setTrips(trips));
       dispatch(setTripsForMap(trips));
       console.log('Loaded data:', trips);
@@ -168,6 +171,7 @@ function Map() {
       }
       content={
         <MapContent
+          places={statePlaces}
           trips={stateTripsForMap}
           colors={colors}
           showJournies={showJournies}

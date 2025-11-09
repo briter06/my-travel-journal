@@ -9,17 +9,23 @@ import 'leaflet-extra-markers';
 import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css';
 import DirectedLine from '../DirectedLine/DirectedLine';
 import { createMarker } from '../../../../utils/icon';
-import { Trips } from '@my-travel-journal/common';
+import { Places, Trips } from '@my-travel-journal/common';
 
 const CENTER_OF_MAP: [number, number] = [40.5, -40.0];
 
 interface MapData {
   trips: Trips;
+  places: Places;
   colors: Record<string, string>;
   showJournies: boolean;
 }
 
-const MapContent: React.FC<MapData> = ({ trips, colors, showJournies }) => {
+const MapContent: React.FC<MapData> = ({
+  trips,
+  places,
+  colors,
+  showJournies,
+}) => {
   const tripEntries = Object.entries(trips);
 
   return (
@@ -35,70 +41,71 @@ const MapContent: React.FC<MapData> = ({ trips, colors, showJournies }) => {
         attribution='&copy; <a href="https://carto.com/">CARTO</a>'
       />
 
-      {tripEntries.map(([tripId, { places, journeys }]) => (
-        <div key={tripId}>
-          {Object.entries(places).map(([placeId, place]) => {
-            const icon = L.ExtraMarkers.icon({
-              svg: true,
-              innerHTML: createMarker(colors[tripId]),
-            });
-            return (
-              <Marker
-                key={placeId}
-                position={[
-                  place.coordinates.latitude,
-                  place.coordinates.longitude,
-                ]}
-                icon={icon}
-              >
-                <Popup>
-                  <b>
-                    {place.name ? `${place.name} - ${place.city}` : place.city}
-                  </b>
-                  {place.description ? (
-                    <div>
-                      <br />
-                      {place.description}
-                    </div>
-                  ) : null}
-                </Popup>
-              </Marker>
-            );
-          })}
-
-          {showJournies
-            ? journeys.map(journey => {
-                const { latitude: la1, longitude: lo1 } =
-                  places[journey.from].coordinates;
-                const { latitude: la2, longitude: lo2 } =
-                  places[journey.to].coordinates;
-                return (
-                  <DirectedLine
-                    key={`trip_${journey.from}_${journey.to}`}
-                    positions={[
-                      [la1, lo1],
-                      [la2, lo2],
-                    ]}
-                    color={colors[tripId]}
-                    popup={`<b>${
-                      places[journey.from].city
-                    } <i class="bi-caret-right-fill"></i> ${
-                      places[journey.to].city
-                    }</b> <br/> ${new Date(journey.date).toLocaleString(
-                      undefined,
-                      {
-                        weekday: 'long',
-                        year: 'numeric',
-                        month: 'long',
-                        day: 'numeric',
-                      },
-                    )}`}
-                  />
-                );
-              })
-            : null}
-        </div>
-      ))}
+      {tripEntries.map(([tripId, { placeIds, journeys }]) => {
+        const icon = L.ExtraMarkers.icon({
+          svg: true,
+          innerHTML: createMarker(colors[tripId]),
+        });
+        return (
+          <div key={tripId}>
+            {placeIds.map((placeId: number) => {
+              const place = places[placeId];
+              return (
+                <Marker
+                  key={placeId}
+                  position={[
+                    parseInt(place.latitude, 10),
+                    parseInt(place.longitude, 10),
+                  ]}
+                  icon={icon}
+                >
+                  <Popup>
+                    <b>
+                      {place.name
+                        ? `${place.name} - ${place.city}`
+                        : place.city}
+                    </b>
+                  </Popup>
+                </Marker>
+              );
+            })}
+            {showJournies
+              ? journeys.map(journey => {
+                  if (journey.to != null) {
+                    const { latitude: la1, longitude: lo1 } =
+                      places[journey.from];
+                    const { latitude: la2, longitude: lo2 } =
+                      places[journey.to];
+                    return (
+                      <DirectedLine
+                        key={`trip_${journey.from}_${journey.to}`}
+                        positions={[
+                          [parseInt(la1, 10), parseInt(lo1, 10)],
+                          [parseInt(la2, 10), parseInt(lo2, 10)],
+                        ]}
+                        color={colors[tripId]}
+                        popup={`<b>${
+                          places[journey.from].city
+                        } <i class="bi-caret-right-fill"></i> ${
+                          places[journey.to].city
+                        }</b> <br/> ${new Date(journey.date).toLocaleString(
+                          undefined,
+                          {
+                            weekday: 'long',
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric',
+                          },
+                        )}`}
+                      />
+                    );
+                  }
+                  return null;
+                })
+              : null}
+          </div>
+        );
+      })}
     </MapContainer>
   );
 };

@@ -1,12 +1,10 @@
 export type Place = {
+  id: number;
   name: string | null;
   city: string;
   country: string;
-  coordinates: Coordinates;
-  description: string | null;
+  latitude: string;
+  longitude: string;
 };
 
-export type Coordinates = {
-  latitude: number;
-  longitude: number;
-};
+export type Places = Record<number, Place>;

@@ -1,13 +1,12 @@
 import { Journey } from './journey.js';
-import { Place } from './place.js';
 
 export type Trip = {
   info: {
     id: number;
     name: string;
-    date?: string;
+    year: string | null;
   };
-  places: Record<number, Place>;
+  placeIds: number[];
   journeys: Journey[];
 };
 

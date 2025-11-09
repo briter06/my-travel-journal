@@ -21,9 +21,8 @@ const processTrip = async (email: string, dataS: string) => {
       name: placeJson.name || null,
       city: placeJson.city,
       country: placeJson.country,
-      latitude: placeJson.coordinates.latitude,
-      longitude: placeJson.coordinates.longitude,
-      description: placeJson.description || null,
+      latitude: placeJson.latitude,
+      longitude: placeJson.longitude,
       tripId: createdTrip.id,
     };
     const createdPlace = await PlaceModel.create(place);

@@ -1,53 +1,58 @@
 import express from 'express';
 import { UserTripModel } from '../db/models/user-trip-model.js';
 import { TripModel } from '../db/models/trip-model.js';
-import { Place, Trips } from '@my-travel-journal/common';
+import { Trip, Trips } from '@my-travel-journal/common';
 import { PlaceModel } from '../db/models/place-model.js';
 import { JourneyModel } from '../db/models/journey-model.js';
 import expressAsyncHandler from 'express-async-handler';
 
 export const tripsRouter = express.Router();
 
-const getTrip = async (trip: TripModel) => {
-  const places: Record<number, Place> = {};
-  const queriedPlaces = await PlaceModel.findAll({
-    where: {
-      tripId: trip.id,
-    },
-    raw: true,
-  });
-  for (const place of queriedPlaces) {
-    places[place.id] = {
-      name: place.name,
-      city: place.city,
-      country: place.country,
-      coordinates: {
-        latitude: place.latitude,
-        longitude: place.longitude,
+const getTrip = async (
+  placeIds: Set<number>,
+  trip: TripModel,
+): Promise<Trip> => {
+  const internalPlaceIds: Set<number> = new Set<number>();
+  const journeys = (
+    await JourneyModel.findAll({
+      where: {
+        tripId: trip.id,
       },
-      description: place.description,
+      raw: true,
+    })
+  ).map(journey => {
+    placeIds.add(journey.from);
+    internalPlaceIds.add(journey.from);
+    if (journey.to != null) placeIds.add(journey.to);
+    return {
+      from: journey.from,
+      to: journey.to,
+      date: journey.date.toISOString(),
     };
-  }
+  });
   return {
     info: {
       id: trip.id,
       name: trip.name,
-      date: trip.date?.toISOString(),
+      year: trip.year,
     },
-    places: places,
-    journeys: (
-      await JourneyModel.findAll({
-        where: {
-          tripId: trip.id,
-        },
-        raw: true,
-      })
-    ).map(journey => ({
-      from: journey.from,
-      to: journey.to,
-      date: journey.date.toISOString(),
-    })),
+    placeIds: Array.from(internalPlaceIds),
+    journeys,
   };
+};
+
+const getPlaces = async (placeIds: Set<number>) => {
+  const places = await PlaceModel.findAll({
+    where: {
+      id: Array.from(placeIds),
+    },
+    raw: true,
+  });
+  const placeMap: Record<number, PlaceModel> = {};
+  for (const place of places) {
+    placeMap[place.id] = place;
+  }
+  return placeMap;
 };
 
 tripsRouter.get(
@@ -65,10 +70,13 @@ tripsRouter.get(
       raw: true,
     });
     const result: Trips = {};
+    const placeIds = new Set<number>();
     for (const trip of trips) {
-      result[trip.id] = await getTrip(trip);
+      result[trip.id] = await getTrip(placeIds, trip);
     }
+
     res.json({
+      places: await getPlaces(placeIds),
       trips: result,
     });
   }),
@@ -93,8 +101,10 @@ tripsRouter.get(
       res.status(403).json({ message: 'Forbidden' });
       return;
     }
-    const result = await getTrip(trip);
+    const placeIds = new Set<number>();
+    const result = await getTrip(placeIds, trip);
     res.json({
+      places: await getPlaces(placeIds),
       trip: result,
     });
   }),

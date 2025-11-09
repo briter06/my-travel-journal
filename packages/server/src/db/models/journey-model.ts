@@ -5,7 +5,7 @@ import { TripModel } from './trip-model.js';
 
 export class JourneyModel extends Model {
   declare from: number;
-  declare to: number;
+  declare to: number | null;
   declare tripId: number;
   declare date: Date;
 }
@@ -26,7 +26,7 @@ export function _Journey(sequelize: Sequelize) {
       },
       to: {
         type: DataTypes.BIGINT,
-        allowNull: false,
+        allowNull: true,
         primaryKey: true,
         references: {
           model: PlaceModel,

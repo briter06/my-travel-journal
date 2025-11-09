@@ -2,11 +2,12 @@ import './AccountMyTrips.css';
 import { useQuery } from '@tanstack/react-query';
 import { getTrips } from '../../../../../api/trips';
 import { useEffect, useState } from 'react';
-import { useAppDispatch } from '../../../../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../../../../store/hooks';
 import { startLoading, stopLoading } from '../../../../../store/slices/loading';
 import { Trip } from '@my-travel-journal/common';
 import { Link, useNavigate } from 'react-router';
 import PaginatedTable from '../../../../utils/PaginatedTable/PaginatedTable';
+import { setPlaces, setTrips } from '../../../../../store/slices/data';
 
 const LOADING_PROCESSES = {
   GETTING_TRIPS: 'accountGettingTrips',
@@ -16,6 +17,8 @@ function AccountMyTrips() {
   const dispatch = useAppDispatch();
   const [sortedTrips, setSortedTrips] = useState<Trip[]>([]);
   const [search, setSearch] = useState('');
+
+  const places = useAppSelector(state => state.trips.places);
 
   const { data: tripsResult, isLoading } = useQuery({
     queryKey: ['trips'],
@@ -28,13 +31,17 @@ function AccountMyTrips() {
     if (isLoading) {
       dispatch(startLoading(LOADING_PROCESSES.GETTING_TRIPS));
     } else {
-      setSortedTrips(
-        Object.values(tripsResult!.trips).sort((a, b) => {
-          const da = a.info.date ? new Date(a.info.date).getTime() : Infinity;
-          const db = b.info.date ? new Date(b.info.date).getTime() : Infinity;
-          return da - db; // ascending
-        }),
-      );
+      if (tripsResult != null) {
+        dispatch(setTrips(tripsResult.trips));
+        dispatch(setPlaces(tripsResult.places));
+        setSortedTrips(
+          Object.values(tripsResult.trips).sort((a, b) => {
+            const da = a.info.year ? parseInt(a.info.year, 10) : Infinity;
+            const db = b.info.year ? parseInt(b.info.year, 10) : Infinity;
+            return da - db; // ascending
+          }),
+        );
+      }
       dispatch(stopLoading(LOADING_PROCESSES.GETTING_TRIPS));
     }
   }, [tripsResult, isLoading]);
@@ -68,13 +75,10 @@ function AccountMyTrips() {
             const filtered = q
               ? sortedTrips.filter(t => {
                   // match year
-                  const year = t.info.date
-                    ? new Date(t.info.date).getFullYear().toString()
-                    : '';
-                  if (year.includes(q)) return true;
+                  if ((t.info.year ?? '').includes(q)) return true;
                   // match any place country
-                  const countries = Object.values(t.places || {}).map(p =>
-                    `${p.country} ${p.city} ${p.name ?? ''}`.toLowerCase(),
+                  const countries = t.placeIds.map(p =>
+                    `${places[p].country} ${places[p].city} ${places[p].name ?? ''}`.toLowerCase(),
                   );
                   if (countries.some(c => c.includes(q))) return true;
                   // also match trip name
@@ -101,9 +105,6 @@ function AccountMyTrips() {
                 pageSizeOptions={[5, 10, 20, 50, 100]}
                 maxPageButtons={2}
                 renderRow={(trip: Trip) => {
-                  const year = trip.info.date
-                    ? new Date(trip.info.date).getFullYear()
-                    : '—';
                   const id = String(trip.info.id);
                   return (
                     <div
@@ -120,7 +121,7 @@ function AccountMyTrips() {
                       }}
                     >
                       <div className="trips-cell" role="cell">
-                        {year}
+                        {trip.info.year ?? '—'}
                       </div>
                       <div className="trips-cell trip-name" role="cell">
                         {trip.info.name}

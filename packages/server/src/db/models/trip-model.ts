@@ -4,7 +4,7 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
 export class TripModel extends Model {
   declare id: number;
   declare name: string;
-  declare date: Date | null;
+  declare year: string | null;
 }
 
 export function _Trip(sequelize: Sequelize) {
@@ -20,8 +20,8 @@ export function _Trip(sequelize: Sequelize) {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      date: {
-        type: DataTypes.DATE,
+      year: {
+        type: DataTypes.STRING,
         allowNull: true,
       },
     },

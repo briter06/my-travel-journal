@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import loadingReducer from './slices/loading';
-import tripsReducer from './slices/trips';
+import tripsReducer from './slices/data';
 import sessionSlice from './slices/session';
 import navigationSlice from './slices/navigation';
 
