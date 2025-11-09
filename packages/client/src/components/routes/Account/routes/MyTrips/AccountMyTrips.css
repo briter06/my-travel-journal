@@ -1,0 +1,141 @@
+
+.mytrips-container {
+	max-width: 1100px; /* wider */
+	margin: 25px auto;
+	padding: 8px;
+}
+
+.trips-table {
+	/* only top and bottom borders, no lateral borders */
+	border-top: 1px solid #e6e7eb;
+	border-bottom: 1px solid #e6e7eb;
+	border-radius: 6px;
+	overflow: hidden;
+	background: #fff;
+}
+
+.trips-row {
+	display: grid;
+	/* year, name */
+	grid-template-columns: 72px 1fr;
+	gap: 12px;
+	padding: 8px 12px; /* reduced height */
+	align-items: center;
+	border-top: 1px solid transparent;
+}
+
+.trips-row.header {
+	background: #fafafa;
+	font-weight: 700;
+}
+
+.trip-name {
+	font-weight: 600;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.trips-cell {
+	color: #111827;
+	text-align: left; /* align text to the left */
+}
+
+.mytrips-empty {
+	padding: 20px;
+	color: #6b7280;
+}
+
+@media (max-width: 600px) {
+  .trips-row {
+    grid-template-columns: 1fr 80px;
+    padding: 10px;
+  }
+}
+
+/* Pagination controls */
+.trips-controls {
+	display: flex;
+	justify-content: flex-end;
+	padding: 8px 12px;
+	flex: 0 0 auto; /* keep controls at their natural size */
+}
+.trips-search-row {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 12px;
+	padding: 8px 0;
+}
+.trips-search {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	flex: 1 1 auto; /* allow search to grow and take available space */
+}
+.trips-search input {
+	padding: 6px 8px;
+	border: 1px solid #d1d5db;
+	border-radius: 6px;
+	min-width: 220px;
+	width: 100%; /* fill the search container, stopping before controls */
+}
+.trips-page-size { flex: 0 0 auto; }
+.trips-page-size {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	font-size: 14px;
+	color: #374151;
+}
+.trips-page-size select {
+	padding: 4px 6px;
+	border-radius: 4px;
+	border: 1px solid #d1d5db;
+	background: #fff;
+}
+
+.create-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 6px 10px;
+	margin-right: 10px;
+	background: #2563eb; /* blue */
+	color: #fff;
+	border-radius: 6px;
+	text-decoration: none;
+	font-weight: 600;
+}
+.create-button:hover { opacity: 0.95; }
+
+.pagination {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	justify-content: center;
+	padding: 10px 12px;
+}
+.trips-row.clickable {
+  cursor: pointer;
+}
+.trips-row.clickable:hover {
+  background: #f9fafb;
+}
+.page-button {
+	background: #f3f4f6;
+	border: 1px solid #e5e7eb;
+	color: #111827;
+	padding: 6px 10px;
+	border-radius: 4px;
+	cursor: pointer;
+}
+.page-button:disabled {
+	opacity: 0.5;
+	cursor: default;
+}
+.page-info {
+	color: #6b7280;
+	font-size: 13px;
+}
+
