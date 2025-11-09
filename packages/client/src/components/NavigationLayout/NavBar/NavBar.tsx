@@ -109,7 +109,7 @@ function NavBar() {
             void navigate('/');
           }}
         >
-          My Travel Journal
+          My World Trail
         </span>
       </div>
       <div
