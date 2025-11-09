@@ -97,4 +97,41 @@
 		}
 }
 
+/* Journeys table styles */
+.journeys-row {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr auto;
+	gap: 12px;
+	align-items: center;
+	padding: 10px 12px;
+	border-bottom: 1px solid #eef2f7;
+}
+
+.journeys-row.header {
+	background: #fafafa;
+	font-weight: 600;
+}
+
+.journey-col { display: block; }
+
+.journey-select {
+	width: 100%;
+	padding: 6px 8px;
+	border-radius: 6px;
+	border: 1px solid #e5e7eb;
+}
+
+.journey-date {
+	width: 100%;
+	padding: 6px 8px;
+	border-radius: 6px;
+	border: 1px solid #e5e7eb;
+}
+
+@media (max-width: 520px) {
+	.journeys-row { grid-template-columns: 1fr; }
+	.journeys-row.header { display: none; }
+}
+
+
 

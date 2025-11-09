@@ -32,3 +32,16 @@ export const getTrip = async (
     return null;
   }
 };
+
+export const getAllPlaces = async (): Promise<{ places: Places } | null> => {
+  try {
+    const result = await axios.get(`${environment.apiUrl}/places/all`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+      },
+    });
+    return result.data as { places: Places };
+  } catch (_err) {
+    return null;
+  }
+};

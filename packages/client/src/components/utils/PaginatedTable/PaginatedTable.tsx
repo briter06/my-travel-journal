@@ -4,7 +4,7 @@ import './PaginatedTable.css';
 type PaginatedTableProps<T> = {
   items: T[];
   header: React.ReactNode; // header node (e.g. a .trips-row.header element)
-  renderRow: (item: T) => React.ReactNode;
+  renderRow: (item: T, index: number) => React.ReactNode;
   defaultPageSize?: number;
   pageSizeOptions?: number[];
   maxPageButtons?: number;
@@ -58,7 +58,7 @@ function PaginatedTable<T>({
       <div className="trips-table" role="table">
         {header}
 
-        {visible.map(item => renderRow(item))}
+        {visible.map((item, i) => renderRow(item, start + i))}
 
         <div className="pagination">
           <button
