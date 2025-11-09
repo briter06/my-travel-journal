@@ -1,27 +1,15 @@
 import './Map.css';
 import { Trips } from '@my-travel-journal/common';
-import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import chroma from 'chroma-js';
-import moment from 'moment';
 import { Menu, SubMenu, MenuItem } from 'react-pro-sidebar';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { getTrips } from '../../../api/trips';
-import {
-  setPlaces,
-  setTrips,
-  setTripsForMap,
-} from '../../../store/slices/data';
-import { startLoading, stopLoading } from '../../../store/slices/loading';
+import { setTripsForMap } from '../../../store/slices/data';
 import NavigationContent from '../../utils/NavigationContent/NavigationContent';
 import Switch from '../../utils/Switch/Switch';
 import CheckBox from '../../utils/CheckBox/CheckBox';
 import MapContent from './MapContent/MapContent';
 import { SIDE_BAR_BACKGROUND_COLOR } from '../../../utils/colors';
-
-const LOADING_PROCESSES = {
-  GETTING_TRIPS: 'gettingTrips',
-};
 
 const groupByYear = (trips: Trips) => {
   const grouped: Record<string, Trips> = {};
@@ -41,49 +29,27 @@ const groupByYear = (trips: Trips) => {
 };
 
 function Map() {
-  const [colors, setColors] = useState<Record<string, string>>({});
-
   const isSideBarOpen = useAppSelector(state => state.navigation.isSideBarOpen);
   const statePlaces = useAppSelector(state => state.trips.places);
   const stateTrips = useAppSelector(state => state.trips.trips);
   const stateTripsForMap = useAppSelector(state => state.trips.tripsForMap);
+  const [colors, setColors] = useState<Record<string, string>>({});
   const dispatch = useAppDispatch();
 
   const [showJournies, setShowJournies] = useState<boolean>(true);
 
-  const { data: tripsResult, isLoading } = useQuery({
-    queryKey: ['trips'],
-    queryFn: getTrips,
-  });
-
-  const tripsCallback = () => {
-    if (tripsResult != null) {
-      const localColors: Record<string, string> = {};
-      const trips = tripsResult.trips;
-      const values = Object.values(trips);
-      const generatedColors = chroma.scale('Set1').colors(values.length);
-      for (let i = 0; i < values.length; i++) {
-        localColors[values[i].info.id] = generatedColors[i];
-      }
-      setColors(localColors);
-      dispatch(setPlaces(tripsResult.places));
-      dispatch(setTrips(trips));
-      dispatch(setTripsForMap(trips));
-      console.log('Loaded data:', trips);
+  useEffect(() => {
+    const values = Object.values(stateTrips);
+    const generatedColors = chroma.scale('Set1').colors(values.length);
+    for (let i = 0; i < values.length; i++) {
+      colors[values[i].info.id] = generatedColors[i];
     }
-  };
+    setColors(colors);
+    dispatch(setTripsForMap({ ...stateTrips }));
+  }, [stateTrips]);
 
   const allAreSelected = () =>
     Object.keys(stateTrips).length === Object.keys(stateTripsForMap).length;
-
-  useEffect(() => {
-    if (isLoading) {
-      dispatch(startLoading(LOADING_PROCESSES.GETTING_TRIPS));
-    } else {
-      tripsCallback();
-      dispatch(stopLoading(LOADING_PROCESSES.GETTING_TRIPS));
-    }
-  }, [tripsResult, isLoading]);
 
   return stateTrips !== null && stateTripsForMap != null ? (
     <NavigationContent

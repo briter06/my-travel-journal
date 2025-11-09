@@ -9,7 +9,7 @@ export const getNonce = async (): Promise<NonceResult | null> => {
   try {
     const result = await axios.get(`${environment.apiUrl}/crypto/nonce`);
     return result.data as NonceResult;
-  } catch (err) {
+  } catch (_err) {
     return null;
   }
 };
@@ -30,7 +30,7 @@ export const loginUser = async (
     );
     localStorage.setItem('token', result.data.token);
     return null;
-  } catch (err) {
+  } catch (_err) {
     return {
       status: false,
       message: 'Email or password are incorrect',
@@ -46,7 +46,7 @@ export const getMe = async (): Promise<Me | null> => {
       },
     });
     return result.data.error != null ? null : (result.data as Me);
-  } catch (err) {
+  } catch (_err) {
     return null;
   }
 };

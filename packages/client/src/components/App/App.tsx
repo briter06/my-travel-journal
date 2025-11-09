@@ -5,13 +5,15 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { setIsLoggedIn, setMe } from '../../store/slices/session';
 import { useQuery } from '@tanstack/react-query';
 import { startLoading, stopLoading } from '../../store/slices/loading';
-import Loading from '../utils/Loading/Loading';
 import NavigationLayout from '../NavigationLayout/NavigationLayout';
-import { Outlet, useLocation, useMatches, useNavigate } from 'react-router';
+import { useLocation, useMatches, useNavigate } from 'react-router';
 import Login from '../Auth/Login/Login';
+import { getTrips } from '../../api/trips';
+import { setPlaces, setTrips } from '../../store/slices/data';
 
 const LOADING_PROCESSES = {
   GETTING_ME: 'gettingMe',
+  GETTING_TRIPS: 'gettingTrips',
   SIGNUP: 'signup',
 };
 
@@ -35,15 +37,21 @@ function App() {
 
   const dispatch = useAppDispatch();
 
-  const { data: me, isLoading } = useQuery({
+  const { data: me, isLoading: isLoadingMe } = useQuery({
     queryKey: ['me'],
     queryFn: getMe,
     enabled: hasToken,
   });
 
+  const { data: tripsResult, isLoading: isLoadingTrips } = useQuery({
+    queryKey: ['trips'],
+    queryFn: getTrips,
+    enabled: hasToken && !isLoadingMe,
+  });
+
   useEffect(() => {
     if (hasToken) {
-      if (isLoading) {
+      if (isLoadingMe) {
         dispatch(startLoading(LOADING_PROCESSES.GETTING_ME));
       } else {
         if (me != null) {
@@ -60,7 +68,21 @@ function App() {
     } else {
       resetLocation();
     }
-  }, [navigate, location.pathname, me, isLoading]);
+  }, [navigate, location.pathname, me, isLoadingMe]);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      if (isLoadingTrips) {
+        dispatch(startLoading(LOADING_PROCESSES.GETTING_TRIPS));
+      } else {
+        if (tripsResult != null) {
+          dispatch(setTrips(tripsResult.trips));
+          dispatch(setPlaces(tripsResult.places));
+        }
+        dispatch(stopLoading(LOADING_PROCESSES.GETTING_TRIPS));
+      }
+    }
+  }, [isLoggedIn, tripsResult, isLoadingTrips]);
 
   return (
     <div className="App">

@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { useAppSelector } from '../hooks';
 
 const initialState: { loadingProcesses: Record<string, boolean> } = {
   loadingProcesses: {},
@@ -16,6 +17,11 @@ const loadingSlice = createSlice({
     },
   },
 });
+
+export const isLoading = () =>
+  useAppSelector(
+    state => Object.keys(state.loading.loadingProcesses).length > 0,
+  );
 
 export const { startLoading, stopLoading } = loadingSlice.actions;
 export default loadingSlice.reducer;

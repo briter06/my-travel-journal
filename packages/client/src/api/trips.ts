@@ -13,7 +13,7 @@ export const getTrips = async (): Promise<{
       },
     });
     return result.data as { places: Places; trips: Trips };
-  } catch (err) {
+  } catch (_err) {
     return null;
   }
 };
@@ -28,7 +28,7 @@ export const getTrip = async (
       },
     });
     return result.data as { places: Places; trip: Trip };
-  } catch (err) {
+  } catch (_err) {
     return null;
   }
 };

@@ -36,7 +36,7 @@ placesRouter.get(
 
 placesRouter.get(
   '/all',
-  expressAsyncHandler(async (req, res) => {
+  expressAsyncHandler(async (_req, res) => {
     const places = await PlaceModel.findAll({
       raw: true,
     });

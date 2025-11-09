@@ -1,13 +1,9 @@
 import './Loading.css';
 import loading from '../../../assets/loading.gif';
-import { useAppSelector } from '../../../store/hooks';
+import { isLoading } from '../../../store/slices/loading';
 
 function Loading() {
-  const loadingProcesses = useAppSelector(
-    state => state.loading.loadingProcesses,
-  );
-
-  return Object.keys(loadingProcesses).length > 0 ? (
+  return isLoading() ? (
     <div className="loading-container">
       <img className="loading-image" src={loading} alt="loading" />
     </div>

@@ -1,54 +1,33 @@
 import './AccountMyTrips.css';
-import { useQuery } from '@tanstack/react-query';
-import { getTrips } from '../../../../../api/trips';
 import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../../../store/hooks';
-import { startLoading, stopLoading } from '../../../../../store/slices/loading';
+import { useAppSelector } from '../../../../../store/hooks';
+import { isLoading } from '../../../../../store/slices/loading';
 import { Trip } from '@my-travel-journal/common';
 import { Link, useNavigate } from 'react-router';
 import PaginatedTable from '../../../../utils/PaginatedTable/PaginatedTable';
-import { setPlaces, setTrips } from '../../../../../store/slices/data';
-
-const LOADING_PROCESSES = {
-  GETTING_TRIPS: 'accountGettingTrips',
-};
 
 function AccountMyTrips() {
-  const dispatch = useAppDispatch();
   const [sortedTrips, setSortedTrips] = useState<Trip[]>([]);
   const [search, setSearch] = useState('');
 
   const places = useAppSelector(state => state.trips.places);
-
-  const { data: tripsResult, isLoading } = useQuery({
-    queryKey: ['trips'],
-    queryFn: getTrips,
-  });
+  const trips = useAppSelector(state => state.trips.trips);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isLoading) {
-      dispatch(startLoading(LOADING_PROCESSES.GETTING_TRIPS));
-    } else {
-      if (tripsResult != null) {
-        dispatch(setTrips(tripsResult.trips));
-        dispatch(setPlaces(tripsResult.places));
-        setSortedTrips(
-          Object.values(tripsResult.trips).sort((a, b) => {
-            const da = a.info.year ? parseInt(a.info.year, 10) : Infinity;
-            const db = b.info.year ? parseInt(b.info.year, 10) : Infinity;
-            return da - db; // ascending
-          }),
-        );
-      }
-      dispatch(stopLoading(LOADING_PROCESSES.GETTING_TRIPS));
-    }
-  }, [tripsResult, isLoading]);
+    setSortedTrips(
+      Object.values(trips).sort((a, b) => {
+        const da = a.info.year ? parseInt(a.info.year, 10) : Infinity;
+        const db = b.info.year ? parseInt(b.info.year, 10) : Infinity;
+        return da - db; // ascending
+      }),
+    );
+  }, [trips]);
 
   return (
     <div className="mytrips-container">
-      {isLoading ? null : sortedTrips.length === 0 ? (
+      {isLoading() ? null : sortedTrips.length === 0 ? (
         <div className="mytrips-empty">You don't have any trips yet.</div>
       ) : (
         <div>

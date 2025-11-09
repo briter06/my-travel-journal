@@ -11,7 +11,7 @@ export const getNonceKey = async (): Promise<NonceKeyResult | null> => {
   try {
     const result = await axios.get(`${environment.apiUrl}/crypto/nonce/key`);
     return result.data as NonceKeyResult;
-  } catch (err) {
+  } catch (_err) {
     return null;
   }
 };
@@ -49,7 +49,7 @@ export const createUser = async (
         message: 'The user has been created. Please login',
       };
     }
-  } catch (err) {
+  } catch (_err) {
     return {
       status: false,
       message: 'There was a problem. Please try again later.',
