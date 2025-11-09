@@ -1,20 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');
 
-.avatar {
-  --size: 40px;
-  display: inline-grid;
-  place-items: center;
-  width: var(--size);
-  height: var(--size);
-  border-radius: 50%;
-  background: #006600;
-  color: white;
-  font-weight: 400;
-  font-size: calc(var(--size) * 0.45);
-  cursor: pointer;
-  user-select: none;
-}
-
 /* Popup animation styles */
 .popup-menu {
   transform-origin: top right;

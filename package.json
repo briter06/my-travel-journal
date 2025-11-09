@@ -16,7 +16,7 @@
     "prepare": "husky",
     "build": "lerna run build",
     "test": "lerna run test",
-    "client": "lerna run start --scope @my-travel-journal/client",
+    "client": "cd packages/client && yarn start",
     "server": "lerna run start --scope @my-travel-journal/server",
     "server:prod": "cd packages/server && node ."
   },

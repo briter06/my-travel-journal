@@ -13,12 +13,11 @@ import NavigationContent from '../../utils/NavigationContent/NavigationContent';
 import Switch from '../../utils/Switch/Switch';
 import CheckBox from '../../utils/CheckBox/CheckBox';
 import MapContent from './MapContent/MapContent';
+import { SIDE_BAR_BACKGROUND_COLOR } from '../../../utils/colors';
 
 const LOADING_PROCESSES = {
   GETTING_TRIPS: 'gettingTrips',
 };
-
-const SIDE_BAR_BACKGROUND_COLOR = '#fbfbfb';
 
 const groupByYear = (trips: Trips) => {
   const grouped: Record<string, Trips> = {};

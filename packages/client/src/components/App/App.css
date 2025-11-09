@@ -81,3 +81,18 @@
   margin-bottom: 1rem;
   font-size: 1rem;
 }
+
+.avatar {
+  --size: 40px;
+  display: inline-grid;
+  place-items: center;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  background: #006600;
+  color: white;
+  font-weight: 400;
+  font-size: calc(var(--size) * 0.45);
+  cursor: pointer;
+  user-select: none;
+}
