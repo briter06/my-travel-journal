@@ -1,0 +1,100 @@
+.account-trip-editor{
+    margin: 30px 50px;
+}
+
+/* Layout for a single labeled field row: label on the left, input on the right */
+.trip-field-row {
+	margin: 12px 0;
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.trip-field-label {
+	display: inline-block;
+	font-weight: 600;
+	margin: 0;
+	/* fix label width but keep it aligned to the left */
+	flex: 0 0 140px;
+	text-align: left;
+}
+
+.trip-field-input {
+	flex: 1;
+	padding: 8px;
+	border-radius: 6px;
+	border: 1px solid #d1d5db;
+	min-width: 0; /* allow shrinking in narrow containers */
+}
+
+/* Actions area (Save/Cancel) */
+.trip-editor-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 8px;
+	margin-top: 20px;
+}
+
+/* Buttons */
+.btn {
+	padding: 8px 12px;
+	border-radius: 6px;
+	cursor: pointer;
+	font-size: 14px;
+}
+
+.btn.cancel {
+	border: 1px solid #d1d5db;
+	background: #fff;
+}
+
+.btn.primary {
+	background: #2563eb;
+	color: #fff;
+	border: none;
+}
+
+/* Responsive tweak: on very narrow screens stack label above input */
+@media (max-width: 420px) {
+	.trip-field-row {
+		flex-direction: column;
+		align-items: stretch;
+	}
+
+	.trip-field-label {
+		width: auto;
+		margin-bottom: 6px;
+	}
+}
+
+/* Date select group */
+.trip-date-selects {
+	display: flex;
+	gap: 8px;
+	align-items: center;
+	width: 100%;
+}
+
+.trip-date-select {
+	padding: 8px;
+	border-radius: 6px;
+	border: 1px solid #d1d5db;
+	background: #fff;
+	color: #111827;
+	font-size: 14px;
+	/* make selects equally wide */
+	flex: 1 1 0;
+	min-width: 0;
+}
+
+@media (max-width: 420px) {
+		.trip-date-selects {
+			flex-direction: column;
+		}
+
+		.trip-date-select {
+			width: 100%;
+		}
+}
+
+

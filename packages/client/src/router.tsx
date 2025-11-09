@@ -5,6 +5,7 @@ import Account from './components/routes/Account/Account';
 import AccountGeneral from './components/routes/Account/routes/General/AccountGeneral';
 import AccountMyTrips from './components/routes/Account/routes/MyTrips/AccountMyTrips';
 import SignUp from './components/Auth/SignUp/SignUp';
+import AccountTrip from './components/routes/Account/routes/Trip/AccountTrip';
 
 export const createRouter = () =>
   createBrowserRouter([
@@ -33,7 +34,20 @@ export const createRouter = () =>
             },
             {
               path: 'trips',
-              element: <AccountMyTrips />,
+              children: [
+                {
+                  path: '',
+                  element: <AccountMyTrips />,
+                },
+                {
+                  path: 'create',
+                  element: <AccountTrip create />,
+                },
+                {
+                  path: ':tripId',
+                  element: <AccountTrip />,
+                },
+              ],
             },
           ],
         },

@@ -8,6 +8,48 @@ import expressAsyncHandler from 'express-async-handler';
 
 export const tripsRouter = express.Router();
 
+const getTrip = async (trip: TripModel) => {
+  const places: Record<number, Place> = {};
+  const queriedPlaces = await PlaceModel.findAll({
+    where: {
+      tripId: trip.id,
+    },
+    raw: true,
+  });
+  for (const place of queriedPlaces) {
+    places[place.id] = {
+      name: place.name,
+      city: place.city,
+      country: place.country,
+      coordinates: {
+        latitude: place.latitude,
+        longitude: place.longitude,
+      },
+      description: place.description,
+    };
+  }
+  return {
+    info: {
+      id: trip.id,
+      name: trip.name,
+      date: trip.date?.toISOString(),
+    },
+    places: places,
+    journeys: (
+      await JourneyModel.findAll({
+        where: {
+          tripId: trip.id,
+        },
+        raw: true,
+      })
+    ).map(journey => ({
+      from: journey.from,
+      to: journey.to,
+      date: journey.date.toISOString(),
+    })),
+  };
+};
+
 tripsRouter.get(
   '/',
   expressAsyncHandler(async (req, res) => {
@@ -24,48 +66,36 @@ tripsRouter.get(
     });
     const result: Trips = {};
     for (const trip of trips) {
-      const places: Record<number, Place> = {};
-      const queriedPlaces = await PlaceModel.findAll({
-        where: {
-          tripId: trip.id,
-        },
-        raw: true,
-      });
-      for (const place of queriedPlaces) {
-        places[place.id] = {
-          name: place.name,
-          city: place.city,
-          country: place.country,
-          coordinates: {
-            latitude: place.latitude,
-            longitude: place.longitude,
-          },
-          description: place.description,
-        };
-      }
-      result[trip.id] = {
-        info: {
-          id: trip.id,
-          name: trip.name,
-          date: trip.date,
-        },
-        places: places,
-        journeys: (
-          await JourneyModel.findAll({
-            where: {
-              tripId: trip.id,
-            },
-            raw: true,
-          })
-        ).map(journey => ({
-          from: journey.from,
-          to: journey.to,
-          date: journey.date,
-        })),
-      };
+      result[trip.id] = await getTrip(trip);
     }
     res.json({
       trips: result,
+    });
+  }),
+);
+
+tripsRouter.get(
+  '/:tripId',
+  expressAsyncHandler(async (req, res) => {
+    const tripId = Number(req.params.tripId);
+    const trip = await TripModel.findByPk(tripId);
+    if (trip == null) {
+      res.status(404).json({ message: 'Trip not found' });
+      return;
+    }
+    const userTrip = await UserTripModel.findOne({
+      where: {
+        email: req.email!,
+        tripId: tripId,
+      },
+    });
+    if (userTrip == null) {
+      res.status(403).json({ message: 'Forbidden' });
+      return;
+    }
+    const result = await getTrip(trip);
+    res.json({
+      trip: result,
     });
   }),
 );

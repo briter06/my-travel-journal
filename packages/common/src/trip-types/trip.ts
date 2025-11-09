@@ -5,7 +5,7 @@ export type Trip = {
   info: {
     id: number;
     name: string;
-    date?: Date;
+    date?: string;
   };
   places: Record<number, Place>;
   journeys: Journey[];

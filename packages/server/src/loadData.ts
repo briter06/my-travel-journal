@@ -11,7 +11,7 @@ const processTrip = async (email: string, dataS: string) => {
   const { info, places, trips } = JSON.parse(dataS);
   const trip = {
     name: info.id,
-    date: new Date(info.date),
+    date: info.date != null ? new Date(info.date) : null,
   };
   const createdTrip = await TripModel.create(trip);
   const createdPlaces: Record<string, number> = {};
