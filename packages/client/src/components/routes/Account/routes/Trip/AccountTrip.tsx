@@ -72,14 +72,6 @@ function AccountTrip({ create }: AccountTripProps) {
     }, [tripResult, isLoadingTrip]);
   }
 
-  const getPlaceOptions = () =>
-    Object.entries(allPlaces).map(([id, place]) => (
-      <option key={id} value={id}>
-        {place.country}, {place.city}
-        {place.name != null ? `, ${place.name}` : ''}
-      </option>
-    ));
-
   const placeOptionsArray = Object.entries(allPlaces).map(([id, place]) => ({
     id: parseInt(id, 10),
     label: `${place.country}, ${place.city}${place.name != null ? `, ${place.name}` : ''}`,
@@ -158,27 +150,36 @@ function AccountTrip({ create }: AccountTripProps) {
           renderRow={(journey: Journey, idx: number) => (
             <div key={idx} className="journeys-row">
               <div className="journey-col">
-                <select
-                  className="journey-select"
-                  value={journey.from.toString()}
-                  onChange={e => {
-                    const v =
-                      e.target.value === '' ? NaN : Number(e.target.value);
+                <SelectAutoComplete<number>
+                  options={placeOptionsArray}
+                  value={journey.from}
+                  onChange={(id: number | null) =>
                     setCurrentTripJourneys(prev =>
-                      prev.map((j, i) => (i === idx ? { ...j, from: v } : j)),
-                    );
+                      prev.map((j, i) =>
+                        i === idx
+                          ? { ...j, from: id == null ? NaN : Number(id) }
+                          : j,
+                      ),
+                    )
+                  }
+                  noMatch={{
+                    node: () => (
+                      <div>
+                        <div className="sac-no-match">Create location</div>
+                      </div>
+                    ),
+                    callback: () => {
+                      setCreateModalOpen(true);
+                    },
                   }}
-                >
-                  <option value="">--</option>
-                  {getPlaceOptions()}
-                </select>
+                />
               </div>
 
               <div className="journey-col">
                 <SelectAutoComplete<number>
                   options={placeOptionsArray}
                   value={journey.to}
-                  onChange={(id: string | number | null) =>
+                  onChange={(id: number | null) =>
                     setCurrentTripJourneys(prev =>
                       prev.map((j, i) =>
                         i === idx
