@@ -1,6 +1,6 @@
 import './AccountTrip.css';
 import { useQuery } from '@tanstack/react-query';
-import { getAllPlaces, getTrip } from '../../../../../api/trips';
+import { getTrip } from '../../../../../api/trips';
 import { useEffect, useState } from 'react';
 import { useAppDispatch } from '../../../../../store/hooks';
 import {
@@ -12,6 +12,8 @@ import { useNavigate, useParams } from 'react-router';
 import { Journey, Places } from '@my-travel-journal/common';
 import PaginatedTable from '../../../../utils/PaginatedTable/PaginatedTable';
 import SelectAutoComplete from '../../../../utils/SelectAutoComplete/SelectAutoComplete';
+import CreatePlacePopup from './CreatePlacePopup/CreatePlacePopup';
+import { getAllPlaces } from '../../../../../api/places';
 
 const LOADING_PROCESSES = {
   GETTING_TRIP: 'accountGettingTrip',
@@ -79,9 +81,11 @@ function AccountTrip({ create }: AccountTripProps) {
     ));
 
   const placeOptionsArray = Object.entries(allPlaces).map(([id, place]) => ({
-    id,
+    id: parseInt(id, 10),
     label: `${place.country}, ${place.city}${place.name != null ? `, ${place.name}` : ''}`,
   }));
+
+  const [createModalOpen, setCreateModalOpen] = useState(false);
 
   return isLoading() ? null : (
     <div className="account-trip-editor">
@@ -171,7 +175,7 @@ function AccountTrip({ create }: AccountTripProps) {
               </div>
 
               <div className="journey-col">
-                <SelectAutoComplete
+                <SelectAutoComplete<number>
                   options={placeOptionsArray}
                   value={journey.to}
                   onChange={(id: string | number | null) =>
@@ -183,10 +187,14 @@ function AccountTrip({ create }: AccountTripProps) {
                       ),
                     )
                   }
-                  noMatchNode={{
-                    node: query => <span>Create place "{query}"</span>,
-                    callback: query => {
-                      console.log('WEnas', query);
+                  noMatch={{
+                    node: () => (
+                      <div>
+                        <div className="sac-no-match">Create location</div>
+                      </div>
+                    ),
+                    callback: () => {
+                      setCreateModalOpen(true);
                     },
                   }}
                 />
@@ -223,6 +231,17 @@ function AccountTrip({ create }: AccountTripProps) {
           )}
         />
       </div>
+
+      {createModalOpen ? (
+        <CreatePlacePopup
+          onClose={() => setCreateModalOpen(false)}
+          onSave={({ country, city, name }) => {
+            // temporary: log and close
+            console.log('Create selections:', { country, city, name });
+            setCreateModalOpen(false);
+          }}
+        />
+      ) : null}
 
       <div className="trip-editor-actions">
         <button

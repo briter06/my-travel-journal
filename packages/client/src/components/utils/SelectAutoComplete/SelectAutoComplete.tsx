@@ -1,33 +1,35 @@
 import React, { useEffect, useRef, useState } from 'react';
 import './SelectAutoComplete.css';
 
-export type Option = { id: string | number; label: string };
+export type Option<T> = { id: T; label: string };
 
-type Props = {
-  options: Option[];
-  value?: string | number | null;
-  onChange: (id: string | number | null) => void;
+type Props<T> = {
+  options: Option<T>[];
+  value?: T | null;
+  onChange: (id: T | null) => void;
   placeholder?: string;
   maxMatches?: number;
   // when true, focusing the input will show matches even with empty query
   showOnFocus?: boolean;
   // optional node or render function to show when there are no matches for the typed query.
   // If omitted, nothing will be displayed when there are zero matches.
-  noMatchNode?: {
+  noMatch?: {
     node: (query: string) => React.ReactNode;
     callback: (query: string) => void;
   };
+  disabled?: boolean;
 };
 
-export default function SelectAutoComplete({
+export default function SelectAutoComplete<T = string>({
   options,
   value,
   onChange,
   placeholder,
   maxMatches = 5,
   showOnFocus = false,
-  noMatchNode,
-}: Props) {
+  noMatch,
+  disabled,
+}: Props<T>) {
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
@@ -77,6 +79,7 @@ export default function SelectAutoComplete({
           onFocus={() => setOpen(true)}
           aria-autocomplete="list"
           aria-haspopup="listbox"
+          disabled={disabled === true}
         />
         {(value != null || query.length > 0) && (
           <button
@@ -118,20 +121,21 @@ export default function SelectAutoComplete({
       )}
 
       {/* when user typed but got no matches, optionally render provided node */}
-      {open && normalized.length > 0 && matches.length === 0 && noMatchNode && (
-        <div className="sac-list" role="listbox">
-          {noMatchNode != null ? (
+      {open &&
+        normalized.length > 0 &&
+        matches.length === 0 &&
+        noMatch != null && (
+          <div className="sac-list" role="listbox">
             <div
               key="no-match"
               role="option"
               className="sac-item"
-              onClick={() => noMatchNode.callback(query)}
+              onClick={() => noMatch.callback(query)}
             >
-              {noMatchNode.node(query)}
+              {noMatch.node(query)}
             </div>
-          ) : null}
-        </div>
-      )}
+          </div>
+        )}
     </div>
   );
 }
