@@ -1,0 +1,46 @@
+.sac-container { position: relative; }
+.sac-input {
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+.sac-list {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin-top: 6px;
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+  z-index: 40;
+  max-height: 220px;
+  overflow: auto;
+}
+.sac-item { padding: 8px 10px; cursor: pointer; }
+.sac-item:hover { background: #f3f4f6; }
+
+.sac-clear {
+  font-size: 12px;
+  line-height: 1;
+  padding: 2px 6px;
+  color: #6b7280;
+}
+
+.sac-input {
+  padding-right: 28px; /* room for clear button */
+}
+
+/* when there's a selected value shown as placeholder, render it as normal black text */
+.sac-input.sac-has-selected::placeholder {
+  color: #111827; /* near-black */
+  opacity: 1; /* ensure visible */
+  font-weight: 400;
+}
+
+.sac-no-match { padding: 8px 10px; color: #6b7280; }
+.sac-create { padding: 8px 10px; border-top: 1px solid #eee; display:flex; justify-content:flex-end; }
+.sac-create-btn { background: #2563eb; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; }
+.sac-create-btn:disabled { opacity: 0.5; }

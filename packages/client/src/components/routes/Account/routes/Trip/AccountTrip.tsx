@@ -11,6 +11,7 @@ import {
 import { useNavigate, useParams } from 'react-router';
 import { Journey, Places } from '@my-travel-journal/common';
 import PaginatedTable from '../../../../utils/PaginatedTable/PaginatedTable';
+import SelectAutoComplete from '../../../../utils/SelectAutoComplete/SelectAutoComplete';
 
 const LOADING_PROCESSES = {
   GETTING_TRIP: 'accountGettingTrip',
@@ -76,6 +77,11 @@ function AccountTrip({ create }: AccountTripProps) {
         {place.name != null ? `, ${place.name}` : ''}
       </option>
     ));
+
+  const placeOptionsArray = Object.entries(allPlaces).map(([id, place]) => ({
+    id,
+    label: `${place.country}, ${place.city}${place.name != null ? `, ${place.name}` : ''}`,
+  }));
 
   return isLoading() ? null : (
     <div className="account-trip-editor">
@@ -165,20 +171,25 @@ function AccountTrip({ create }: AccountTripProps) {
               </div>
 
               <div className="journey-col">
-                <select
-                  className="journey-select"
-                  value={journey.to?.toString() ?? ''}
-                  onChange={e => {
-                    const v =
-                      e.target.value === '' ? null : Number(e.target.value);
+                <SelectAutoComplete
+                  options={placeOptionsArray}
+                  value={journey.to}
+                  onChange={(id: string | number | null) =>
                     setCurrentTripJourneys(prev =>
-                      prev.map((j, i) => (i === idx ? { ...j, to: v } : j)),
-                    );
+                      prev.map((j, i) =>
+                        i === idx
+                          ? { ...j, to: id == null ? null : Number(id) }
+                          : j,
+                      ),
+                    )
+                  }
+                  noMatchNode={{
+                    node: query => <span>Create place "{query}"</span>,
+                    callback: query => {
+                      console.log('WEnas', query);
+                    },
                   }}
-                >
-                  <option value="">--</option>
-                  {getPlaceOptions()}
-                </select>
+                />
               </div>
 
               <div className="journey-col">
