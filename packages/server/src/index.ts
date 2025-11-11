@@ -58,8 +58,6 @@ app.get(/.*/, (_req, res) => {
 
 connectSequelize()
   .then(() => {
-    // TODO: Remove this after load
-    // loadDataFromFolder('briter.gd@gmail.com').then(() => console.log('FINISHED LOAD'));
     // Start server
     app.listen(port, () => {
       logger.info(`Server running at http://localhost:${port}`);

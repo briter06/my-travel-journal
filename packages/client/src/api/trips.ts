@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { environment } from '../env/environment';
-import { Places, Trip, Trips } from '@my-travel-journal/common';
+import { Locations, Trip, Trips } from '@my-travel-journal/common';
 
 export const getTrips = async (): Promise<{
-  places: Places;
+  locations: Locations;
   trips: Trips;
 } | null> => {
   try {
@@ -12,7 +12,7 @@ export const getTrips = async (): Promise<{
         Authorization: `Bearer ${localStorage.getItem('token')}`,
       },
     });
-    return result.data as { places: Places; trips: Trips };
+    return result.data as { locations: Locations; trips: Trips };
   } catch (_err) {
     return null;
   }
@@ -20,14 +20,18 @@ export const getTrips = async (): Promise<{
 
 export const getTrip = async (
   tripId: string,
-): Promise<{ places: Places; trip: Trip } | null> => {
+  allLocations?: boolean,
+): Promise<{ locations: Locations; trip: Trip } | null> => {
   try {
-    const result = await axios.get(`${environment.apiUrl}/trips/${tripId}`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+    const result = await axios.get(
+      `${environment.apiUrl}/trips/${tripId}${allLocations === true ? '?allLocations=true' : ''}`,
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
       },
-    });
-    return result.data as { places: Places; trip: Trip };
+    );
+    return result.data as { locations: Locations; trip: Trip };
   } catch (_err) {
     return null;
   }

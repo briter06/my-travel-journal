@@ -4,7 +4,7 @@ import { authRouter } from './routes/auth.js';
 import { tripsRouter } from './routes/trips.js';
 import express from 'express';
 import { cryptoRouter } from './routes/crypto.js';
-import { placesRouter } from './routes/places.js';
+import { locationsRouter } from './routes/locations.js';
 
 export const apiRouter = express.Router();
 
@@ -13,4 +13,8 @@ apiRouter.use(express.json());
 apiRouter.use('/auth', authRouter);
 apiRouter.use('/crypto', cryptoRouter);
 apiRouter.use('/trips', expressAsyncHandler(authMiddleware), tripsRouter);
-apiRouter.use('/places', expressAsyncHandler(authMiddleware), placesRouter);
+apiRouter.use(
+  '/locations',
+  expressAsyncHandler(authMiddleware),
+  locationsRouter,
+);

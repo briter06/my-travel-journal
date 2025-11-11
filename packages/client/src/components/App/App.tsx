@@ -9,7 +9,7 @@ import NavigationLayout from '../NavigationLayout/NavigationLayout';
 import { useLocation, useMatches, useNavigate } from 'react-router';
 import Login from '../Auth/Login/Login';
 import { getTrips } from '../../api/trips';
-import { setPlaces, setTrips } from '../../store/slices/data';
+import { setLocations, setTrips } from '../../store/slices/data';
 
 const LOADING_PROCESSES = {
   GETTING_ME: 'gettingMe',
@@ -77,7 +77,7 @@ function App() {
       } else {
         if (tripsResult != null) {
           dispatch(setTrips(tripsResult.trips));
-          dispatch(setPlaces(tripsResult.places));
+          dispatch(setLocations(tripsResult.locations));
         }
         dispatch(stopLoading(LOADING_PROCESSES.GETTING_TRIPS));
       }

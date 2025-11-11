@@ -1,11 +1,11 @@
 // journey-model.ts
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { PlaceModel } from './place-model.js';
+import { LocationModel } from './location-model.js';
 import { TripModel } from './trip-model.js';
 
 export class JourneyModel extends Model {
-  declare from: number;
-  declare to: number | null;
+  declare from: string;
+  declare to: string | null;
   declare tripId: number;
   declare date: Date;
 }
@@ -14,22 +14,22 @@ export function _Journey(sequelize: Sequelize) {
   JourneyModel.init(
     {
       from: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.STRING,
         allowNull: false,
         primaryKey: true,
         references: {
-          model: PlaceModel,
+          model: LocationModel,
           key: 'id',
         },
         onUpdate: 'CASCADE',
         onDelete: 'CASCADE',
       },
       to: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.STRING,
         allowNull: true,
         primaryKey: true,
         references: {
-          model: PlaceModel,
+          model: LocationModel,
           key: 'id',
         },
         onUpdate: 'CASCADE',

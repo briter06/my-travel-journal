@@ -1,5 +1,5 @@
 export type Journey = {
-  from: number;
-  to: number | null;
+  from: string;
+  to: string | null;
   date: string;
 };

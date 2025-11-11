@@ -9,11 +9,11 @@ import {
   stopLoading,
 } from '../../../../../store/slices/loading';
 import { useNavigate, useParams } from 'react-router';
-import { Journey, Places } from '@my-travel-journal/common';
+import { Journey, Locations, Trip } from '@my-travel-journal/common';
 import PaginatedTable from '../../../../utils/PaginatedTable/PaginatedTable';
 import SelectAutoComplete from '../../../../utils/SelectAutoComplete/SelectAutoComplete';
 import CreatePlacePopup from './CreatePlacePopup/CreatePlacePopup';
-import { getAllPlaces } from '../../../../../api/places';
+import { getMyLocations } from '../../../../../api/locations';
 
 const LOADING_PROCESSES = {
   GETTING_TRIP: 'accountGettingTrip',
@@ -33,28 +33,46 @@ function AccountTrip({ create }: AccountTripProps) {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const [allPlaces, setAllPlaces] = useState<Places>({});
+  const [allLocations, setAllLocations] = useState<Locations>({});
 
   const [currentTripName, setCurrentTripName] = useState<string>('');
   const [currentTripYear, setCurrentTripYear] = useState<string>('');
   const [currentTripJourneys, setCurrentTripJourneys] = useState<Journey[]>([]);
 
-  if (create !== true) {
-    const { data: tripResult, isLoading: isLoadingTrip } = useQuery({
-      queryKey: ['trips', `trip_${tripId}`],
-      queryFn: async () => {
-        const trip = await getTrip(tripId!);
-        const allPlaces = await getAllPlaces();
-        return trip != null ? { ...trip, ...allPlaces } : null;
-      },
-    });
+  const isValid = () => {
+    if (currentTripName.trim() === '') return false;
+    for (const j of currentTripJourneys) {
+      if (j.from.trim() === '') return false;
+      if (j.to != null && j.to.trim() === '') return false;
+      if (j.date.trim() === '') return false;
+    }
+    return true;
+  };
 
-    useEffect(() => {
-      if (isLoadingTrip) {
-        dispatch(startLoading(LOADING_PROCESSES.GETTING_TRIP));
-      } else {
-        if (tripResult != null) {
-          setAllPlaces(tripResult.places);
+  const { data: tripResult, isLoading: isLoadingTrip } = useQuery({
+    queryKey: [`trip_individual`],
+    queryFn: async (): Promise<{
+      trip: Trip | null;
+      locations: Locations;
+    } | null> => {
+      if (create) {
+        const myLocations = await getMyLocations();
+        return myLocations != null
+          ? { trip: null, locations: myLocations.locations }
+          : null;
+      }
+      const trip = await getTrip(tripId!, true);
+      return trip != null ? trip : null;
+    },
+  });
+
+  useEffect(() => {
+    if (isLoadingTrip) {
+      dispatch(startLoading(LOADING_PROCESSES.GETTING_TRIP));
+    } else {
+      if (tripResult != null) {
+        setAllLocations(tripResult.locations);
+        if (tripResult.trip != null) {
           setCurrentTripName(tripResult.trip.info.name || '');
           setCurrentTripYear(tripResult.trip.info.year ?? '');
           // sort journeys once on load (ascending by date) so mounted order is stable
@@ -67,17 +85,20 @@ function AccountTrip({ create }: AccountTripProps) {
             });
           setCurrentTripJourneys(sortedJourneys);
         }
-        dispatch(stopLoading(LOADING_PROCESSES.GETTING_TRIP));
       }
-    }, [tripResult, isLoadingTrip]);
-  }
+      dispatch(stopLoading(LOADING_PROCESSES.GETTING_TRIP));
+    }
+  }, [tripResult, isLoadingTrip]);
 
-  const placeOptionsArray = Object.entries(allPlaces).map(([id, place]) => ({
-    id: parseInt(id, 10),
-    label: `${place.country}, ${place.city}${place.name != null ? `, ${place.name}` : ''}`,
+  const locationOptions = Object.entries(allLocations).map(([id, place]) => ({
+    id,
+    label: `${place.country}, ${place.locality}${place.name != null ? `, ${place.name}` : ''}`,
   }));
 
-  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [createLocationModalJourney, setCreateLocationModalJourney] = useState<{
+    idx: number;
+    key: 'from' | 'to';
+  } | null>(null);
 
   return isLoading() ? null : (
     <div className="account-trip-editor">
@@ -128,7 +149,7 @@ function AccountTrip({ create }: AccountTripProps) {
             onClick={() => {
               setCurrentTripJourneys(prev => [
                 ...prev,
-                { from: NaN, to: null, date: '' },
+                { from: '', to: '', date: '' },
               ]);
             }}
           >
@@ -150,15 +171,13 @@ function AccountTrip({ create }: AccountTripProps) {
           renderRow={(journey: Journey, idx: number) => (
             <div key={idx} className="journeys-row">
               <div className="journey-col">
-                <SelectAutoComplete<number>
-                  options={placeOptionsArray}
+                <SelectAutoComplete<string>
+                  options={locationOptions}
                   value={journey.from}
-                  onChange={(id: number | null) =>
+                  onChange={id =>
                     setCurrentTripJourneys(prev =>
                       prev.map((j, i) =>
-                        i === idx
-                          ? { ...j, from: id == null ? NaN : Number(id) }
-                          : j,
+                        i === idx ? { ...j, from: id == null ? '' : id } : j,
                       ),
                     )
                   }
@@ -169,22 +188,20 @@ function AccountTrip({ create }: AccountTripProps) {
                       </div>
                     ),
                     callback: () => {
-                      setCreateModalOpen(true);
+                      setCreateLocationModalJourney({ idx, key: 'from' });
                     },
                   }}
                 />
               </div>
-
               <div className="journey-col">
-                <SelectAutoComplete<number>
-                  options={placeOptionsArray}
+                <SelectAutoComplete<string>
+                  options={locationOptions}
                   value={journey.to}
-                  onChange={(id: number | null) =>
+                  generateCustomId={() => ''}
+                  onChange={locationId =>
                     setCurrentTripJourneys(prev =>
                       prev.map((j, i) =>
-                        i === idx
-                          ? { ...j, to: id == null ? null : Number(id) }
-                          : j,
+                        i === idx ? { ...j, to: locationId } : j,
                       ),
                     )
                   }
@@ -195,7 +212,7 @@ function AccountTrip({ create }: AccountTripProps) {
                       </div>
                     ),
                     callback: () => {
-                      setCreateModalOpen(true);
+                      setCreateLocationModalJourney({ idx, key: 'to' });
                     },
                   }}
                 />
@@ -233,13 +250,18 @@ function AccountTrip({ create }: AccountTripProps) {
         />
       </div>
 
-      {createModalOpen ? (
+      {createLocationModalJourney != null ? (
         <CreatePlacePopup
-          onClose={() => setCreateModalOpen(false)}
-          onSave={({ country, city, name }) => {
-            // temporary: log and close
-            console.log('Create selections:', { country, city, name });
-            setCreateModalOpen(false);
+          onClose={() => setCreateLocationModalJourney(null)}
+          onSave={(locationId: string) => {
+            setCurrentTripJourneys(prev =>
+              prev.map((j, i) =>
+                i === createLocationModalJourney.idx
+                  ? { ...j, [createLocationModalJourney.key]: locationId }
+                  : j,
+              ),
+            );
+            setCreateLocationModalJourney(null);
           }}
         />
       ) : null}
@@ -254,7 +276,7 @@ function AccountTrip({ create }: AccountTripProps) {
         >
           Cancel
         </button>
-        <button type="button" className="btn primary">
+        <button type="button" className="btn primary" disabled={!isValid()}>
           {create ? 'Create' : 'Save'}
         </button>
       </div>

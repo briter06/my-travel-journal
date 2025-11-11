@@ -32,6 +32,7 @@
     "morgan": "^1.10.1",
     "mysql2": "^3.15.1",
     "sequelize": "^6.37.7",
-    "sequelize-typescript": "^2.1.6"
+    "sequelize-typescript": "^2.1.6",
+    "uuid": "^13.0.0"
   }
 }

@@ -30,7 +30,7 @@ const groupByYear = (trips: Trips) => {
 
 function Map() {
   const isSideBarOpen = useAppSelector(state => state.navigation.isSideBarOpen);
-  const statePlaces = useAppSelector(state => state.trips.places);
+  const stateLocations = useAppSelector(state => state.trips.locations);
   const stateTrips = useAppSelector(state => state.trips.trips);
   const stateTripsForMap = useAppSelector(state => state.trips.tripsForMap);
   const [colors, setColors] = useState<Record<string, string>>({});
@@ -137,7 +137,7 @@ function Map() {
       }
       content={
         <MapContent
-          places={statePlaces}
+          locations={stateLocations}
           trips={stateTripsForMap}
           colors={colors}
           showJournies={showJournies}

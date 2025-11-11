@@ -10,7 +10,7 @@ function AccountMyTrips() {
   const [sortedTrips, setSortedTrips] = useState<Trip[]>([]);
   const [search, setSearch] = useState('');
 
-  const places = useAppSelector(state => state.trips.places);
+  const locations = useAppSelector(state => state.trips.locations);
   const trips = useAppSelector(state => state.trips.trips);
 
   const navigate = useNavigate();
@@ -27,28 +27,35 @@ function AccountMyTrips() {
 
   return (
     <div className="mytrips-container">
-      {isLoading() ? null : sortedTrips.length === 0 ? (
-        <div className="mytrips-empty">You don't have any trips yet.</div>
-      ) : (
+      {isLoading() ? null : (
         <div>
-          {/* Search + Pagination controls */}
           <div className="trips-search-row">
-            <div className="trips-search">
-              <input
-                id="trips-search-input"
-                type="text"
-                placeholder="Search by year, country, city or landmark"
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-              />
-            </div>
             <div className="trips-controls">
               <Link to="create" className="create-button">
                 Create
               </Link>
             </div>
+            {sortedTrips.length === 0 ? null : (
+              /* Search + Pagination controls */
+              <div className="trips-search">
+                <input
+                  id="trips-search-input"
+                  type="text"
+                  placeholder="Search by year, country, city or landmark"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                />
+              </div>
+            )}
           </div>
+
           {(() => {
+            if (sortedTrips.length === 0)
+              return (
+                <div className="mytrips-empty">
+                  You don't have any trips yet.
+                </div>
+              );
             // apply search filter (year or country)
             const q = search.trim().toLowerCase();
             const filtered = q
@@ -56,8 +63,8 @@ function AccountMyTrips() {
                   // match year
                   if ((t.info.year ?? '').includes(q)) return true;
                   // match any place country
-                  const countries = t.placeIds.map(p =>
-                    `${places[p].country} ${places[p].city} ${places[p].name ?? ''}`.toLowerCase(),
+                  const countries = t.locationIds.map(p =>
+                    `${locations[p].country} ${locations[p].locality} ${locations[p].name ?? ''}`.toLowerCase(),
                   );
                   if (countries.some(c => c.includes(q))) return true;
                   // also match trip name

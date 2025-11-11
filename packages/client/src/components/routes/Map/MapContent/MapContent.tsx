@@ -9,20 +9,20 @@ import 'leaflet-extra-markers';
 import 'leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css';
 import DirectedLine from '../DirectedLine/DirectedLine';
 import { createMarker } from '../../../../utils/icon';
-import { Places, Trips } from '@my-travel-journal/common';
+import { Locations, Trips } from '@my-travel-journal/common';
 
 const CENTER_OF_MAP: [number, number] = [40.5, -40.0];
 
 interface MapData {
   trips: Trips;
-  places: Places;
+  locations: Locations;
   colors: Record<string, string>;
   showJournies: boolean;
 }
 
 const MapContent: React.FC<MapData> = ({
   trips,
-  places,
+  locations,
   colors,
   showJournies,
 }) => {
@@ -41,29 +41,29 @@ const MapContent: React.FC<MapData> = ({
         attribution='&copy; <a href="https://carto.com/">CARTO</a>'
       />
 
-      {tripEntries.map(([tripId, { placeIds, journeys }]) => {
+      {tripEntries.map(([tripId, { locationIds, journeys }]) => {
         const icon = L.ExtraMarkers.icon({
           svg: true,
           innerHTML: createMarker(colors[tripId]),
         });
         return (
           <div key={tripId}>
-            {placeIds.map((placeId: number) => {
-              const place = places[placeId];
+            {locationIds.map(locationId => {
+              const location = locations[locationId];
               return (
                 <Marker
-                  key={placeId}
+                  key={locationId}
                   position={[
-                    parseInt(place.latitude, 10),
-                    parseInt(place.longitude, 10),
+                    parseInt(location.latitude, 10),
+                    parseInt(location.longitude, 10),
                   ]}
                   icon={icon}
                 >
                   <Popup>
                     <b>
-                      {place.name
-                        ? `${place.name} - ${place.city}`
-                        : place.city}
+                      {location.name
+                        ? `${location.name} - ${location.locality}`
+                        : location.locality}
                     </b>
                   </Popup>
                 </Marker>
@@ -73,9 +73,9 @@ const MapContent: React.FC<MapData> = ({
               ? journeys.map(journey => {
                   if (journey.to != null) {
                     const { latitude: la1, longitude: lo1 } =
-                      places[journey.from];
+                      locations[journey.from];
                     const { latitude: la2, longitude: lo2 } =
-                      places[journey.to];
+                      locations[journey.to];
                     return (
                       <DirectedLine
                         key={`trip_${journey.from}_${journey.to}`}
@@ -85,9 +85,9 @@ const MapContent: React.FC<MapData> = ({
                         ]}
                         color={colors[tripId]}
                         popup={`<b>${
-                          places[journey.from].city
+                          locations[journey.from].locality
                         } <i class="bi-caret-right-fill"></i> ${
-                          places[journey.to].city
+                          locations[journey.to].locality
                         }</b> <br/> ${new Date(journey.date).toLocaleString(
                           undefined,
                           {

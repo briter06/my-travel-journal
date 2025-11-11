@@ -1,29 +1,35 @@
 // place-model.ts
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { UserModel } from './user-model.js';
 
-export class PlaceModel extends Model {
-  declare id: number;
+export const LOCATION_TYPES = {
+  MANUAL: 1,
+};
+
+export class LocationModel extends Model {
+  declare id: string;
   declare name: string | null;
-  declare city: string;
+  declare locality: string;
   declare country: string;
   declare latitude: number;
   declare longitude: number;
+  declare type: number;
+  declare owner: string;
 }
 
-export function _Place(sequelize: Sequelize) {
-  PlaceModel.init(
+export function _Location(sequelize: Sequelize) {
+  LocationModel.init(
     {
       id: {
-        type: DataTypes.BIGINT,
+        type: DataTypes.STRING,
         allowNull: false,
         primaryKey: true,
-        autoIncrement: true,
       },
       name: {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      city: {
+      locality: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -39,10 +45,25 @@ export function _Place(sequelize: Sequelize) {
         type: DataTypes.DECIMAL(20, 10),
         allowNull: false,
       },
+      owner: {
+        type: DataTypes.STRING,
+        primaryKey: true,
+        allowNull: true,
+        references: {
+          model: UserModel,
+          key: 'email',
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'CASCADE',
+      },
+      type: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
     },
     {
       sequelize,
-      tableName: 'places',
+      tableName: 'locations',
       timestamps: false,
     },
   );

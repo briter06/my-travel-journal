@@ -7,6 +7,7 @@ type Props<T> = {
   options: Option<T>[];
   value?: T | null;
   onChange: (id: T | null) => void;
+  generateCustomId?: (value: string) => T;
   placeholder?: string;
   maxMatches?: number;
   // when true, focusing the input will show matches even with empty query
@@ -24,6 +25,7 @@ export default function SelectAutoComplete<T = string>({
   options,
   value,
   onChange,
+  generateCustomId,
   placeholder,
   maxMatches = 5,
   showOnFocus = false,
@@ -49,6 +51,13 @@ export default function SelectAutoComplete<T = string>({
       : '';
   const showSelectedAsPlaceholder = value != null && query === '';
 
+  useEffect(() => {
+    if (selectedLabel.trim() !== '') {
+      setQuery('');
+      setOpen(false);
+    }
+  }, [selectedLabel]);
+
   const normalized = query.trim().toLowerCase();
   const matches = normalized
     ? options
@@ -70,10 +79,18 @@ export default function SelectAutoComplete<T = string>({
       <div style={{ position: 'relative' }}>
         <input
           className={`sac-input ${showSelectedAsPlaceholder ? 'sac-has-selected' : ''}`}
-          placeholder={selectedLabel || placeholder || 'Search...'}
+          placeholder={selectedLabel || (placeholder ?? 'Search...')}
           value={query}
           onChange={e => {
-            setQuery(e.target.value);
+            // keep the raw input (allow spaces) but use a trimmed value for id-generation
+            const raw = e.target.value;
+            const trimmed = raw.trim();
+            if (generateCustomId != null) {
+              onChange(generateCustomId(trimmed));
+            } else {
+              onChange(null);
+            }
+            setQuery(raw);
             setOpen(true);
           }}
           onFocus={() => setOpen(true)}

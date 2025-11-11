@@ -2,17 +2,17 @@ import express from 'express';
 import { UserTripModel } from '../db/models/user-trip-model.js';
 import { TripModel } from '../db/models/trip-model.js';
 import { Trip, Trips } from '@my-travel-journal/common';
-import { PlaceModel } from '../db/models/place-model.js';
 import { JourneyModel } from '../db/models/journey-model.js';
 import expressAsyncHandler from 'express-async-handler';
+import { LocationModel } from '../db/models/location-model.js';
 
 export const tripsRouter = express.Router();
 
 const getTrip = async (
-  placeIds: Set<number>,
   trip: TripModel,
+  locationIds?: Set<string>,
 ): Promise<Trip> => {
-  const internalPlaceIds: Set<number> = new Set<number>();
+  const internalLocationIds: Set<string> = new Set<string>();
   const journeys = (
     await JourneyModel.findAll({
       where: {
@@ -21,9 +21,9 @@ const getTrip = async (
       raw: true,
     })
   ).map(journey => {
-    placeIds.add(journey.from);
-    internalPlaceIds.add(journey.from);
-    if (journey.to != null) placeIds.add(journey.to);
+    internalLocationIds.add(journey.from);
+    locationIds?.add(journey.from);
+    if (journey.to != null) locationIds?.add(journey.to);
     return {
       from: journey.from,
       to: journey.to,
@@ -32,32 +32,37 @@ const getTrip = async (
   });
   return {
     info: {
-      id: trip.id,
+      id: trip.id.toString(),
       name: trip.name,
       year: trip.year,
     },
-    placeIds: Array.from(internalPlaceIds),
+    locationIds: Array.from(internalLocationIds),
     journeys,
   };
 };
 
-const getPlaces = async (placeIds: Set<number>) => {
-  const places = await PlaceModel.findAll({
-    where: {
-      id: Array.from(placeIds),
-    },
+const getLocations = async (locationIds?: Set<string>) => {
+  const manualLocations = await LocationModel.findAll({
+    ...(locationIds != null
+      ? {
+          where: {
+            id: Array.from(locationIds).map(id => Number(id)),
+          },
+        }
+      : null),
     raw: true,
   });
-  const placeMap: Record<number, PlaceModel> = {};
-  for (const place of places) {
-    placeMap[place.id] = place;
+  const locationMap: Record<string, LocationModel> = {};
+  for (const location of manualLocations) {
+    locationMap[location.id] = location;
   }
-  return placeMap;
+  return locationMap;
 };
 
 tripsRouter.get(
   '/',
   expressAsyncHandler(async (req, res) => {
+    const includeAll = req.query.allLocations === 'true';
     const myTrips = (
       await UserTripModel.findAll({
         where: {
@@ -70,13 +75,12 @@ tripsRouter.get(
       raw: true,
     });
     const result: Trips = {};
-    const placeIds = new Set<number>();
+    const locationIds = new Set<string>();
     for (const trip of trips) {
-      result[trip.id] = await getTrip(placeIds, trip);
+      result[trip.id] = await getTrip(trip, locationIds);
     }
-
     res.json({
-      places: await getPlaces(placeIds),
+      locations: await getLocations(includeAll ? undefined : locationIds),
       trips: result,
     });
   }),
@@ -85,6 +89,7 @@ tripsRouter.get(
 tripsRouter.get(
   '/:tripId',
   expressAsyncHandler(async (req, res) => {
+    const includeAll = req.query.allLocations === 'true';
     const tripId = Number(req.params.tripId);
     const trip = await TripModel.findByPk(tripId);
     if (trip == null) {
@@ -101,10 +106,10 @@ tripsRouter.get(
       res.status(403).json({ message: 'Forbidden' });
       return;
     }
-    const placeIds = new Set<number>();
-    const result = await getTrip(placeIds, trip);
+    const locationIds = new Set<string>();
+    const result = await getTrip(trip, locationIds);
     res.json({
-      places: await getPlaces(placeIds),
+      locations: await getLocations(includeAll ? undefined : locationIds),
       trip: result,
     });
   }),

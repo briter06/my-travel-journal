@@ -1,18 +1,19 @@
-import { Places, Trips } from '@my-travel-journal/common';
+import { Locations, Trips } from '@my-travel-journal/common';
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState: { places: Places; trips: Trips; tripsForMap: Trips } = {
-  places: {},
-  trips: {},
-  tripsForMap: {},
-};
+const initialState: { locations: Locations; trips: Trips; tripsForMap: Trips } =
+  {
+    locations: {},
+    trips: {},
+    tripsForMap: {},
+  };
 
 const tripsSlice = createSlice({
   name: 'trips',
   initialState,
   reducers: {
-    setPlaces: (state, action) => {
-      state.places = action.payload;
+    setLocations: (state, action) => {
+      state.locations = action.payload;
     },
     setTrips: (state, action) => {
       state.trips = action.payload;
@@ -23,5 +24,5 @@ const tripsSlice = createSlice({
   },
 });
 
-export const { setPlaces, setTrips, setTripsForMap } = tripsSlice.actions;
+export const { setLocations, setTrips, setTripsForMap } = tripsSlice.actions;
 export default tripsSlice.reducer;
