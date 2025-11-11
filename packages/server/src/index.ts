@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { connectSequelize } from './db/init.js';
 import { logger } from './utils/logger.js';
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import path from 'path';
 import { apiRouter } from './api.js';
 import morgan from 'morgan';
@@ -9,6 +9,7 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import cors from 'cors';
 import helmet from 'helmet';
+import { respondError } from './utils/response.js';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -54,6 +55,12 @@ app.use('/api', apiRouter);
 
 app.get(/.*/, (_req, res) => {
   res.sendFile(path.join(clientBuildPath, 'index.html'));
+});
+
+// --- Global error handler ---
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
+  logger.error(err.stack || err.message);
+  respondError(res, 'INTERNAL_SERVER_ERROR', 500);
 });
 
 connectSequelize()

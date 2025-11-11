@@ -10,6 +10,7 @@ import { claimNonce, verifyLogin } from '../crypto/hmac.js';
 import { decryptPassword } from '../crypto/rsa.js';
 import { logger } from '../utils/logger.js';
 import { authMiddleware } from '../middlewares/auth.js';
+import { respond, respondError } from '../utils/response.js';
 
 export const authRouter = express.Router();
 
@@ -38,13 +39,10 @@ authRouter.post(
         req.params.nonce,
       );
       if (!verificationResult) {
-        res.status(StatusCodes.UNAUTHORIZED).json({
-          status: false,
-          error: 'UNAUTHORIZED',
-        });
+        respondError(res, 'UNAUTHORIZED', StatusCodes.UNAUTHORIZED);
         return;
       }
-      res.json({
+      respond(res, {
         token: jwt.sign(
           {
             email: user.email,
@@ -58,10 +56,7 @@ authRouter.post(
         ),
       });
     } else {
-      res.status(StatusCodes.UNAUTHORIZED).json({
-        status: false,
-        error: 'UNAUTHORIZED',
-      });
+      respondError(res, 'UNAUTHORIZED', StatusCodes.UNAUTHORIZED);
     }
   }),
 );
@@ -72,12 +67,7 @@ authRouter.post(
   expressAsyncHandler(async (req, res) => {
     const activeNonce = claimNonce(req.params.nonce);
     if (activeNonce == null || activeNonce.privateKey == null) {
-      res
-        .json({
-          status: false,
-          error: 'BAD_REQUEST',
-        })
-        .status(StatusCodes.BAD_REQUEST);
+      respondError(res, 'BAD_REQUEST', StatusCodes.BAD_REQUEST);
       return;
     }
     const decryptedPassword = decryptPassword(
@@ -86,12 +76,7 @@ authRouter.post(
     );
     const user = await UserModel.findByPk(req.body.email);
     if (user != null) {
-      res
-        .json({
-          status: false,
-          error: 'USER_ALREADY_EXISTS',
-        })
-        .status(StatusCodes.INTERNAL_SERVER_ERROR);
+      respondError(res, 'USER_ALREADY_EXISTS', StatusCodes.CONFLICT);
       return;
     }
     await UserModel.create({
@@ -101,7 +86,7 @@ authRouter.post(
       lastName: req.body.lastName,
     });
     logger.info(`${req.body.email} signed up`);
-    res.json({ status: true }).status(StatusCodes.OK);
+    respond(res);
   }),
 );
 
@@ -113,13 +98,10 @@ authRouter.get(
       raw: true,
     });
     if (user == null) {
-      res.status(StatusCodes.UNAUTHORIZED).json({
-        status: false,
-        error: 'UNAUTHORIZED',
-      });
+      respondError(res, 'UNAUTHORIZED', StatusCodes.UNAUTHORIZED);
       return;
     }
-    res.json({
+    respond(res, {
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,

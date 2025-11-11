@@ -3,9 +3,9 @@ import expressAsyncHandler from 'express-async-handler';
 import { sequelize } from '../db/init.js';
 import { joiMiddleware } from '../middlewares/joi.js';
 import Joi from 'joi';
-import { StatusCodes } from 'http-status-codes';
 import { LOCATION_TYPES, LocationModel } from '../db/models/location-model.js';
 import { v4 } from 'uuid';
+import { respond } from '../utils/response.js';
 
 export const locationsRouter = express.Router();
 
@@ -28,7 +28,7 @@ locationsRouter.get(
         raw: true,
       }),
     );
-    res.json({
+    respond(res, {
       locations: myLocations,
     });
   }),
@@ -46,7 +46,7 @@ locationsRouter.get(
       },
       raw: true,
     });
-    res.json({
+    respond(res, {
       countries: countries.map(c => c.country),
     });
   }),
@@ -79,6 +79,6 @@ locationsRouter.post(
       type: body.type,
       owner: body.type === LOCATION_TYPES.MANUAL ? req.email! : null,
     });
-    res.json({ status: true, id: locationId }).status(StatusCodes.OK);
+    respond(res, { id: locationId });
   }),
 );

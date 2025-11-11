@@ -1,6 +1,5 @@
-import axios from 'axios';
-import { environment } from '../env/environment';
 import { Locations } from '@my-travel-journal/common';
+import { callAPI } from './helper';
 
 export type LocationAPIData = {
   country: string;
@@ -15,50 +14,11 @@ export const LOCATION_API_TYPES = {
   MANUAL: 1,
 };
 
-export const getMyLocations = async (): Promise<{
-  locations: Locations;
-} | null> => {
-  try {
-    const result = await axios.get(`${environment.apiUrl}/locations`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
-    return result.data as { locations: Locations };
-  } catch (_err) {
-    return null;
-  }
-};
+export const getMyLocations = () =>
+  callAPI<{ locations: Locations }>('GET', '/locations');
 
-export const getMyCountries = async (): Promise<{
-  countries: string[];
-} | null> => {
-  try {
-    const result = await axios.get(
-      `${environment.apiUrl}/locations/countries`,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      },
-    );
-    return result.data as { countries: string[] };
-  } catch (_err) {
-    return null;
-  }
-};
+export const getMyCountries = () =>
+  callAPI<{ countries: string[] }>('GET', '/locations/countries');
 
-export const createLocation = async (
-  data: LocationAPIData,
-): Promise<{ status: boolean; id: string }> => {
-  try {
-    const result = await axios.post(`${environment.apiUrl}/locations`, data, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
-      },
-    });
-    return result.data as { status: boolean; id: string };
-  } catch (_err) {
-    return { status: false, id: '' };
-  }
-};
+export const createLocation = (data: LocationAPIData) =>
+  callAPI<{ id: string }>('POST', '/locations', { payload: data });

@@ -1,20 +1,13 @@
-import axios from 'axios';
-import { environment } from '../env/environment';
 import { encryptPassword, hashPassword } from '../crypto/hmac';
+import { callAPI } from './helper';
 
 type NonceKeyResult = {
   nonce: string;
   publicKey: string;
 };
 
-export const getNonceKey = async (): Promise<NonceKeyResult | null> => {
-  try {
-    const result = await axios.get(`${environment.apiUrl}/crypto/nonce/key`);
-    return result.data as NonceKeyResult;
-  } catch (_err) {
-    return null;
-  }
-};
+export const getNonceKey = () =>
+  callAPI<NonceKeyResult>('GET', '/crypto/nonce/key');
 
 export const createUser = async (
   user: {
@@ -29,16 +22,15 @@ export const createUser = async (
   try {
     const hashedPassword = await hashPassword(user.password);
     const encryptedPassword = await encryptPassword(publicKey, hashedPassword);
-    const signUpResult = await axios.post(
-      `${environment.apiUrl}/auth/signup/${nonce}`,
-      {
+    const signUpResult = await callAPI('POST', `/auth/signup/${nonce}`, {
+      payload: {
         email: user.email,
         password: encryptedPassword,
         firstName: user.firstName,
         lastName: user.lastName,
       },
-    );
-    if (!signUpResult.data.status) {
+    });
+    if (signUpResult == null) {
       return {
         status: false,
         message: 'That email is already associated with an account',

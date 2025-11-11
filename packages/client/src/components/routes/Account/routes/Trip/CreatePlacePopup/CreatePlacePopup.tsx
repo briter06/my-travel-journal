@@ -52,7 +52,7 @@ export default function CreatePlacePopup({ onClose, onSave }: Props) {
   const saveLocation = async (data: LocationAPIData) => {
     setIsCreating(true);
     const result = await locationMutator.mutateAsync(data);
-    if (result.status) {
+    if (result != null) {
       onSave(result.id);
     } else {
       setMessage({

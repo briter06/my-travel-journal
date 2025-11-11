@@ -5,6 +5,10 @@ import { Trip, Trips } from '@my-travel-journal/common';
 import { JourneyModel } from '../db/models/journey-model.js';
 import expressAsyncHandler from 'express-async-handler';
 import { LocationModel } from '../db/models/location-model.js';
+import { joiMiddleware } from '../middlewares/joi.js';
+import { Joi } from '../utils/joi.js';
+import { respond, respondError } from '../utils/response.js';
+import { StatusCodes } from 'http-status-codes';
 
 export const tripsRouter = express.Router();
 
@@ -79,7 +83,7 @@ tripsRouter.get(
     for (const trip of trips) {
       result[trip.id] = await getTrip(trip, locationIds);
     }
-    res.json({
+    respond(res, {
       locations: await getLocations(includeAll ? undefined : locationIds),
       trips: result,
     });
@@ -93,7 +97,7 @@ tripsRouter.get(
     const tripId = Number(req.params.tripId);
     const trip = await TripModel.findByPk(tripId);
     if (trip == null) {
-      res.status(404).json({ message: 'Trip not found' });
+      respondError(res, 'TRIP_NOT_FOUND');
       return;
     }
     const userTrip = await UserTripModel.findOne({
@@ -103,14 +107,53 @@ tripsRouter.get(
       },
     });
     if (userTrip == null) {
-      res.status(403).json({ message: 'Forbidden' });
+      respondError(res, 'FORBIDDEN', StatusCodes.FORBIDDEN);
       return;
     }
     const locationIds = new Set<string>();
     const result = await getTrip(trip, locationIds);
-    res.json({
+    respond(res, {
       locations: await getLocations(includeAll ? undefined : locationIds),
       trip: result,
     });
+  }),
+);
+
+tripsRouter.post(
+  '/',
+  joiMiddleware(
+    Joi.object().keys({
+      name: Joi.string().required(),
+      year: Joi.number().required().allow(null),
+      journies: Joi.array()
+        .items(
+          Joi.object().keys({
+            from: Joi.string().required(),
+            to: Joi.string().allow(null),
+            date: Joi.dateString().required(),
+          }),
+        )
+        .required(),
+    }),
+  ),
+  expressAsyncHandler(async (req, res) => {
+    const body = req.body;
+    const trip = await TripModel.create({
+      name: body.name,
+      year: body.year,
+    });
+    for (const journey of body.journies) {
+      await JourneyModel.create({
+        tripId: trip.id,
+        from: journey.from,
+        to: journey.to,
+        date: new Date(journey.date),
+      });
+    }
+    await UserTripModel.create({
+      email: req.email!,
+      tripId: trip.id,
+    });
+    respond(res, { id: trip.id.toString() });
   }),
 );

@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes';
 import jwt from 'jsonwebtoken';
 import { environment } from '../env/environment.js';
 import { UserModel } from '../db/models/user-model.js';
+import { respondError } from '../utils/response.js';
 
 export const authMiddleware = async (
   req: Request,
@@ -23,16 +24,12 @@ export const authMiddleware = async (
       user = null;
     }
     if (user == null) {
-      res.status(StatusCodes.FORBIDDEN).json({
-        error: 'FORBIDDEN',
-      });
+      respondError(res, 'FORBIDDEN', StatusCodes.FORBIDDEN);
     } else {
       req.email = email;
       next();
     }
   } else {
-    res.status(StatusCodes.FORBIDDEN).json({
-      error: 'FORBIDDEN',
-    });
+    respondError(res, 'FORBIDDEN', StatusCodes.FORBIDDEN);
   }
 };
