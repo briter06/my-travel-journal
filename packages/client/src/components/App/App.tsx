@@ -14,6 +14,7 @@ import {
   setTrips,
   setTripsForMap,
 } from '../../store/slices/data';
+import { deleteFromStorage, getFromStorage } from '../../utils/storage';
 
 const LOADING_PROCESSES = {
   GETTING_ME: 'gettingMe',
@@ -35,7 +36,7 @@ function App() {
     }
   };
 
-  const hasToken = localStorage.getItem('token') != null;
+  const hasToken = getFromStorage('token') != null;
   const [isReady, setIsReady] = useState(!hasToken);
   const isLoggedIn = useAppSelector(state => state.session.isLoggedIn);
 
@@ -63,7 +64,7 @@ function App() {
           dispatch(setIsLoggedIn(true));
         } else {
           dispatch(setIsLoggedIn(false));
-          localStorage.removeItem('token');
+          deleteFromStorage('token');
           resetLocation();
         }
         dispatch(stopLoading(LOADING_PROCESSES.GETTING_ME));

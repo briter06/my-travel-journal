@@ -21,6 +21,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const clientBuildPath = path.join(__dirname, '../../client/build');
+const publicFolderPath = path.join(__dirname, '../public');
 
 app.use(express.static(clientBuildPath));
 
@@ -52,6 +53,8 @@ app.use(
 );
 
 app.use('/api', apiRouter);
+
+app.use('/public', express.static(publicFolderPath));
 
 app.get(/.*/, (_req, res) => {
   res.sendFile(path.join(clientBuildPath, 'index.html'));

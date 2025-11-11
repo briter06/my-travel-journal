@@ -7,6 +7,7 @@ import { createUser, getNonceKey } from '../../../api/signup';
 import { clearSession } from '../../../store/slices/session';
 import { isValid } from '../../../utils/form';
 import Disclamer from '../../utils/Disclamer/Disclamer';
+import { clearStorage } from '../../../utils/storage';
 
 const LOADING_PROCESSES = {
   SIGNUP: 'signup',
@@ -37,7 +38,7 @@ function SignUp() {
       );
       if (result.status) {
         dispatch(clearSession());
-        localStorage.clear();
+        clearStorage();
         void navigate('/', { state: { signUpResult: result } });
       } else {
         setMessage({

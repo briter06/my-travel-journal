@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import { environment } from '../env/environment';
+import { getFromStorage } from '../utils/storage';
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -17,7 +18,7 @@ export const callAPI = async <T = object>(
       url: `${environment.apiUrl}${path}`,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${getFromStorage('token')}`,
       },
       ...(config.payload != null ? { data: config.payload } : {}),
       ...(config.queryParams != null ? { params: config.queryParams } : {}),

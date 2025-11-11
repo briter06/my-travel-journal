@@ -8,8 +8,13 @@ import { getInitials } from '../../../utils/user';
 import { clearSession } from '../../../store/slices/session';
 import { toggleSideBar } from '../../../store/slices/navigation';
 import { useMatches, useNavigate } from 'react-router';
+import { useTranslation, UseTranslationResponse } from 'react-i18next';
+import { clearStorage } from '../../../utils/storage';
+import LanguageSelector from '../../utils/LanguageSelector/LanguageSelector';
 
 function NavBar() {
+  const { t }: UseTranslationResponse<'translation', undefined> =
+    useTranslation();
   const navigate = useNavigate();
   const me = useAppSelector(state => state.session.me)!;
   const [openMenu, setOpenMenu] = useState(false);
@@ -106,12 +111,13 @@ function NavBar() {
         <span
           style={{ cursor: 'pointer' }}
           onClick={() => {
-            void navigate('/');
+            void navigate('/', { replace: true });
           }}
         >
           My World Trail
         </span>
       </div>
+      <LanguageSelector />
       <div
         className="avatar"
         ref={avatarRef}
@@ -141,14 +147,14 @@ function NavBar() {
                 void navigate('account');
               }}
             >
-              My Account
+              {t('myAccount')}
             </MenuItem>
             <MenuItem
               onClick={() => {
                 setOpenMenu(false);
                 dispatch(clearSession());
-                localStorage.clear();
-                void navigate('/');
+                clearStorage();
+                void navigate('/', { replace: true });
               }}
             >
               Logout

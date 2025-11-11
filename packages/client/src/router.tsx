@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router';
+import { createBrowserRouter, Navigate } from 'react-router';
 import Map from './components/routes/Map/Map';
 import App from './components/App/App';
 import Account from './components/routes/Account/Account';
@@ -6,46 +6,71 @@ import AccountGeneral from './components/routes/Account/routes/General/AccountGe
 import AccountMyTrips from './components/routes/Account/routes/MyTrips/AccountMyTrips';
 import SignUp from './components/Auth/SignUp/SignUp';
 import AccountTrip from './components/routes/Account/routes/Trip/AccountTrip';
+import LanguageInjector from './components/LanguageInjector/LanguageInjector';
+import { getFromStorage } from './utils/storage';
+import { DEFAULT_LANGUAGE } from './utils/languages';
+
+function RedirectToLanguage() {
+  // read language at render time so changes in localStorage are respected
+  const lang = getFromStorage('language') || DEFAULT_LANGUAGE;
+  return <Navigate to={`/${lang}`} replace />;
+}
 
 export const createRouter = () =>
   createBrowserRouter([
-    // Public routes
-    {
-      path: 'signup',
-      element: <SignUp />,
-    },
-    // Main routes
     {
       path: '',
-      element: <App />,
       children: [
+        // Redirect to default language
         {
-          path: '',
-          element: <Map />,
-          handle: { hasSideBar: true },
+          index: true,
+          element: <RedirectToLanguage />,
         },
         {
-          path: 'account',
-          element: <Account />,
+          path: ':lng',
+          element: <LanguageInjector />,
           children: [
+            // Public routes
+            {
+              path: 'signup',
+              element: <SignUp />,
+            },
+            // Main routes
             {
               path: '',
-              element: <AccountGeneral />,
-            },
-            {
-              path: 'trips',
+              element: <App />,
               children: [
                 {
                   path: '',
-                  element: <AccountMyTrips />,
+                  element: <Map />,
+                  handle: { hasSideBar: true },
                 },
                 {
-                  path: 'create',
-                  element: <AccountTrip create />,
-                },
-                {
-                  path: ':tripId',
-                  element: <AccountTrip />,
+                  path: 'account',
+                  element: <Account />,
+                  children: [
+                    {
+                      path: '',
+                      element: <AccountGeneral />,
+                    },
+                    {
+                      path: 'trips',
+                      children: [
+                        {
+                          path: '',
+                          element: <AccountMyTrips />,
+                        },
+                        {
+                          path: 'create',
+                          element: <AccountTrip create />,
+                        },
+                        {
+                          path: ':tripId',
+                          element: <AccountTrip />,
+                        },
+                      ],
+                    },
+                  ],
                 },
               ],
             },

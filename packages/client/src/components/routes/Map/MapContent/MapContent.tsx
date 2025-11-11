@@ -2,6 +2,7 @@ import './MapContent.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
@@ -26,6 +27,8 @@ const MapContent: React.FC<MapData> = ({
   colors,
   showJournies,
 }) => {
+  const { i18n } = useTranslation();
+  const locale = i18n?.language ?? undefined;
   return (
     <MapContainer center={CENTER_OF_MAP} zoom={2.5} id="map-container">
       {/* <TileLayer
@@ -87,7 +90,7 @@ const MapContent: React.FC<MapData> = ({
                         } <i class="bi-caret-right-fill"></i> ${
                           locations[journey.to].locality
                         }</b> <br/> ${new Date(journey.date).toLocaleString(
-                          undefined,
+                          locale,
                           {
                             weekday: 'long',
                             year: 'numeric',
