@@ -1,6 +1,6 @@
 import './AccountTrip.css';
-import { useQuery } from '@tanstack/react-query';
-import { getTrip } from '../../../../../api/trips';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { createTrip, getTrip, TripAPIData } from '../../../../../api/trips';
 import { useEffect, useState } from 'react';
 import { useAppDispatch } from '../../../../../store/hooks';
 import {
@@ -14,9 +14,11 @@ import PaginatedTable from '../../../../utils/PaginatedTable/PaginatedTable';
 import SelectAutoComplete from '../../../../utils/SelectAutoComplete/SelectAutoComplete';
 import CreatePlacePopup from './CreatePlacePopup/CreatePlacePopup';
 import { getMyLocations } from '../../../../../api/locations';
+import Disclamer from '../../../../utils/Disclamer/Disclamer';
 
 const LOADING_PROCESSES = {
   GETTING_TRIP: 'accountGettingTrip',
+  CREATING_TRIP: 'accountCreatingTrip',
 };
 
 const YEARS: number[] = [];
@@ -26,6 +28,19 @@ for (let y = new Date().getFullYear(); y >= 1900; y--) {
 
 type AccountTripProps = {
   create?: boolean;
+};
+
+const useCreateTrip = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: createTrip,
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: ['trips'],
+        exact: false,
+      });
+    },
+  });
 };
 
 function AccountTrip({ create }: AccountTripProps) {
@@ -39,6 +54,32 @@ function AccountTrip({ create }: AccountTripProps) {
   const [currentTripYear, setCurrentTripYear] = useState<string>('');
   const [currentTripJourneys, setCurrentTripJourneys] = useState<Journey[]>([]);
 
+  const [createLocationModalJourney, setCreateLocationModalJourney] = useState<{
+    idx: number;
+    key: 'from' | 'to';
+  } | null>(null);
+
+  const [message, setMessage] = useState<{
+    error: boolean;
+    message: string;
+  } | null>(null);
+
+  const tripMutator = useCreateTrip();
+
+  const createTrip = async (data: TripAPIData) => {
+    dispatch(startLoading(LOADING_PROCESSES.CREATING_TRIP));
+    const result = await tripMutator.mutateAsync(data);
+    if (result != null) {
+      void navigate(`..`);
+    } else {
+      setMessage({
+        error: true,
+        message: 'An error occurred while creating the trip. Please try again!',
+      });
+    }
+    dispatch(stopLoading(LOADING_PROCESSES.CREATING_TRIP));
+  };
+
   const isValid = () => {
     if (currentTripName.trim() === '') return false;
     for (const j of currentTripJourneys) {
@@ -50,7 +91,7 @@ function AccountTrip({ create }: AccountTripProps) {
   };
 
   const { data: tripResult, isLoading: isLoadingTrip } = useQuery({
-    queryKey: [`trip_individual`],
+    queryKey: ['trips', 'trip_individual'],
     queryFn: async (): Promise<{
       trip: Trip | null;
       locations: Locations;
@@ -95,13 +136,9 @@ function AccountTrip({ create }: AccountTripProps) {
     label: `${place.country}, ${place.locality}${place.name != null ? `, ${place.name}` : ''}`,
   }));
 
-  const [createLocationModalJourney, setCreateLocationModalJourney] = useState<{
-    idx: number;
-    key: 'from' | 'to';
-  } | null>(null);
-
   return isLoading() ? null : (
     <div className="account-trip-editor">
+      <Disclamer message={message} />
       <div className="trip-field-row">
         <label className="trip-field-label">Name</label>
         <input
@@ -276,7 +313,18 @@ function AccountTrip({ create }: AccountTripProps) {
         >
           Cancel
         </button>
-        <button type="button" className="btn primary" disabled={!isValid()}>
+        <button
+          type="button"
+          className="btn primary"
+          disabled={!isValid()}
+          onClick={() =>
+            void createTrip({
+              name: currentTripName,
+              year: currentTripYear === '' ? null : Number(currentTripYear),
+              journeys: currentTripJourneys,
+            })
+          }
+        >
           {create ? 'Create' : 'Save'}
         </button>
       </div>

@@ -10,6 +10,7 @@ import {
 } from '../../../../../../api/locations';
 import { extractGoogleMapsCoords } from '../../../../../../utils/coordinates';
 import { handlePromiseError } from '../../../../../../utils/promises';
+import Disclamer from '../../../../../utils/Disclamer/Disclamer';
 
 type Props = {
   onClose: () => void;
@@ -21,7 +22,9 @@ const useCreateLocation = () => {
   return useMutation({
     mutationFn: createLocation,
     onSuccess: () => {
-      return queryClient.invalidateQueries({ queryKey: ['trip_individual'] });
+      return queryClient.invalidateQueries({
+        queryKey: ['trips', 'trip_individual'],
+      });
     },
   });
 };
@@ -108,17 +111,7 @@ export default function CreatePlacePopup({ onClose, onSave }: Props) {
   return (
     <div className="sac-modal-overlay">
       <div className="sac-modal">
-        {/* Message */}
-        {message != null && (
-          <div
-            style={{
-              color: message.error ? 'red' : 'green',
-              marginBottom: '10px',
-            }}
-          >
-            {message.message}
-          </div>
-        )}
+        <Disclamer message={message} />
         <h3 style={{ marginTop: 0 }}>Create location</h3>
 
         <div style={{ display: 'grid', gap: 10 }}>

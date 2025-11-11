@@ -68,7 +68,7 @@ function Map() {
                   width: '100%',
                 }}
               >
-                <span style={{ marginRight: '20px' }}>Show journies</span>
+                <span style={{ marginRight: '20px' }}>Show journeys</span>
                 <Switch
                   size={'sm'}
                   checked={showJournies}

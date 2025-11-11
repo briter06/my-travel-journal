@@ -6,6 +6,7 @@ import { setIsLoggedIn, setMe } from '../../../store/slices/session';
 import { startLoading, stopLoading } from '../../../store/slices/loading';
 import { useLocation, useNavigate } from 'react-router';
 import { isValid } from '../../../utils/form';
+import Disclamer from '../../utils/Disclamer/Disclamer';
 
 const LOADING_PROCESSES = {
   LOGIN: 'login',
@@ -79,17 +80,8 @@ function Login() {
       >
         <h2 style={{ marginBottom: '30px' }}>Welcome!</h2>
 
-        {/* Message */}
-        {message != null && (
-          <div
-            style={{
-              color: message.error ? 'red' : 'green',
-              marginBottom: '10px',
-            }}
-          >
-            {message.message}
-          </div>
-        )}
+        <Disclamer message={message} />
+
         <label htmlFor="email" className="formLabel">
           Enter your email
         </label>

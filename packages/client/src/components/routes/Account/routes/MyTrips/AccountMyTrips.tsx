@@ -20,7 +20,7 @@ function AccountMyTrips() {
       Object.values(trips).sort((a, b) => {
         const da = a.info.year ? parseInt(a.info.year, 10) : Infinity;
         const db = b.info.year ? parseInt(b.info.year, 10) : Infinity;
-        return da - db; // ascending
+        return db - da; // descending
       }),
     );
   }, [trips]);

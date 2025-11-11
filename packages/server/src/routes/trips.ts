@@ -50,7 +50,7 @@ const getLocations = async (locationIds?: Set<string>) => {
     ...(locationIds != null
       ? {
           where: {
-            id: Array.from(locationIds).map(id => Number(id)),
+            id: Array.from(locationIds),
           },
         }
       : null),
@@ -125,7 +125,7 @@ tripsRouter.post(
     Joi.object().keys({
       name: Joi.string().required(),
       year: Joi.number().required().allow(null),
-      journies: Joi.array()
+      journeys: Joi.array()
         .items(
           Joi.object().keys({
             from: Joi.string().required(),
@@ -142,7 +142,7 @@ tripsRouter.post(
       name: body.name,
       year: body.year,
     });
-    for (const journey of body.journies) {
+    for (const journey of body.journeys) {
       await JourneyModel.create({
         tripId: trip.id,
         from: journey.from,
@@ -154,6 +154,6 @@ tripsRouter.post(
       email: req.email!,
       tripId: trip.id,
     });
-    respond(res, { id: trip.id.toString() });
+    respond(res, { id: trip.id });
   }),
 );

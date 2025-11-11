@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router';
 import { createUser, getNonceKey } from '../../../api/signup';
 import { clearSession } from '../../../store/slices/session';
 import { isValid } from '../../../utils/form';
+import Disclamer from '../../utils/Disclamer/Disclamer';
 
 const LOADING_PROCESSES = {
   SIGNUP: 'signup',
@@ -65,17 +66,9 @@ function SignUp() {
         }}
       >
         <h2 style={{ marginBottom: '30px' }}>Become a member!</h2>
-        {/* Message */}
-        {message != null && (
-          <div
-            style={{
-              color: message.error ? 'red' : 'green',
-              marginBottom: '10px',
-            }}
-          >
-            {message.message}
-          </div>
-        )}
+
+        <Disclamer message={message} />
+
         <div className="formRow">
           <div className="formCol">
             <label htmlFor="firstName" className="formLabel">
