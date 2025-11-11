@@ -48,6 +48,12 @@
 	background: #fff;
 }
 
+.btn.delete {
+	border: 1px solid #d1d5db;
+	background: #C82909;
+	color: #fff;
+}
+
 .btn.primary {
 	background: #2563eb;
 	color: #fff;

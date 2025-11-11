@@ -1,16 +1,16 @@
+import '../Popup.css';
 import { useEffect, useState } from 'react';
-import SelectAutoComplete from '../../../../../utils/SelectAutoComplete/SelectAutoComplete';
-import './CreatePlacePopup.css';
+import SelectAutoComplete from '../../../../../../utils/SelectAutoComplete/SelectAutoComplete';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createLocation,
   getMyCountries,
   LOCATION_API_TYPES,
   LocationAPIData,
-} from '../../../../../../api/locations';
-import { extractGoogleMapsCoords } from '../../../../../../utils/coordinates';
-import { handlePromiseError } from '../../../../../../utils/promises';
-import Disclamer from '../../../../../utils/Disclamer/Disclamer';
+} from '../../../../../../../api/locations';
+import { extractGoogleMapsCoords } from '../../../../../../../utils/coordinates';
+import { handlePromiseError } from '../../../../../../../utils/promises';
+import Disclamer from '../../../../../../utils/Disclamer/Disclamer';
 
 type Props = {
   onClose: () => void;
@@ -23,7 +23,8 @@ const useCreateLocation = () => {
     mutationFn: createLocation,
     onSuccess: () => {
       return queryClient.invalidateQueries({
-        queryKey: ['trips', 'trip_individual'],
+        queryKey: ['my_locations'],
+        exact: false,
       });
     },
   });
@@ -63,6 +64,7 @@ export default function CreatePlacePopup({ onClose, onSave }: Props) {
         message:
           'An error occurred while creating the location. Please try again!',
       });
+      setIsCreating(false);
     }
   };
 

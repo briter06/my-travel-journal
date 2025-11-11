@@ -33,6 +33,7 @@ function Map() {
   const stateLocations = useAppSelector(state => state.trips.locations);
   const stateTrips = useAppSelector(state => state.trips.trips);
   const stateTripsForMap = useAppSelector(state => state.trips.tripsForMap);
+
   const [colors, setColors] = useState<Record<string, string>>({});
   const dispatch = useAppDispatch();
 
@@ -41,10 +42,12 @@ function Map() {
   useEffect(() => {
     const values = Object.values(stateTrips);
     const generatedColors = chroma.scale('Set1').colors(values.length);
+    // build a fresh colors object instead of mutating the existing state
+    const newColors: Record<string, string> = {};
     for (let i = 0; i < values.length; i++) {
-      colors[values[i].info.id] = generatedColors[i];
+      newColors[values[i].info.id] = generatedColors[i];
     }
-    setColors(colors);
+    setColors(newColors);
     dispatch(setTripsForMap({ ...stateTrips }));
   }, [stateTrips]);
 

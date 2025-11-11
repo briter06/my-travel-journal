@@ -9,7 +9,11 @@ import NavigationLayout from '../NavigationLayout/NavigationLayout';
 import { useLocation, useMatches, useNavigate } from 'react-router';
 import Login from '../Auth/Login/Login';
 import { getTrips } from '../../api/trips';
-import { setLocations, setTrips } from '../../store/slices/data';
+import {
+  setLocations,
+  setTrips,
+  setTripsForMap,
+} from '../../store/slices/data';
 
 const LOADING_PROCESSES = {
   GETTING_ME: 'gettingMe',
@@ -43,7 +47,7 @@ function App() {
     enabled: hasToken,
   });
 
-  const { data: tripsResult, isLoading: isLoadingTrips } = useQuery({
+  const { data: tripsResult, isFetching: isFetchingTrips } = useQuery({
     queryKey: ['trips'],
     queryFn: getTrips,
     enabled: hasToken && !isLoadingMe,
@@ -72,17 +76,18 @@ function App() {
 
   useEffect(() => {
     if (isLoggedIn) {
-      if (isLoadingTrips) {
+      if (isFetchingTrips) {
         dispatch(startLoading(LOADING_PROCESSES.GETTING_TRIPS));
       } else {
         if (tripsResult != null) {
           dispatch(setTrips(tripsResult.trips));
+          dispatch(setTripsForMap({}));
           dispatch(setLocations(tripsResult.locations));
         }
         dispatch(stopLoading(LOADING_PROCESSES.GETTING_TRIPS));
       }
     }
-  }, [isLoggedIn, tripsResult, isLoadingTrips]);
+  }, [isLoggedIn, tripsResult, isFetchingTrips]);
 
   return (
     <div className="App">

@@ -6,11 +6,26 @@ import { JourneyModel } from '../db/models/journey-model.js';
 import expressAsyncHandler from 'express-async-handler';
 import { LocationModel } from '../db/models/location-model.js';
 import { joiMiddleware } from '../middlewares/joi.js';
-import { Joi } from '../utils/joi.js';
 import { respond, respondError } from '../utils/response.js';
 import { StatusCodes } from 'http-status-codes';
+import { sequelize } from '../db/init.js';
+import Joi from 'joi';
 
 export const tripsRouter = express.Router();
+
+const tripJoiSchema = Joi.object().keys({
+  name: Joi.string().required(),
+  year: Joi.number().required().allow(null),
+  journeys: Joi.array()
+    .items(
+      Joi.object().keys({
+        from: Joi.string().required(),
+        to: Joi.string().allow(null),
+        date: Joi.date().required(),
+      }),
+    )
+    .required(),
+});
 
 const getTrip = async (
   trip: TripModel,
@@ -27,7 +42,10 @@ const getTrip = async (
   ).map(journey => {
     internalLocationIds.add(journey.from);
     locationIds?.add(journey.from);
-    if (journey.to != null) locationIds?.add(journey.to);
+    if (journey.to != null) {
+      internalLocationIds.add(journey.to);
+      locationIds?.add(journey.to);
+    }
     return {
       from: journey.from,
       to: journey.to,
@@ -121,21 +139,7 @@ tripsRouter.get(
 
 tripsRouter.post(
   '/',
-  joiMiddleware(
-    Joi.object().keys({
-      name: Joi.string().required(),
-      year: Joi.number().required().allow(null),
-      journeys: Joi.array()
-        .items(
-          Joi.object().keys({
-            from: Joi.string().required(),
-            to: Joi.string().allow(null),
-            date: Joi.dateString().required(),
-          }),
-        )
-        .required(),
-    }),
-  ),
+  joiMiddleware(tripJoiSchema),
   expressAsyncHandler(async (req, res) => {
     const body = req.body;
     const trip = await TripModel.create({
@@ -155,5 +159,82 @@ tripsRouter.post(
       tripId: trip.id,
     });
     respond(res, { id: trip.id });
+  }),
+);
+
+tripsRouter.put(
+  '/:tripId',
+  joiMiddleware(tripJoiSchema),
+  expressAsyncHandler(async (req, res) => {
+    const tripId = Number(req.params.tripId);
+    const body = req.body;
+    const trip = await TripModel.findByPk(tripId);
+    if (trip == null) {
+      respondError(res, 'TRIP_NOT_FOUND');
+      return;
+    }
+    const userTrip = await UserTripModel.findOne({
+      where: {
+        email: req.email!,
+        tripId: tripId,
+      },
+    });
+    if (userTrip == null) {
+      respondError(res, 'FORBIDDEN', StatusCodes.FORBIDDEN);
+      return;
+    }
+
+    await sequelize.transaction(async transaction => {
+      await JourneyModel.destroy({
+        where: {
+          tripId: trip.id,
+        },
+        transaction,
+      });
+      for (const journey of body.journeys) {
+        await JourneyModel.create(
+          {
+            tripId: trip.id,
+            from: journey.from,
+            to: journey.to,
+            date: new Date(journey.date),
+          },
+          { transaction },
+        );
+      }
+      trip.name = body.name;
+      trip.year = body.year;
+      await trip.save({ transaction });
+    });
+    respond(res);
+  }),
+);
+
+tripsRouter.delete(
+  '/:tripId',
+  expressAsyncHandler(async (req, res) => {
+    const tripId = Number(req.params.tripId);
+    const trip = await TripModel.findByPk(tripId);
+    if (trip == null) {
+      respondError(res, 'TRIP_NOT_FOUND');
+      return;
+    }
+    const userTrip = await UserTripModel.findOne({
+      where: {
+        email: req.email!,
+        tripId: tripId,
+      },
+    });
+    if (userTrip == null) {
+      respondError(res, 'FORBIDDEN', StatusCodes.FORBIDDEN);
+      return;
+    }
+
+    await TripModel.destroy({
+      where: {
+        id: trip.id,
+      },
+    });
+    respond(res);
   }),
 );

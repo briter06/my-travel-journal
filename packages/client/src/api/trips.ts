@@ -21,3 +21,11 @@ export const createTrip = (payload: TripAPIData) =>
   callAPI<{ id: number }>('POST', '/trips', {
     payload,
   });
+
+export const updateTrip = (tripId: number, payload: TripAPIData) =>
+  callAPI<{ id: number }>('PUT', `/trips/${tripId}`, {
+    payload,
+  });
+
+export const deleteTrip = (tripId: number) =>
+  callAPI<{ id: number }>('DELETE', `/trips/${tripId}`);

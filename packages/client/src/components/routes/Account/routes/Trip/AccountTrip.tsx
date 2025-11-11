@@ -1,6 +1,11 @@
 import './AccountTrip.css';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createTrip, getTrip, TripAPIData } from '../../../../../api/trips';
+import {
+  createTrip,
+  getTrip,
+  TripAPIData,
+  updateTrip,
+} from '../../../../../api/trips';
 import { useEffect, useState } from 'react';
 import { useAppDispatch } from '../../../../../store/hooks';
 import {
@@ -9,16 +14,18 @@ import {
   stopLoading,
 } from '../../../../../store/slices/loading';
 import { useNavigate, useParams } from 'react-router';
-import { Journey, Locations, Trip } from '@my-travel-journal/common';
+import { Journey, Locations } from '@my-travel-journal/common';
 import PaginatedTable from '../../../../utils/PaginatedTable/PaginatedTable';
 import SelectAutoComplete from '../../../../utils/SelectAutoComplete/SelectAutoComplete';
-import CreatePlacePopup from './CreatePlacePopup/CreatePlacePopup';
+import CreatePlacePopup from './Popup/CreatePlacePopup/CreatePlacePopup';
 import { getMyLocations } from '../../../../../api/locations';
 import Disclamer from '../../../../utils/Disclamer/Disclamer';
+import DeleteTripPopup from './Popup/DeleteTripPopup/DeleteTripPopup';
 
 const LOADING_PROCESSES = {
   GETTING_TRIP: 'accountGettingTrip',
-  CREATING_TRIP: 'accountCreatingTrip',
+  GETTING_LOCATIONS: 'accountGettingLocations',
+  MUTATING_TRIP: 'accountMutatingTrip',
 };
 
 const YEARS: number[] = [];
@@ -33,7 +40,20 @@ type AccountTripProps = {
 const useCreateTrip = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: createTrip,
+    mutationFn: (payload: TripAPIData) => createTrip(payload),
+    onSuccess: () => {
+      return queryClient.invalidateQueries({
+        queryKey: ['trips'],
+        exact: false,
+      });
+    },
+  });
+};
+
+const useUpdateTrip = (tripId: number) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (payload: TripAPIData) => updateTrip(tripId, payload),
     onSuccess: () => {
       return queryClient.invalidateQueries({
         queryKey: ['trips'],
@@ -45,6 +65,8 @@ const useCreateTrip = () => {
 
 function AccountTrip({ create }: AccountTripProps) {
   const { tripId } = useParams();
+  if (!create && (tripId == null || Number.isInteger(tripId))) return null;
+
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
@@ -54,6 +76,7 @@ function AccountTrip({ create }: AccountTripProps) {
   const [currentTripYear, setCurrentTripYear] = useState<string>('');
   const [currentTripJourneys, setCurrentTripJourneys] = useState<Journey[]>([]);
 
+  const [createDeleteModal, setCreateDeleteModal] = useState<boolean>(false);
   const [createLocationModalJourney, setCreateLocationModalJourney] = useState<{
     idx: number;
     key: 'from' | 'to';
@@ -64,20 +87,20 @@ function AccountTrip({ create }: AccountTripProps) {
     message: string;
   } | null>(null);
 
-  const tripMutator = useCreateTrip();
+  const tripMutator = create ? useCreateTrip() : useUpdateTrip(Number(tripId));
 
-  const createTrip = async (data: TripAPIData) => {
-    dispatch(startLoading(LOADING_PROCESSES.CREATING_TRIP));
+  const mutateTrip = async (data: TripAPIData) => {
+    dispatch(startLoading(LOADING_PROCESSES.MUTATING_TRIP));
     const result = await tripMutator.mutateAsync(data);
     if (result != null) {
       void navigate(`..`);
     } else {
       setMessage({
         error: true,
-        message: 'An error occurred while creating the trip. Please try again!',
+        message: `An error occurred while ${create ? 'creating' : 'updating'} the trip. Please try again!`,
       });
     }
-    dispatch(stopLoading(LOADING_PROCESSES.CREATING_TRIP));
+    dispatch(stopLoading(LOADING_PROCESSES.MUTATING_TRIP));
   };
 
   const isValid = () => {
@@ -91,20 +114,18 @@ function AccountTrip({ create }: AccountTripProps) {
   };
 
   const { data: tripResult, isLoading: isLoadingTrip } = useQuery({
-    queryKey: ['trips', 'trip_individual'],
-    queryFn: async (): Promise<{
-      trip: Trip | null;
-      locations: Locations;
-    } | null> => {
-      if (create) {
-        const myLocations = await getMyLocations();
-        return myLocations != null
-          ? { trip: null, locations: myLocations.locations }
-          : null;
-      }
-      const trip = await getTrip(tripId!, true);
-      return trip != null ? trip : null;
-    },
+    queryKey: [
+      'trips',
+      'trip_individual',
+      `trip_individual_${create ? 'new' : tripId}`,
+    ],
+    queryFn: () => getTrip(tripId!, false),
+    enabled: !create,
+  });
+
+  const { data: locationsResult, isLoading: isLoadingLocations } = useQuery({
+    queryKey: ['my_locations'],
+    queryFn: () => getMyLocations(),
   });
 
   useEffect(() => {
@@ -112,24 +133,32 @@ function AccountTrip({ create }: AccountTripProps) {
       dispatch(startLoading(LOADING_PROCESSES.GETTING_TRIP));
     } else {
       if (tripResult != null) {
-        setAllLocations(tripResult.locations);
-        if (tripResult.trip != null) {
-          setCurrentTripName(tripResult.trip.info.name || '');
-          setCurrentTripYear(tripResult.trip.info.year ?? '');
-          // sort journeys once on load (ascending by date) so mounted order is stable
-          const sortedJourneys = tripResult.trip.journeys
-            .slice()
-            .sort((a: Journey, b: Journey) => {
-              const da = new Date(a.date);
-              const db = new Date(b.date);
-              return da.getTime() - db.getTime();
-            });
-          setCurrentTripJourneys(sortedJourneys);
-        }
+        setCurrentTripName(tripResult.trip.info.name || '');
+        setCurrentTripYear(tripResult.trip.info.year ?? '');
+        // sort journeys once on load (ascending by date) so mounted order is stable
+        const sortedJourneys = tripResult.trip.journeys
+          .slice()
+          .sort((a: Journey, b: Journey) => {
+            const da = new Date(a.date);
+            const db = new Date(b.date);
+            return da.getTime() - db.getTime();
+          });
+        setCurrentTripJourneys(sortedJourneys);
       }
       dispatch(stopLoading(LOADING_PROCESSES.GETTING_TRIP));
     }
   }, [tripResult, isLoadingTrip]);
+
+  useEffect(() => {
+    if (isLoadingLocations) {
+      dispatch(startLoading(LOADING_PROCESSES.GETTING_LOCATIONS));
+    } else {
+      if (locationsResult != null) {
+        setAllLocations(locationsResult.locations);
+      }
+      dispatch(stopLoading(LOADING_PROCESSES.GETTING_LOCATIONS));
+    }
+  }, [locationsResult, isLoadingLocations]);
 
   const locationOptions = Object.entries(allLocations).map(([id, place]) => ({
     id,
@@ -263,7 +292,11 @@ function AccountTrip({ create }: AccountTripProps) {
                   onChange={e => {
                     const v = e.target.value;
                     setCurrentTripJourneys(prev =>
-                      prev.map((j, i) => (i === idx ? { ...j, date: v } : j)),
+                      prev.map((j, i) =>
+                        i === idx
+                          ? { ...j, date: new Date(v).toISOString() }
+                          : j,
+                      ),
                     );
                   }}
                 />
@@ -303,7 +336,26 @@ function AccountTrip({ create }: AccountTripProps) {
         />
       ) : null}
 
+      {createDeleteModal ? (
+        <DeleteTripPopup
+          tripId={Number(tripId)}
+          onClose={() => setCreateDeleteModal(false)}
+          onConfirm={() => {
+            void navigate('..');
+          }}
+        />
+      ) : null}
+
       <div className="trip-editor-actions">
+        <button
+          type="button"
+          className="btn delete"
+          onClick={() => {
+            setCreateDeleteModal(true);
+          }}
+        >
+          Delete
+        </button>
         <button
           type="button"
           className="btn cancel"
@@ -318,7 +370,7 @@ function AccountTrip({ create }: AccountTripProps) {
           className="btn primary"
           disabled={!isValid()}
           onClick={() =>
-            void createTrip({
+            void mutateTrip({
               name: currentTripName,
               year: currentTripYear === '' ? null : Number(currentTripYear),
               journeys: currentTripJourneys,

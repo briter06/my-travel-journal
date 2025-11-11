@@ -26,8 +26,6 @@ const MapContent: React.FC<MapData> = ({
   colors,
   showJournies,
 }) => {
-  const tripEntries = Object.entries(trips);
-
   return (
     <MapContainer center={CENTER_OF_MAP} zoom={2.5} id="map-container">
       {/* <TileLayer
@@ -41,7 +39,7 @@ const MapContent: React.FC<MapData> = ({
         attribution='&copy; <a href="https://carto.com/">CARTO</a>'
       />
 
-      {tripEntries.map(([tripId, { locationIds, journeys }]) => {
+      {Object.entries(trips).map(([tripId, { locationIds, journeys }]) => {
         const icon = L.ExtraMarkers.icon({
           svg: true,
           innerHTML: createMarker(colors[tripId]),
@@ -54,8 +52,8 @@ const MapContent: React.FC<MapData> = ({
                 <Marker
                   key={locationId}
                   position={[
-                    parseInt(location.latitude, 10),
-                    parseInt(location.longitude, 10),
+                    parseFloat(location.latitude),
+                    parseFloat(location.longitude),
                   ]}
                   icon={icon}
                 >
@@ -80,8 +78,8 @@ const MapContent: React.FC<MapData> = ({
                       <DirectedLine
                         key={`trip_${journey.from}_${journey.to}`}
                         positions={[
-                          [parseInt(la1, 10), parseInt(lo1, 10)],
-                          [parseInt(la2, 10), parseInt(lo2, 10)],
+                          [parseFloat(la1), parseFloat(lo1)],
+                          [parseFloat(la2), parseFloat(lo2)],
                         ]}
                         color={colors[tripId]}
                         popup={`<b>${
