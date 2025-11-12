@@ -8,7 +8,7 @@ void i18n
   .use(initReactI18next) // bind react-i18next
   .init({
     fallbackLng: 'en',
-    debug: true,
+    debug: false,
     interpolation: {
       escapeValue: false, // react already escapes
     },

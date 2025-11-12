@@ -1,13 +1,12 @@
 import './App.css';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { getMe } from '../../api/login';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { setIsLoggedIn, setMe } from '../../store/slices/session';
+import { setMe } from '../../store/slices/session';
 import { useQuery } from '@tanstack/react-query';
 import { startLoading, stopLoading } from '../../store/slices/loading';
 import NavigationLayout from '../NavigationLayout/NavigationLayout';
-import { useLocation, useMatches, useNavigate } from 'react-router';
-import Login from '../Auth/Login/Login';
+import { useNavigate, useParams } from 'react-router';
 import { getTrips } from '../../api/trips';
 import {
   setLocations,
@@ -19,26 +18,18 @@ import { deleteFromStorage, getFromStorage } from '../../utils/storage';
 const LOADING_PROCESSES = {
   GETTING_ME: 'gettingMe',
   GETTING_TRIPS: 'gettingTrips',
-  SIGNUP: 'signup',
 };
 
 function App() {
   const navigate = useNavigate();
-  const location = useLocation();
+  const { lng } = useParams();
 
-  const matches = useMatches();
-  const currentMatch = matches[matches.length - 1];
-  const handle = currentMatch.handle as { isPublicRoute?: boolean } | undefined;
-
-  const resetLocation = () => {
-    if (handle?.isPublicRoute !== true && location.pathname !== '/') {
-      void navigate('/');
-    }
+  const sendToLogin = () => {
+    void navigate(`/${lng}/login`);
   };
 
   const hasToken = getFromStorage('token') != null;
-  const [isReady, setIsReady] = useState(!hasToken);
-  const isLoggedIn = useAppSelector(state => state.session.isLoggedIn);
+  const stateMe = useAppSelector(state => state.session.me);
 
   const dispatch = useAppDispatch();
 
@@ -48,10 +39,14 @@ function App() {
     enabled: hasToken,
   });
 
-  const { data: tripsResult, isFetching: isFetchingTrips } = useQuery({
+  const {
+    data: tripsResult,
+    isLoading: isLoadingTrips,
+    isFetching: isFetchingTrips,
+  } = useQuery({
     queryKey: ['trips'],
     queryFn: getTrips,
-    enabled: hasToken && !isLoadingMe,
+    enabled: hasToken,
   });
 
   useEffect(() => {
@@ -60,40 +55,35 @@ function App() {
         dispatch(startLoading(LOADING_PROCESSES.GETTING_ME));
       } else {
         if (me != null) {
-          dispatch(setMe(me));
-          dispatch(setIsLoggedIn(true));
+          dispatch(setMe({ ...me }));
         } else {
-          dispatch(setIsLoggedIn(false));
           deleteFromStorage('token');
-          resetLocation();
+          sendToLogin();
         }
         dispatch(stopLoading(LOADING_PROCESSES.GETTING_ME));
-        setIsReady(true);
       }
     } else {
-      resetLocation();
+      sendToLogin();
     }
-  }, [navigate, location.pathname, me, isLoadingMe]);
+  }, [me, isLoadingMe]);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      if (isFetchingTrips) {
+    if (hasToken) {
+      if (isLoadingTrips || isFetchingTrips) {
         dispatch(startLoading(LOADING_PROCESSES.GETTING_TRIPS));
       } else {
         if (tripsResult != null) {
-          dispatch(setTrips(tripsResult.trips));
+          dispatch(setTrips({ ...tripsResult.trips }));
           dispatch(setTripsForMap({}));
-          dispatch(setLocations(tripsResult.locations));
+          dispatch(setLocations({ ...tripsResult.locations }));
         }
         dispatch(stopLoading(LOADING_PROCESSES.GETTING_TRIPS));
       }
     }
-  }, [isLoggedIn, tripsResult, isFetchingTrips]);
+  }, [tripsResult, isLoadingTrips, isFetchingTrips]);
 
   return (
-    <div className="App">
-      {isReady ? isLoggedIn ? <NavigationLayout /> : <Login /> : null}
-    </div>
+    <div className="App">{stateMe != null ? <NavigationLayout /> : null}</div>
   );
 }
 

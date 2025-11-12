@@ -9,7 +9,3 @@ export const getFromStorage = (key: string): string | null => {
 export const deleteFromStorage = (key: string) => {
   localStorage.removeItem(key);
 };
-
-export const clearStorage = () => {
-  localStorage.clear();
-};

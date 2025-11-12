@@ -33,18 +33,18 @@ export const createUser = async (
     if (signUpResult == null) {
       return {
         status: false,
-        message: 'That email is already associated with an account',
+        message: 'auth.signup.userExists',
       };
     } else {
       return {
         status: true,
-        message: 'The user has been created. Please login',
+        message: 'auth.signup.success',
       };
     }
   } catch (_err) {
     return {
       status: false,
-      message: 'There was a problem. Please try again later.',
+      message: 'general.error',
     };
   }
 };

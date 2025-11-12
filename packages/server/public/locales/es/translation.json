@@ -1,3 +1,133 @@
 {
-  "myAccount": "Mi cuenta"
+  "general": {
+    "error": "Hubo un error. Por favor, inténtalo de nuevo."
+  },
+  "auth": {
+    "login": {
+      "title": "¡Bienvenido!",
+      "emailLabel": "Introduce tu correo electrónico",
+      "passwordLabel": "Introduce tu contraseña",
+      "loginButton": "Iniciar sesión",
+      "signupButton": "Registrarse",
+      "incorrectCredentials": "Correo electrónico o contraseña incorrectos. Por favor, inténtalo de nuevo."
+    },
+    "signup": {
+      "title": "¡Hazte miembro!",
+      "firstNameLabel": "Nombre",
+      "lastNameLabel": "Apellido",
+      "emailLabel": "Introduce tu correo electrónico",
+      "passwordLabel": "Crea una contraseña",
+      "signupButton": "Registrarse",
+      "userExists": "Ese correo electrónico ya está asociado a una cuenta",
+      "success": "El usuario ha sido creado. Por favor, inicia sesión"
+    }
+  },
+  "navigation": {
+    "title": "My World Trail",
+    "profile": {
+      "myAccount": "Mi cuenta",
+      "logout": "Cerrar sesión",
+      "general": "General",
+      "myTrips": "Mis viajes"
+    }
+  },
+  "profileMenu": {
+    "myAccount": "Mi cuenta"
+  },
+  "trips": {
+    "search": {
+      "placeholder": "Buscar por año, país, ciudad o lugar"
+    },
+    "emptyMessage": "Aún no tienes viajes.",
+    "header": {
+      "year": "Año",
+      "trip": "Viaje"
+    },
+    "actions": {
+      "create": "Crear"
+    }
+  },
+  "tripEditor": {
+    "label": {
+      "name": "Nombre",
+      "date": "Fecha",
+      "year": "Año",
+      "month": "Mes"
+    },
+    "actions": {
+      "save": "Guardar",
+      "create": "Crear",
+      "cancel": "Cancelar",
+      "addJourney": "Agregar viaje",
+      "delete": "Eliminar"
+    },
+    "journeys": "Viajes",
+    "journey": {
+      "from": "Desde",
+      "to": "Hasta",
+      "date": "Fecha",
+      "actions": "Acciones"
+    },
+    "error": {
+      "mutateFailed": "Ocurrió un error al crear o actualizar el viaje. ¡Inténtalo de nuevo!"
+    }
+  },
+  "createPlace": {
+    "title": "Crear ubicación",
+    "label": {
+      "country": "País *",
+      "locality": "Localidad *",
+      "name": "Nombre",
+      "mapsUrl": "URL de Google Maps",
+      "latitude": "Latitud *",
+      "longitude": "Longitud *"
+    },
+    "manualCoordsToggle": "Ingresar coordenadas manualmente",
+    "button": {
+      "create": "Crear",
+      "creating": "Creando...",
+      "cancel": "Cancelar"
+    },
+    "error": {
+      "invalidMapsUrl": "URL de Google Maps inválida. Por favor, ve a Google Maps y copia la URL desde allí.",
+      "createFailed": "Ocurrió un error al crear la ubicación. ¡Inténtalo de nuevo!"
+    }
+  },
+  "deleteTrip": {
+    "confirmTitle": "Eliminar viaje",
+    "confirmMessage": "¿Estás seguro de que quieres eliminar este viaje?",
+    "actions": {
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "deleting": "Eliminando..."
+    },
+    "error": {
+      "deleteFailed": "Ocurrió un error al eliminar el viaje. ¡Inténtalo de nuevo!"
+    }
+  },
+  "map": {
+    "controls": {
+      "showJourneys": "Mostrar viajes",
+      "myTrips": "Mis viajes"
+    }
+  },
+  "account": {
+    "myInformation": {
+      "title": "Mi información",
+      "label": {
+        "email": "Correo electrónico",
+        "name": "Nombre"
+      }
+    }
+  },
+  "loading": {
+    "alt": "cargando",
+    "text": "Cargando..."
+  },
+  "selectAutoComplete": {
+    "placeholder": "Buscar..."
+  },
+  "validation": {
+    "required": "Este campo es obligatorio"
+  }
 }

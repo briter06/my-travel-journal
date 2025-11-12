@@ -1,12 +1,14 @@
 import '../Auth.css';
 import { useEffect, useState } from 'react';
-import { getMe, getNonce, loginUser } from '../../../api/login';
+import { getNonce, loginUser } from '../../../api/login';
 import { useAppDispatch } from '../../../store/hooks';
-import { setIsLoggedIn, setMe } from '../../../store/slices/session';
 import { startLoading, stopLoading } from '../../../store/slices/loading';
 import { useLocation, useNavigate } from 'react-router';
 import { isValid } from '../../../utils/form';
 import Disclamer from '../../utils/Disclamer/Disclamer';
+import { authHomeRedirector } from '../../utils/AuthHomeRedirector/AuthHomeRedirector';
+import { setInStorage } from '../../../utils/storage';
+import { useTranslation } from 'react-i18next';
 
 const LOADING_PROCESSES = {
   LOGIN: 'login',
@@ -15,6 +17,8 @@ const LOADING_PROCESSES = {
 function Login() {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const { t } = useTranslation();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -41,33 +45,25 @@ function Login() {
     const nonce = await getNonce();
     if (nonce != null) {
       const result = await loginUser(email, password, nonce.nonce);
-      if (result == null) {
-        const me = await getMe();
-        if (me != null) {
-          dispatch(setMe(me));
-          dispatch(setIsLoggedIn(true));
-        } else {
-          setMessage({
-            error: true,
-            message: 'There was a problem. Please try again.',
-          });
-        }
+      if (result.token != null) {
+        setInStorage('token', result.token);
+        void navigate(`/`, { replace: true });
       } else {
         setMessage({
-          error: !result.status,
+          error: true,
           message: result.message,
         });
       }
     } else {
       setMessage({
         error: true,
-        message: 'There was a problem. Please try again.',
+        message: 'general.error',
       });
     }
     dispatch(stopLoading(LOADING_PROCESSES.LOGIN));
   };
 
-  return (
+  return authHomeRedirector(
     <div className="initialScreen">
       <form
         className="loginForm"
@@ -78,12 +74,12 @@ function Login() {
             .catch(console.error);
         }}
       >
-        <h2 style={{ marginBottom: '30px' }}>Welcome!</h2>
+        <h2 style={{ marginBottom: '30px' }}>{t('auth.login.title')}</h2>
 
         <Disclamer message={message} />
 
         <label htmlFor="email" className="formLabel">
-          Enter your email
+          {t('auth.login.emailLabel')}
         </label>
         <input
           type="text"
@@ -95,7 +91,7 @@ function Login() {
           onChange={e => setEmail(e.target.value)}
         />
         <label htmlFor="password" className="formLabel">
-          Enter your password
+          {t('auth.login.passwordLabel')}
         </label>
         <input
           type="password"
@@ -111,19 +107,19 @@ function Login() {
           className="loginButton"
           disabled={!isValid({ email, password })}
         >
-          Log In
+          {t('auth.login.loginButton')}
         </button>
         <button
           type="button"
           className="loginButton"
           onClick={() => {
-            void navigate('/signup');
+            void navigate(`../signup`);
           }}
         >
-          Sign Up
+          {t('auth.login.signupButton')}
         </button>
       </form>
-    </div>
+    </div>,
   );
 }
 

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import './SelectAutoComplete.css';
 
 export type Option<T> = { id: T; label: string };
@@ -32,6 +33,7 @@ export default function SelectAutoComplete<T = string>({
   noMatch,
   disabled,
 }: Props<T>) {
+  const { t } = useTranslation();
   const [query, setQuery] = useState('');
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement | null>(null);
@@ -79,7 +81,10 @@ export default function SelectAutoComplete<T = string>({
       <div style={{ position: 'relative' }}>
         <input
           className={`sac-input ${showSelectedAsPlaceholder ? 'sac-has-selected' : ''}`}
-          placeholder={selectedLabel || (placeholder ?? 'Search...')}
+          placeholder={
+            selectedLabel ||
+            (placeholder ?? t('selectAutoComplete.placeholder'))
+          }
           value={query}
           onChange={e => {
             // keep the raw input (allow spaces) but use a trimmed value for id-generation

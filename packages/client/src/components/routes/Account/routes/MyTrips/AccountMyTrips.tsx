@@ -1,5 +1,6 @@
 import './AccountMyTrips.css';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppSelector } from '../../../../../store/hooks';
 import { isLoading } from '../../../../../store/slices/loading';
 import { Trip } from '@my-travel-journal/common';
@@ -9,6 +10,7 @@ import PaginatedTable from '../../../../utils/PaginatedTable/PaginatedTable';
 function AccountMyTrips() {
   const [sortedTrips, setSortedTrips] = useState<Trip[]>([]);
   const [search, setSearch] = useState('');
+  const { t } = useTranslation();
 
   const locations = useAppSelector(state => state.trips.locations);
   const trips = useAppSelector(state => state.trips.trips);
@@ -32,7 +34,7 @@ function AccountMyTrips() {
           <div className="trips-search-row">
             <div className="trips-controls">
               <Link to="create" className="create-button">
-                Create
+                {t('trips.actions.create')}
               </Link>
             </div>
             {sortedTrips.length === 0 ? null : (
@@ -41,7 +43,7 @@ function AccountMyTrips() {
                 <input
                   id="trips-search-input"
                   type="text"
-                  placeholder="Search by year, country, city or landmark"
+                  placeholder={t('trips.search.placeholder')}
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                 />
@@ -52,9 +54,7 @@ function AccountMyTrips() {
           {(() => {
             if (sortedTrips.length === 0)
               return (
-                <div className="mytrips-empty">
-                  You don't have any trips yet.
-                </div>
+                <div className="mytrips-empty">{t('trips.emptyMessage')}</div>
               );
             // apply search filter (year or country)
             const q = search.trim().toLowerCase();
@@ -80,10 +80,10 @@ function AccountMyTrips() {
                 header={
                   <div className="trips-row header" role="row">
                     <div className="trips-cell" role="columnheader">
-                      Year
+                      {t('trips.header.year')}
                     </div>
                     <div className="trips-cell" role="columnheader">
-                      Trip
+                      {t('trips.header.trip')}
                     </div>
                   </div>
                 }

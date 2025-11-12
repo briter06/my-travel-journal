@@ -1,8 +1,11 @@
+import { useTranslation } from 'react-i18next';
+
 type DisclamerProps = {
   message: { message: string; error: boolean } | null;
 };
 
 function Disclamer({ message }: DisclamerProps) {
+  const { t } = useTranslation();
   return message != null ? (
     <div
       style={{
@@ -10,7 +13,7 @@ function Disclamer({ message }: DisclamerProps) {
         marginBottom: '10px',
       }}
     >
-      {message.message}
+      {t(message.message)}
     </div>
   ) : null;
 }

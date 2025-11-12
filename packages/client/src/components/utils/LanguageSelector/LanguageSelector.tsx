@@ -1,12 +1,11 @@
 import { useState } from 'react';
-import { useTranslation, UseTranslationResponse } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { SUPPORTED_LANGUAGES } from '../../../utils/languages';
 import { useLocation, useNavigate } from 'react-router';
 import { setInStorage } from '../../../utils/storage';
 
 export default function LanguageSelector() {
-  const { i18n }: UseTranslationResponse<'translation', undefined> =
-    useTranslation();
+  const { i18n } = useTranslation();
   const [lang, setLang] = useState<string>(
     i18n.language || SUPPORTED_LANGUAGES[0],
   );

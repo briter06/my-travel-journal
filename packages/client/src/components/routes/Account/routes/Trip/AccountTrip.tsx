@@ -7,6 +7,7 @@ import {
   updateTrip,
 } from '../../../../../api/trips';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useAppDispatch } from '../../../../../store/hooks';
 import {
   isLoading,
@@ -86,6 +87,7 @@ function AccountTrip({ create }: AccountTripProps) {
     error: boolean;
     message: string;
   } | null>(null);
+  const { t } = useTranslation();
 
   const tripMutator = create ? useCreateTrip() : useUpdateTrip(Number(tripId));
 
@@ -169,7 +171,7 @@ function AccountTrip({ create }: AccountTripProps) {
     <div className="account-trip-editor">
       <Disclamer message={message} />
       <div className="trip-field-row">
-        <label className="trip-field-label">Name</label>
+        <label className="trip-field-label">{t('tripEditor.label.name')}</label>
         <input
           className="trip-field-input"
           type="text"
@@ -179,7 +181,7 @@ function AccountTrip({ create }: AccountTripProps) {
       </div>
 
       <div className="trip-field-row">
-        <label className="trip-field-label">Date</label>
+        <label className="trip-field-label">{t('tripEditor.label.date')}</label>
         <div className="trip-date-selects">
           <select
             className="trip-date-select"
@@ -208,7 +210,7 @@ function AccountTrip({ create }: AccountTripProps) {
             alignItems: 'center',
           }}
         >
-          <h3 style={{ margin: 0 }}>Journeys</h3>
+          <h3 style={{ margin: 0 }}>{t('tripEditor.journeys')}</h3>
           <button
             type="button"
             className="btn primary"
@@ -219,7 +221,7 @@ function AccountTrip({ create }: AccountTripProps) {
               ]);
             }}
           >
-            Add journey
+            {t('tripEditor.actions.addJourney')}
           </button>
         </div>
 
@@ -228,10 +230,12 @@ function AccountTrip({ create }: AccountTripProps) {
           defaultPageSize={10}
           header={
             <div className="journeys-row header">
-              <div className="journey-col">From</div>
-              <div className="journey-col">To</div>
-              <div className="journey-col">Date</div>
-              <div className="journey-col">Actions</div>
+              <div className="journey-col">{t('tripEditor.journey.from')}</div>
+              <div className="journey-col">{t('tripEditor.journey.to')}</div>
+              <div className="journey-col">{t('tripEditor.journey.date')}</div>
+              <div className="journey-col">
+                {t('tripEditor.journey.actions')}
+              </div>
             </div>
           }
           renderRow={(journey: Journey, idx: number) => (
@@ -250,7 +254,9 @@ function AccountTrip({ create }: AccountTripProps) {
                   noMatch={{
                     node: () => (
                       <div>
-                        <div className="sac-no-match">Create location</div>
+                        <div className="sac-no-match">
+                          {t('createPlace.title')}
+                        </div>
                       </div>
                     ),
                     callback: () => {
@@ -274,7 +280,9 @@ function AccountTrip({ create }: AccountTripProps) {
                   noMatch={{
                     node: () => (
                       <div>
-                        <div className="sac-no-match">Create location</div>
+                        <div className="sac-no-match">
+                          {t('createPlace.title')}
+                        </div>
                       </div>
                     ),
                     callback: () => {
@@ -312,7 +320,7 @@ function AccountTrip({ create }: AccountTripProps) {
                     )
                   }
                 >
-                  Delete
+                  {t('tripEditor.actions.delete')}
                 </button>
               </div>
             </div>
@@ -354,7 +362,7 @@ function AccountTrip({ create }: AccountTripProps) {
             setCreateDeleteModal(true);
           }}
         >
-          Delete
+          {t('tripEditor.actions.delete')}
         </button>
         <button
           type="button"
@@ -363,7 +371,7 @@ function AccountTrip({ create }: AccountTripProps) {
             void navigate('..');
           }}
         >
-          Cancel
+          {t('tripEditor.actions.cancel')}
         </button>
         <button
           type="button"
@@ -377,7 +385,9 @@ function AccountTrip({ create }: AccountTripProps) {
             })
           }
         >
-          {create ? 'Create' : 'Save'}
+          {create
+            ? t('tripEditor.actions.create')
+            : t('tripEditor.actions.save')}
         </button>
       </div>
     </div>

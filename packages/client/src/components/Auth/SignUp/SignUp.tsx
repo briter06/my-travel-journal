@@ -2,12 +2,14 @@ import '../Auth.css';
 import { useState } from 'react';
 import { useAppDispatch } from '../../../store/hooks';
 import { startLoading, stopLoading } from '../../../store/slices/loading';
-import { useNavigate } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import { createUser, getNonceKey } from '../../../api/signup';
 import { clearSession } from '../../../store/slices/session';
 import { isValid } from '../../../utils/form';
 import Disclamer from '../../utils/Disclamer/Disclamer';
-import { clearStorage } from '../../../utils/storage';
+import { deleteFromStorage } from '../../../utils/storage';
+import { authHomeRedirector } from '../../utils/AuthHomeRedirector/AuthHomeRedirector';
+import { useTranslation } from 'react-i18next';
 
 const LOADING_PROCESSES = {
   SIGNUP: 'signup',
@@ -15,6 +17,8 @@ const LOADING_PROCESSES = {
 
 function SignUp() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
+  const { lng } = useParams();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -38,8 +42,8 @@ function SignUp() {
       );
       if (result.status) {
         dispatch(clearSession());
-        clearStorage();
-        void navigate('/', { state: { signUpResult: result } });
+        deleteFromStorage('token');
+        void navigate(`/${lng}/login`, { state: { signUpResult: result } });
       } else {
         setMessage({
           error: !result.status,
@@ -49,13 +53,13 @@ function SignUp() {
     } else {
       setMessage({
         error: true,
-        message: 'There was a problem. Please try again.',
+        message: 'general.error',
       });
     }
     dispatch(stopLoading(LOADING_PROCESSES.SIGNUP));
   };
 
-  return (
+  return authHomeRedirector(
     <div className="initialScreen">
       <form
         className="loginForm"
@@ -66,14 +70,14 @@ function SignUp() {
             .catch(console.error);
         }}
       >
-        <h2 style={{ marginBottom: '30px' }}>Become a member!</h2>
+        <h2 style={{ marginBottom: '30px' }}>{t('auth.signup.title')}</h2>
 
         <Disclamer message={message} />
 
         <div className="formRow">
           <div className="formCol">
             <label htmlFor="firstName" className="formLabel">
-              First name
+              {t('auth.signup.firstNameLabel')}
             </label>
             <input
               type="text"
@@ -87,7 +91,7 @@ function SignUp() {
           </div>
           <div className="formCol">
             <label htmlFor="lastName" className="formLabel">
-              Last name
+              {t('auth.signup.lastNameLabel')}
             </label>
             <input
               type="text"
@@ -102,7 +106,7 @@ function SignUp() {
         </div>
 
         <label htmlFor="email" className="formLabel">
-          Enter your email
+          {t('auth.signup.emailLabel')}
         </label>
         <input
           type="text"
@@ -114,7 +118,7 @@ function SignUp() {
           onChange={e => setEmail(e.target.value)}
         />
         <label htmlFor="password" className="formLabel">
-          Enter your password
+          {t('auth.signup.passwordLabel')}
         </label>
         <input
           type="password"
@@ -130,10 +134,10 @@ function SignUp() {
           className="loginButton"
           disabled={!isValid({ email, password, firstName, lastName })}
         >
-          Sign Up
+          {t('auth.signup.signupButton')}
         </button>
       </form>
-    </div>
+    </div>,
   );
 }
 

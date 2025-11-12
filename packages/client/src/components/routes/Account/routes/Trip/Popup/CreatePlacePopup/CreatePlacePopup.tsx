@@ -1,5 +1,6 @@
 import '../Popup.css';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import SelectAutoComplete from '../../../../../../utils/SelectAutoComplete/SelectAutoComplete';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -31,6 +32,7 @@ const useCreateLocation = () => {
 };
 
 export default function CreatePlacePopup({ onClose, onSave }: Props) {
+  const { t } = useTranslation();
   const [country, setCountry] = useState<string | null>(null);
   const [locality, setLocality] = useState<string | null>(null);
   const [name, setName] = useState<string | null>(null);
@@ -61,8 +63,7 @@ export default function CreatePlacePopup({ onClose, onSave }: Props) {
     } else {
       setMessage({
         error: true,
-        message:
-          'An error occurred while creating the location. Please try again!',
+        message: t('createPlace.error.createFailed'),
       });
       setIsCreating(false);
     }
@@ -96,8 +97,7 @@ export default function CreatePlacePopup({ onClose, onSave }: Props) {
         } else {
           setMessage({
             error: true,
-            message:
-              'Invalid Google Maps URL. Please go to Google Maps directly and copy the URL from there.',
+            message: t('createPlace.error.invalidMapsUrl'),
           });
         }
       }
@@ -114,12 +114,12 @@ export default function CreatePlacePopup({ onClose, onSave }: Props) {
     <div className="sac-modal-overlay">
       <div className="sac-modal">
         <Disclamer message={message} />
-        <h3 style={{ marginTop: 0 }}>Create location</h3>
+        <h3 style={{ marginTop: 0 }}>{t('createPlace.title')}</h3>
 
         <div style={{ display: 'grid', gap: 10 }}>
           <div>
             <label style={{ display: 'block', fontSize: 13, marginBottom: 6 }}>
-              Country *
+              {t('createPlace.label.country')}
             </label>
             <SelectAutoComplete<string>
               disabled={allCountries == null}
@@ -133,7 +133,7 @@ export default function CreatePlacePopup({ onClose, onSave }: Props) {
 
           <div>
             <label style={{ display: 'block', fontSize: 13, marginBottom: 6 }}>
-              Locality *
+              {t('createPlace.label.locality')}
             </label>
             <input
               className="sac-input"
@@ -147,7 +147,7 @@ export default function CreatePlacePopup({ onClose, onSave }: Props) {
 
           <div>
             <label style={{ display: 'block', fontSize: 13, marginBottom: 6 }}>
-              Name
+              {t('createPlace.label.name')}
             </label>
             <input
               className="sac-input"
@@ -165,7 +165,7 @@ export default function CreatePlacePopup({ onClose, onSave }: Props) {
                 <label
                   style={{ display: 'block', fontSize: 13, marginBottom: 6 }}
                 >
-                  Latitude *
+                  {t('createPlace.label.latitude')}
                 </label>
                 <input
                   className="sac-input"
@@ -181,7 +181,7 @@ export default function CreatePlacePopup({ onClose, onSave }: Props) {
                 <label
                   style={{ display: 'block', fontSize: 13, marginBottom: 6 }}
                 >
-                  Longitude *
+                  {t('createPlace.label.longitude')}
                 </label>
                 <input
                   className="sac-input"
@@ -198,7 +198,7 @@ export default function CreatePlacePopup({ onClose, onSave }: Props) {
               <label
                 style={{ display: 'block', fontSize: 13, marginBottom: 6 }}
               >
-                Google Maps URL *
+                {t('createPlace.label.mapsUrl')}
               </label>
               <input
                 className="sac-input"
@@ -230,7 +230,7 @@ export default function CreatePlacePopup({ onClose, onSave }: Props) {
                   }
                 }}
               />
-              <span>Enter coordinates manually</span>
+              <span>{t('createPlace.manualCoordsToggle')}</span>
             </label>
           </div>
         </div>
@@ -250,7 +250,7 @@ export default function CreatePlacePopup({ onClose, onSave }: Props) {
               onClose();
             }}
           >
-            Cancel
+            {t('createPlace.button.cancel')}
           </button>
 
           <button
@@ -266,7 +266,9 @@ export default function CreatePlacePopup({ onClose, onSave }: Props) {
             }
             onClick={() => void handleCreate().catch(handlePromiseError)}
           >
-            {isCreating ? 'Creating...' : 'Create'}
+            {isCreating
+              ? t('createPlace.button.creating')
+              : t('createPlace.button.create')}
           </button>
         </div>
       </div>

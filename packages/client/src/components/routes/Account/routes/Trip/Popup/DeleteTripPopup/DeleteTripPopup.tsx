@@ -1,5 +1,6 @@
 import '../Popup.css';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { handlePromiseError } from '../../../../../../../utils/promises';
 import Disclamer from '../../../../../../utils/Disclamer/Disclamer';
@@ -29,6 +30,7 @@ export default function DeleteTripPopup({ tripId, onClose, onConfirm }: Props) {
     message: string;
   } | null>(null);
   const [isDeleting, setIsDeleting] = useState<boolean>(false);
+  const { t } = useTranslation();
 
   const tripMutator = useDeleteTrip();
 
@@ -40,7 +42,9 @@ export default function DeleteTripPopup({ tripId, onClose, onConfirm }: Props) {
     } else {
       setMessage({
         error: true,
-        message: 'An error occurred while deleting the trip. Please try again!',
+        message:
+          t('deleteTrip.error.deleteFailed') ??
+          'An error occurred while deleting the trip. Please try again!',
       });
       setIsDeleting(false);
     }
@@ -50,7 +54,7 @@ export default function DeleteTripPopup({ tripId, onClose, onConfirm }: Props) {
     <div className="sac-modal-overlay">
       <div className="sac-modal">
         <Disclamer message={message} />
-        <h3 style={{ marginTop: 0 }}>Do you want to delete this trip?</h3>
+        <h3 style={{ marginTop: 0 }}>{t('deleteTrip.confirmMessage')}</h3>
 
         <div
           style={{
@@ -67,7 +71,7 @@ export default function DeleteTripPopup({ tripId, onClose, onConfirm }: Props) {
               onClose();
             }}
           >
-            Cancel
+            {t('deleteTrip.actions.cancel')}
           </button>
 
           <button
@@ -76,7 +80,9 @@ export default function DeleteTripPopup({ tripId, onClose, onConfirm }: Props) {
             disabled={isDeleting}
             onClick={() => void deleteTrip().catch(handlePromiseError)}
           >
-            {isDeleting ? 'Deleting...' : 'Delete'}
+            {isDeleting
+              ? (t('deleteTrip.actions.deleting') ?? 'Deleting...')
+              : t('deleteTrip.actions.delete')}
           </button>
         </div>
       </div>

@@ -1,4 +1,7 @@
+// const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'https://www.myworldtrail.com';
+
 export const environment = {
-  // apiUrl: 'http://localhost:3000/api',
-  apiUrl: 'https://my-travel-journal-1e75012f20b3.herokuapp.com/api',
+  apiUrl: `${BASE_URL}/api`,
+  publicUrl: `${BASE_URL}/public`,
 };

@@ -1,12 +1,11 @@
 import { useEffect } from 'react';
-import { useTranslation, UseTranslationResponse } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { Outlet, useParams } from 'react-router';
 import { setInStorage } from '../../utils/storage';
 
 function LanguageInjector() {
   const { lng } = useParams();
-  const { i18n }: UseTranslationResponse<'translation', undefined> =
-    useTranslation();
+  const { i18n } = useTranslation();
 
   useEffect(() => {
     if (lng != null && i18n.language !== lng) {

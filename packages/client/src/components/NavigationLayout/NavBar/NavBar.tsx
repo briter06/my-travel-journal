@@ -8,13 +8,12 @@ import { getInitials } from '../../../utils/user';
 import { clearSession } from '../../../store/slices/session';
 import { toggleSideBar } from '../../../store/slices/navigation';
 import { useMatches, useNavigate } from 'react-router';
-import { useTranslation, UseTranslationResponse } from 'react-i18next';
-import { clearStorage } from '../../../utils/storage';
+import { useTranslation } from 'react-i18next';
+import { deleteFromStorage } from '../../../utils/storage';
 import LanguageSelector from '../../utils/LanguageSelector/LanguageSelector';
 
 function NavBar() {
-  const { t }: UseTranslationResponse<'translation', undefined> =
-    useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const me = useAppSelector(state => state.session.me)!;
   const [openMenu, setOpenMenu] = useState(false);
@@ -114,7 +113,7 @@ function NavBar() {
             void navigate('/', { replace: true });
           }}
         >
-          My World Trail
+          {t('navigation.title')}
         </span>
       </div>
       <LanguageSelector />
@@ -147,17 +146,17 @@ function NavBar() {
                 void navigate('account');
               }}
             >
-              {t('myAccount')}
+              {t('profileMenu.myAccount')}
             </MenuItem>
             <MenuItem
               onClick={() => {
                 setOpenMenu(false);
                 dispatch(clearSession());
-                clearStorage();
+                deleteFromStorage('token');
                 void navigate('/', { replace: true });
               }}
             >
-              Logout
+              {t('navigation.profile.logout')}
             </MenuItem>
           </Menu>
         </div>

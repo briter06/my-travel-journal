@@ -5,9 +5,11 @@ import { SIDE_BAR_BACKGROUND_COLOR } from '../../../utils/colors';
 import { getInitials } from '../../../utils/user';
 import { useAppSelector } from '../../../store/hooks';
 import { Link, Outlet } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 function Account() {
   const me = useAppSelector(state => state.session.me)!;
+  const { t } = useTranslation();
 
   return (
     <NavigationContent
@@ -33,8 +35,12 @@ function Account() {
             </div>
           </MenuItem>
           <hr className="my-2 border-gray-200" />
-          <MenuItem component={<Link to="" />}>General</MenuItem>
-          <MenuItem component={<Link to="trips" />}>My Trips</MenuItem>
+          <MenuItem component={<Link to="" />}>
+            {t('navigation.profile.general')}
+          </MenuItem>
+          <MenuItem component={<Link to="trips" />}>
+            {t('navigation.profile.myTrips')}
+          </MenuItem>
         </Menu>
       }
       content={<Outlet />}

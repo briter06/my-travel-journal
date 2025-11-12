@@ -1,6 +1,5 @@
 import { genHmac } from '../crypto/hmac';
 import { Me } from '../store/slices/session';
-import { setInStorage } from '../utils/storage';
 import { callAPI } from './helper';
 
 type NonceResult = { nonce: string };
@@ -25,12 +24,14 @@ export const loginUser = async (
   );
   if (result == null) {
     return {
-      status: false,
-      message: 'Email or password are incorrect',
+      token: null,
+      message: 'auth.login.incorrectCredentials',
     };
   }
-  setInStorage('token', result.token);
-  return null;
+  return {
+    token: result.token,
+    message: '',
+  };
 };
 
 export const getMe = () => callAPI<Me>('GET', '/auth/me');

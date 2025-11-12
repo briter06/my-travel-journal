@@ -9,6 +9,7 @@ import AccountTrip from './components/routes/Account/routes/Trip/AccountTrip';
 import LanguageInjector from './components/LanguageInjector/LanguageInjector';
 import { getFromStorage } from './utils/storage';
 import { DEFAULT_LANGUAGE } from './utils/languages';
+import Login from './components/Auth/Login/Login';
 
 function RedirectToLanguage() {
   // read language at render time so changes in localStorage are respected
@@ -34,6 +35,10 @@ export const createRouter = () =>
             {
               path: 'signup',
               element: <SignUp />,
+            },
+            {
+              path: 'login',
+              element: <Login />,
             },
             // Main routes
             {

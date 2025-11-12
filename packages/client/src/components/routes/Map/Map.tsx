@@ -1,6 +1,7 @@
 import './Map.css';
 import { Trips } from '@my-travel-journal/common';
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import chroma from 'chroma-js';
 import { Menu, SubMenu, MenuItem } from 'react-pro-sidebar';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
@@ -29,6 +30,7 @@ const groupByYear = (trips: Trips) => {
 };
 
 function Map() {
+  const { t } = useTranslation();
   const isSideBarOpen = useAppSelector(state => state.navigation.isSideBarOpen);
   const stateLocations = useAppSelector(state => state.trips.locations);
   const stateTrips = useAppSelector(state => state.trips.trips);
@@ -71,7 +73,9 @@ function Map() {
                   width: '100%',
                 }}
               >
-                <span style={{ marginRight: '20px' }}>Show journeys</span>
+                <span style={{ marginRight: '20px' }}>
+                  {t('map.controls.showJourneys')}
+                </span>
                 <Switch
                   size={'sm'}
                   checked={showJournies}
@@ -99,7 +103,9 @@ function Map() {
               }}
             >
               <CheckBox disableClick size={'sm'} checked={allAreSelected()} />
-              <span style={{ marginLeft: '5px' }}>My Trips</span>
+              <span style={{ marginLeft: '5px' }}>
+                {t('navigation.profile.myTrips')}
+              </span>
             </div>
           </MenuItem>
           {groupByYear(stateTrips).map(({ year, groupedData }) => (
