@@ -95,18 +95,24 @@ function Map() {
               }
             }}
           >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                width: '100%',
-              }}
-            >
-              <CheckBox disableClick size={'sm'} checked={allAreSelected()} />
+            {Object.keys(stateTrips).length > 0 ? (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  width: '100%',
+                }}
+              >
+                <CheckBox disableClick size={'sm'} checked={allAreSelected()} />
+                <span style={{ marginLeft: '5px' }}>
+                  {t('map.controls.myTrips')}
+                </span>
+              </div>
+            ) : (
               <span style={{ marginLeft: '5px' }}>
-                {t('navigation.profile.myTrips')}
+                {t('map.controls.noTrips')}
               </span>
-            </div>
+            )}
           </MenuItem>
           {groupByYear(stateTrips).map(({ year, groupedData }) => (
             <SubMenu label={year} key={year}>

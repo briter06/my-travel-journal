@@ -108,7 +108,8 @@
   "map": {
     "controls": {
       "showJourneys": "Mostrar viajes",
-      "myTrips": "Mis viajes"
+      "myTrips": "Mis viajes",
+      "noTrips": "Aún no has creado ningún viaje"
     }
   },
   "account": {

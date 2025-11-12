@@ -13,7 +13,7 @@ interface DirectedLineProps {
 const DirectedLine: React.FC<DirectedLineProps> = ({
   positions,
   color = 'red',
-  size = 20,
+  size = 12,
   popup = '',
 }) => {
   const map = useMap();
@@ -30,7 +30,7 @@ const DirectedLine: React.FC<DirectedLineProps> = ({
     const decorator = L.polylineDecorator(polyline, {
       patterns: [
         {
-          offset: '70%', // middle of the line
+          offset: '85%', // middle of the line
           repeat: 0, // only one arrow
           symbol: L.Symbol.arrowHead({
             pixelSize: size,

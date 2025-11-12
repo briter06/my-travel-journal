@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState: { isSideBarOpen: boolean } = {
-  isSideBarOpen: false,
+  isSideBarOpen: true,
 };
 
 const navigationSlice = createSlice({
