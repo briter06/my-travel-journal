@@ -1,6 +1,12 @@
 // types/i18n.d.ts
-import * as i18n from 'react-i18next';
+import 'react-i18next';
 
 declare module 'react-i18next' {
-  export function useTranslation<T, J>(): i18n.UseTranslationResponse<T, J>;
+  export function useTranslation(): {
+    t: (key: string) => string;
+    i18n: {
+      changeLanguage: (lng: string) => Promise<void>;
+      language: string | null;
+    };
+  };
 }

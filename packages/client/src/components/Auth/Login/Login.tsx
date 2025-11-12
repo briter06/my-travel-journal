@@ -9,6 +9,7 @@ import Disclamer from '../../utils/Disclamer/Disclamer';
 import { authHomeRedirector } from '../../utils/AuthHomeRedirector/AuthHomeRedirector';
 import { setInStorage } from '../../../utils/storage';
 import { useTranslation } from 'react-i18next';
+import LanguageSelector from '../../utils/LanguageSelector/LanguageSelector';
 
 const LOADING_PROCESSES = {
   LOGIN: 'login',
@@ -64,7 +65,10 @@ function Login() {
   };
 
   return authHomeRedirector(
-    <div className="initialScreen">
+    <div className="initialScreen" style={{ position: 'relative' }}>
+      <div style={{ position: 'absolute', top: 10, right: 10, zIndex: 1000 }}>
+        <LanguageSelector />
+      </div>
       <form
         className="loginForm"
         onSubmit={e => {
